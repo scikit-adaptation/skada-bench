@@ -9,6 +9,7 @@ This benchmark is dedicated to solver of domain adaptation problems.
 In this problem, we consider source domain with labels and target domain without labels.
 But shift happens:
 
+.. math::
 $$\mathcal{P}_s \neq \mathcal{P}_t,$$
 
 with $\mathcal{P}_s$ and $\mathcal{P}_t$ the distributions of the source and target domains.
@@ -16,6 +17,7 @@ The goal is to learn a model that can predict the labels of the target domain us
 
 There exist different shifts:
 
+.. math::
 - Covariate shift: $\mathcal{P}_s(x) \neq \mathcal{P}_t(x)$ and $\mathcal{P}_s(y|x) = \mathcal{P}_t(y|x)$
 - Label shift: $\mathcal{P}_s(y) \neq \mathcal{P}_t(y)$ and $\mathcal{P}_s(x|y) = \mathcal{P}_t(x|y)$
 - Concept shift: $\mathcal{P}_s(x|y) = \mathcal{P}_t(x|y)$ and $\mathcal{P}_s(y|x) = \mathcal{P}_t(y|x)$
