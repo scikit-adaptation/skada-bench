@@ -41,7 +41,7 @@ class Objective(BaseObjective):
             n_splits=10,
         )
 
-    def evaluate_result(self, dict_valid, dict_estimators):
+    def evaluate_result(self, cv_results, dict_estimators):
         # The keyword arguments of this function are the keys of the
         # dictionary returned by `Solver.get_result`. This defines the
         # benchmark's API to pass solvers' result. This is customizable for
