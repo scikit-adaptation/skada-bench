@@ -8,6 +8,7 @@ with safe_import_context() as import_ctx:
     from sklearn.preprocessing import OneHotEncoder
 
     from skada.utils import source_target_merge
+    import numpy as np
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
@@ -61,6 +62,12 @@ class Dataset(BaseDataset):
 
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target)
+        
+        # Mapping from letters to binary
+        mapping = {'e': 0, 'p': 1}
+
+        # Applying the mapping function
+        y = np.array([mapping[val] for val in y])
 
         return dict(
             X=X,
