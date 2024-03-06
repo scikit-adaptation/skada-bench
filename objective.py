@@ -29,7 +29,7 @@ class Objective(BaseObjective):
 
     # Minimal version of benchopt required to run this benchmark.
     # Bump it up if the benchmark depends on a new feature of benchopt.
-    min_benchopt_version = "1.6"
+    min_benchopt_version = "1.5"
 
     def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary
@@ -41,7 +41,7 @@ class Objective(BaseObjective):
             n_splits=10,
         )
 
-    def evaluate_result(self, cv_grid, model_per_criterion):
+    def evaluate_result(self, cv_results, dict_estimators):
         # The keyword arguments of this function are the keys of the
         # dictionary returned by `Solver.get_result`. This defines the
         # benchmark's API to pass solvers' result. This is customizable for
