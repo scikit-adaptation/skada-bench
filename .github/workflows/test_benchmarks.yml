@@ -1,0 +1,95 @@
+name: Test Benchmark
+
+on:
+  workflow_call:
+    inputs:
+      benchopt_branch:
+        description: Branch of benchopt to install to test the benchmark.
+        default: benchopt@main
+        required: false
+        type: string
+      benchopt_version:
+        description: |
+          If set, use a specific version of benchopt for the tests,
+          thus ignoring the benchopt_branch input.
+        default: git
+        required: false
+        type: string
+
+jobs:
+  test-benchmark:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: ['ubuntu-latest', 'macos-latest']
+        exclude:
+          # Only run OSX test on version==git, not on the release ones.
+          - os: ${{ inputs.benchopt_version == 'git' || 'macos-latest' }}
+    env:
+      CONDA_ENV: 'test_env'
+      BENCHOPT_BRANCH: ${{ inputs.benchopt_branch }}
+      BENCHOPT_VERSION: ${{ inputs.benchopt_version }}
+      BENCHOPT_DEBUG: 1
+      BENCHOPT_CONDA_CMD: mamba
+
+    defaults:
+      run:
+        # Need to use this shell to get conda working properly.
+        # See https://github.com/marketplace/actions/setup-miniconda#important
+        shell: bash -l {0}
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Conda
+      uses: conda-incubator/setup-miniconda@v2
+      with:
+        auto-update-conda: true
+        miniforge-variant: Mambaforge
+        use-mamba: true
+        channels: conda-forge
+        python-version: 3.9
+        activate-environment: ${{ env.CONDA_ENV }}
+
+    - run: conda info
+
+    - name: Install benchopt and its dependencies
+      run: |
+        conda info
+        mamba install -yq pip
+
+        # Get the correct branch of benchopt
+        if [[ "$BENCHOPT_VERSION" == "git" ]]
+        then
+          user=${BENCHOPT_BRANCH%@*}
+          branch=${BENCHOPT_BRANCH##*@}
+          pip install -U git+https://github.com/$user/benchopt@$branch
+        elif [[ "$BENCHOPT_VERSION" == "latest" ]]
+        then
+          pip install -U benchopt
+        else
+          pip install -U benchopt==$BENCHOPT_VERSION
+        fi
+    - name: Check if benchopt is compatible with this benchmark
+      id: check_min_version
+      run: |
+          min_version=$(grep -Po 'min_benchopt_version = \K.*' objective.py || echo "0.0")
+          if [[ "$BENCHOPT_VERSION" == "git" ]]
+          then
+            # Always test dev version
+            benchopt_version="99.0"
+          else
+            benchopt_version=$(benchopt --version)
+          fi
+          echo "$benchopt_version and $min_version"
+          if [[ "$benchopt_version" < "$min_version" ]]
+          then
+            echo "compatible=false" >> $GITHUB_OUTPUT
+          else
+            echo "compatible=true" >> $GITHUB_OUTPUT
+          fi
+
+    - name: Test
+      if: ${{ steps.check_min_version.outputs.compatible == 'true' }}
+      run: |
+        benchopt test . --env-name bench_test_env -vl
+        benchopt test . --env-name bench_test_env -vl --skip-install

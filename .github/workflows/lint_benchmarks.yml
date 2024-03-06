@@ -1,0 +1,21 @@
+name: Lint
+
+on:
+    workflow_call:
+
+
+jobs:
+  linter-flake8:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Lint with flake8
+      run: |
+        pip install flake8
+        flake8 .
