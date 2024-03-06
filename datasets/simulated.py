@@ -41,14 +41,8 @@ class Dataset(BaseDataset):
             random_state=self.random_state,
         )
 
-        if self.label == 'regression':
-            is_regression = True
-        else:
-            is_regression = False
-
         return dict(
             X=X,
             y=y,
             sample_domain=sample_domain,
-            is_regression=is_regression,
         )
