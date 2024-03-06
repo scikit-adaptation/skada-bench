@@ -4,7 +4,7 @@ from benchopt import BaseObjective, safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    import numpy as np
+    from skada.model_selection import StratifiedDomainShuffleSplit
 
 
 # The benchmark objective must be named `Objective` and
@@ -23,13 +23,9 @@ class Objective(BaseObjective):
     # This means the OLS objective will have a parameter `self.whiten_y`.
 
     # List of packages needed to run the benchmark.
-    # They are installed with conda; to use pip, use 'pip:packagename'. To
-    # install from a specific conda channel, use 'channelname:packagename'.
-    # Packages that are not necessary to the whole benchmark but only to some
-    # solvers or datasets should be declared in Dataset or Solver (see
-    # simulated.py and python-gd.py).
-    # Example syntax: requirements = ['numpy', 'pip:jax', 'pytorch:pytorch']
-    requirements = []
+    requirements = [
+        'pip:git+https://github.com/scikit-adaptation/skada.git'
+    ]
 
     # Minimal version of benchopt required to run this benchmark.
     # Bump it up if the benchmark depends on a new feature of benchopt.
@@ -39,12 +35,11 @@ class Objective(BaseObjective):
         # The keyword arguments of this function are the keys of the dictionary
         # returned by `Dataset.get_data`. This defines the benchmark's
         # API to pass data. This is customizable for each benchmark.
-        self.X, self.y = X, y
+        self.X, self.y, self.sample_domain = X, y, sample_domain
 
-        # `set_data` can be used to preprocess the data. For instance,
-        # if `whiten_y` is True, remove the mean of `y`.
-        if self.whiten_y:
-            y -= y.mean(axis=0)
+        self.cv = StratifiedDomainShuffleSplit(
+            n_splits=10,
+        )
 
     def evaluate_result(self, cv_grid, model_per_criterion):
         # The keyword arguments of this function are the keys of the
@@ -64,13 +59,28 @@ class Objective(BaseObjective):
         # with `self.evaluate_result`. This is mainly for testing purposes.
         return dict(beta=np.zeros(self.X.shape[1]))
 
+    def split(X, y, sample_domain, cv_fold):
+        id_train, id_test = cv_fold
+
+        self.X_train, self.X_test = X[id_train], X[id_test]
+        self.y_train, self.y_test = y[id_train], y[id_test]
+        self.sample_domain_train = sample_domain[id_train]
+        self.sample_domain_test = sample_domain[id_test]
+
+        # Mask the target in the train to pass to the solver
+        y_train = self.y_train.copy()
+        id_train_source, id_train_target = extract_domains_indices(
+            sample_domain_train
+        )
+        y_train[id_train_target] = -1
+        return self.X_train, y_train, self.sample_domain_train
+
     def get_objective(self):
         # Define the information to pass to each solver to run the benchmark.
         # The output of this function are the keyword arguments
         # for `Solver.set_objective`. This defines the
         # benchmark's API for passing the objective to the solver.
         # It is customizable for each benchmark.
-        return dict(
-            X=self.X,
-            y=self.y,
-        )
+        X, y, sample_domain = self.get_split(self.X, self.y)
+
+        return dict(X=X, y=y, sample_domain=sample_domain)
