@@ -17,6 +17,7 @@ class DASolver(BaseSolver):
     }
 
     def get_estimator(self):
+        """Return an estimator compatible with the `sklearn.GridSearchCV`."""
         pass
 
 
