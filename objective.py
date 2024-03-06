@@ -12,18 +12,15 @@ with safe_import_context() as import_ctx:
 class Objective(BaseObjective):
 
     # Name to select the objective in the CLI and to display the results.
-    name = "Ordinary Least Squares"
+    name = "SKADA Domain Adaptation Benchmark"
 
     # URL of the main repo for this benchmark.
-    url = "https://github.com/#ORG/#BENCHMARK_NAME"
+    url = "https://github.com/scikit-adaptation/skada-bench"
 
     # List of parameters for the objective. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     # This means the OLS objective will have a parameter `self.whiten_y`.
-    parameters = {
-        'whiten_y': [False, True],
-    }
 
     # List of packages needed to run the benchmark.
     # They are installed with conda; to use pip, use 'pip:packagename'. To
@@ -36,9 +33,9 @@ class Objective(BaseObjective):
 
     # Minimal version of benchopt required to run this benchmark.
     # Bump it up if the benchmark depends on a new feature of benchopt.
-    min_benchopt_version = "1.5"
+    min_benchopt_version = "1.6"
 
-    def set_data(self, X, y):
+    def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary
         # returned by `Dataset.get_data`. This defines the benchmark's
         # API to pass data. This is customizable for each benchmark.
@@ -49,7 +46,7 @@ class Objective(BaseObjective):
         if self.whiten_y:
             y -= y.mean(axis=0)
 
-    def evaluate_result(self, beta):
+    def evaluate_result(self, cv_grid, model_per_criterion):
         # The keyword arguments of this function are the keys of the
         # dictionary returned by `Solver.get_result`. This defines the
         # benchmark's API to pass solvers' result. This is customizable for
