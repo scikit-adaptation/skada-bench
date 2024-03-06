@@ -1,13 +1,11 @@
 from benchopt import BaseSolver, safe_import_context
-from skada import CORAL
+
 # Protect the import with `safe_import_context()`. This allows:
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     import numpy as np
-
-    # import your reusable functions here
-    from benchmark_utils import gradient_ols
+    from skada import CORAL
 
 
 # The benchmark solvers must be named `Solver` and
