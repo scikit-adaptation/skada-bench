@@ -1,33 +1,24 @@
-from benchopt import BaseDataset, safe_import_context
-
-
-# Protect the import with `safe_import_context()`. This allows:
-# - skipping import to speed up autocompletion in CLI.
-# - getting requirements info when all dependencies are not installed.
-with safe_import_context() as import_ctx:
-    import numpy as np
+from benchopt import BaseDataset
+from skada.datasets import make_shifted_datasets
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "Simulated"
+    name = "Simulated_shifts"
 
     # List of parameters to generate the datasets. The benchmark will consider
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
-        'n_samples, n_features': [
-            (1000, 500),
-            (5000, 200),
+        'shift': [
+            'covariate_shift', 'target_shift', 'concept_drift', 'subspace'
         ],
-        'random_state': [27],
+        'n_samples_source, n_samples_target': [(100, 100)],
+        'label': ['binary', 'multiclass',],
+        'random_state': list(range(10))
     }
-
-    # List of packages needed to run the dataset. See the corresponding
-    # section in objective.py
-    requirements = []
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
@@ -35,9 +26,17 @@ class Dataset(BaseDataset):
         # API to pass data. It is customizable for each benchmark.
 
         # Generate pseudorandom data using `numpy`.
-        rng = np.random.RandomState(self.random_state)
-        X = rng.randn(self.n_samples, self.n_features)
-        y = rng.randn(self.n_samples)
+        X, y, sample_domain = make_shifted_datasets(
+            n_samples_source=self.n_samples_source,
+            n_samples_target=self.n_samples_target,
+            shift=self.shift,
+            noise=0.3,
+            label=self.label,
+            random_state=self.random_state,
+        )
 
-        # The dictionary defines the keyword arguments for `Objective.set_data`
-        return dict(X=X, y=y)
+        return dict(
+            X=X,
+            y=y,
+            sample_domain=sample_domain,
+        )
