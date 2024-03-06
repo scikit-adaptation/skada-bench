@@ -10,15 +10,15 @@ In this problem, we consider source domain with labels and target domain without
 But shift happens:
 
 .. math::
-$$\mathcal{P}_s \neq \mathcal{P}_t,$$
+   \mathcal{P}_s \neq \mathcal{P}_t,
 
 with $\mathcal{P}_s$ and $\mathcal{P}_t$ the distributions of the source and target domains.
 The goal is to learn a model that can predict the labels of the target domain using the source domain.
 
 There exist different shifts:
 
-.. math::
-- Covariate shift: $\mathcal{P}_s(x) \neq \mathcal{P}_t(x)$ and $\mathcal{P}_s(y|x) = \mathcal{P}_t(y|x)$
+
+- Covariate shift: .. math:: '\mathcal{P}_s(x) \neq \mathcal{P}_t(x)' and .. math:: '$\mathcal{P}_s(y|x) = \mathcal{P}_t(y|x)'
 - Label shift: $\mathcal{P}_s(y) \neq \mathcal{P}_t(y)$ and $\mathcal{P}_s(x|y) = \mathcal{P}_t(x|y)$
 - Concept shift: $\mathcal{P}_s(x|y) = \mathcal{P}_t(x|y)$ and $\mathcal{P}_s(y|x) = \mathcal{P}_t(y|x)$
 - Subspace shift: there exist a subspace $U$ such that $\mathcal{P}_s(UU^Tx) = \mathcal{P}_t(UU^Tx)$ and $\mathcal{P}_s(UU^Ty|x) = \mathcal{P}_t(UU^Ty|x)$
