@@ -1,16 +1,25 @@
 
-My Benchopt Benchmark
+Domain Adaptation Benchmark
 =====================
 |Build Status| |Python 3.6+|
 
 Benchopt is a package to simplify and make more transparent and
 reproducible the comparisons of optimization algorithms.
-This benchmark is dedicated to solver of **describe your problem**:
+This benchmark is dedicated to solver of domain adaptation problems.
+In this problem, we consider source domain with labels and target domain without labels.
+But shift happens:
 
+$$\mathcal{P}_s \neq \mathcal{P}_t,$$
 
-$$\\min_{\\beta} f(X, \\beta),$$
+with $\mathcal{P}_s$ and $\mathcal{P}_t$ the distributions of the source and target domains.
+The goal is to learn a model that can predict the labels of the target domain using the source domain.
 
-where $X$ is the matrix of data and $\\beta$ is the optimization variable.
+There exist different shifts:
+
+- Covariate shift: $\mathcal{P}_s(x) \neq \mathcal{P}_t(x)$ and $\mathcal{P}_s(y|x) = \mathcal{P}_t(y|x)$
+- Label shift: $\mathcal{P}_s(y) \neq \mathcal{P}_t(y)$ and $\mathcal{P}_s(x|y) = \mathcal{P}_t(x|y)$
+- Concept shift: $\mathcal{P}_s(x|y) = \mathcal{P}_t(x|y)$ and $\mathcal{P}_s(y|x) = \mathcal{P}_t(y|x)$
+- Subspace shift: there exist a subspace $U$ such that $\mathcal{P}_s(UU^Tx) = \mathcal{P}_t(UU^Tx)$ and $\mathcal{P}_s(UU^Ty|x) = \mathcal{P}_t(UU^Ty|x)$
 
 Install
 --------
