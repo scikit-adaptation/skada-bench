@@ -10,7 +10,9 @@ In this problem, we consider source domain with labels and target domain without
 But shift happens:
 
 .. math::
-   $\mathcal{P}_s \neq \mathcal{P}_t$
+   \begin{equation}
+   \mathcal{P}_s \neq \mathcal{P}_t
+   \end{equation}
 
 with :math:`$\mathcal{P}_s$` and :math:`$\mathcal{P}_t$` the distributions of the source and target domains.
 The goal is to learn a model that can predict the labels of the target domain using the source domain.
