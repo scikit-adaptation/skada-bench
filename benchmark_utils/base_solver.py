@@ -4,11 +4,12 @@ from benchopt import BaseSolver, safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    from abc import abstractmethod
+    import numpy as np
+    from sklearn.base import clone
     from sklearn.model_selection import GridSearchCV
     from skada.metrics import SupervisedScorer
     from skada.metrics import PredictionEntropyScorer
-    import numpy as np
-    from sklearn.base import clone
 
 
 class DASolver(BaseSolver):
@@ -19,9 +20,10 @@ class DASolver(BaseSolver):
         'prediction_entropy': PredictionEntropyScorer()
     }
 
+    @abstractmethod
     def get_estimator(self):
         """Return an estimator compatible with the `sklearn.GridSearchCV`."""
-        super.get_estimator()
+        pass
 
 
     def set_objective(self, X, y, sample_domain, unmasked_y_train):

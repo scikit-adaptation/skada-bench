@@ -75,7 +75,7 @@ class Objective(BaseObjective):
          y_test_source, y_test_target
          ) = source_target_split(self.X_test, self.y_test, sample_domain=self.sample_domain_test)
         
-        metrics_per_criterion = {}
+        all_metrics = {}
 
         for criterion, estimator in dict_estimators.items():
             # TRAIN metrics
@@ -96,17 +96,16 @@ class Objective(BaseObjective):
             y_pred_test_target = estimator.predict(X_test_target)
             test_target_acc = accuracy_score(y_test_target, y_pred_test_target)
 
-
-            metrics_per_criterion[criterion] = {'train_source_acc': train_source_acc,
-                                                 'train_target_acc': train_target_acc,
-                                                 'test_source_acc': test_source_acc,
-                                                 'test_target_acc': test_target_acc}
-
-            
+            all_metrics.update({
+                f'{criterion}_train_source_acc': train_source_acc,
+                f'{criterion}_train_target_acc': train_target_acc,
+                f'{criterion}_test_source_acc': test_source_acc,
+                f'{criterion}_test_target_acc': test_target_acc
+            })
 
         return dict(
-            metrics_per_criterion = metrics_per_criterion,
             cv_results = cv_results,
+            **all_metrics,
             value=1e-7,
         )
 
