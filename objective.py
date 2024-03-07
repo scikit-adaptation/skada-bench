@@ -8,7 +8,7 @@ with safe_import_context() as import_ctx:
     from skada.utils import extract_source_indices, source_target_split
     from skada._utils import Y_Type, _find_y_type
     from skada._utils import _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL, _DEFAULT_MASKED_TARGET_REGRESSION_LABEL
-    from sklearn.metrics import accuracy_score
+    from sklearn.metrics import accuracy_score, balanced_accuracy_score, f1_score, roc_auc_score
     import numpy as np
 
 # The benchmark objective must be named `Objective` and
@@ -34,6 +34,14 @@ class Objective(BaseObjective):
     # Minimal version of benchopt required to run this benchmark.
     # Bump it up if the benchmark depends on a new feature of benchopt.
     min_benchopt_version = "1.5"
+
+    metrics = {
+        'accuracy': accuracy_score,
+        'balanced_accuracy': balanced_accuracy_score,
+        'f1_score': f1_score,
+        'roc_auc_score': roc_auc_score,
+    }
+
 
     def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary
@@ -81,27 +89,44 @@ class Objective(BaseObjective):
             # TRAIN metrics
             # Source accuracy
             y_pred_train_source = estimator.predict(X_train_source)
-            train_source_acc = accuracy_score(y_train_source, y_pred_train_source)
+            y_pred_train_source_proba = estimator.predict_proba(X_train_source)
 
             # Target accuracy
             y_pred_train_target = estimator.predict(X_train_target)
-            train_target_acc = accuracy_score(y_train_target, y_pred_train_target)
+            y_pred_train_target_proba = estimator.predict_proba(X_train_target)
 
             # TEST metrics
             # Source accuracy
             y_pred_test_source = estimator.predict(X_test_source)
-            test_source_acc = accuracy_score(y_test_source, y_pred_test_source)
+            y_pred_test_source_proba = estimator.predict_proba(X_test_source)
 
             # Target accuracy
             y_pred_test_target = estimator.predict(X_test_target)
-            test_target_acc = accuracy_score(y_test_target, y_pred_test_target)
+            y_pred_test_target_proba = estimator.predict_proba(X_test_target)
 
-            all_metrics.update({
-                f'{criterion}_train_source_acc': train_source_acc,
-                f'{criterion}_train_target_acc': train_target_acc,
-                f'{criterion}_test_source_acc': test_source_acc,
-                f'{criterion}_test_target_acc': test_target_acc
-            })
+            for metric_name, metric in self.metrics.items():
+                if metric_name == 'roc_auc_score':
+                    if len(np.unique(np.concatenate((self.y_train, self.y_test)))) > 2:
+                        roc_args = {'multi_class':'ovo', 'labels':np.unique(np.concatenate((self.y_train, self.y_test)))}
+
+                        all_metrics.update({
+                            f'{criterion}_train_source_{metric_name}': metric(y_train_source, y_pred_train_source_proba, **roc_args),
+                            f'{criterion}_train_target_{metric_name}': metric(y_train_target, y_pred_train_target_proba, **roc_args),
+                            f'{criterion}_test_source_{metric_name}': metric(y_test_source, y_pred_test_source_proba, **roc_args),
+                            f'{criterion}_test_target_{metric_name}': metric(y_test_target, y_pred_test_target_proba, **roc_args)
+                        })
+                        continue
+                
+                f1_args = {}
+                if metric_name == 'f1_score':
+                    f1_args = {'average':'weighted'}
+
+                all_metrics.update({
+                    f'{criterion}_train_source_{metric_name}': metric(y_train_source, y_pred_train_source, **f1_args),
+                    f'{criterion}_train_target_{metric_name}': metric(y_train_target, y_pred_train_target, **f1_args),
+                    f'{criterion}_test_source_{metric_name}': metric(y_test_source, y_pred_test_source, **f1_args),
+                    f'{criterion}_test_target_{metric_name}': metric(y_test_target, y_pred_test_target, **f1_args)
+                })
 
         return dict(
             cv_results = cv_results,
