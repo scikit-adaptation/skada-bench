@@ -12,13 +12,18 @@ class Dataset(BaseDataset):
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
-        'shift': [
-            'covariate_shift', 'target_shift', 'concept_drift', 'subspace'
-        ],
         'n_samples_source, n_samples_target': [(100, 100)],
-        'label': ['binary', 'multiclass',],
-        'random_state': list(range(10))
+        'shift, label' : [('covariate_shift', 'binary'),
+                          ('target_shift', 'binary'),
+                          ('target_shift', 'multiclass'),
+                          ('concept_drift', 'binary'),
+                          ('concept_drift', 'multiclass'),
+                          ('subspace', 'binary'),
+                          ('subspace', 'multiclass')
+                          ],
+        'random_state': list(range(5))
     }
+
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments

@@ -4,7 +4,7 @@ from benchopt import BaseObjective, safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    from skada.model_selection import StratifiedDomainShuffleSplit
+    from skada.model_selection import StratifiedDomainShuffleSplit, DomainShuffleSplit
     from skada.utils import extract_domains_indices, source_target_split
     from skada._utils import Y_Type, _find_y_type
     from skada._utils import _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL, _DEFAULT_MASKED_TARGET_REGRESSION_LABEL
@@ -44,10 +44,17 @@ class Objective(BaseObjective):
         # check y is discrete or continuous
         self.discrete_ = _find_y_type(self.y) == Y_Type.DISCRETE
 
-        self.cv = StratifiedDomainShuffleSplit(
-            n_splits=5,
-            test_size = 0.2
-        )
+        if self.discrete_:
+            self.cv = StratifiedDomainShuffleSplit(
+                n_splits=5,
+                test_size = 0.2
+            )
+        else:
+            # We cant use StratifiedDomainShuffleSplit if y is continuous
+            self.cv = DomainShuffleSplit(
+                n_splits=5,
+                test_size = 0.2
+            )
 
     def evaluate_result(self, cv_results, dict_estimators):
         # The keyword arguments of this function are the keys of the
