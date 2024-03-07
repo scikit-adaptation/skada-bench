@@ -7,9 +7,6 @@ with safe_import_context() as import_ctx:
     from sklearn.model_selection import GridSearchCV
     from skada.metrics import SupervisedScorer
     from skada.metrics import PredictionEntropyScorer
-    import numpy as np
-    from sklearn.base import clone
-
 
 class DASolver(BaseSolver):
     strategy = "run_once"
@@ -21,39 +18,35 @@ class DASolver(BaseSolver):
 
     def get_estimator(self):
         """Return an estimator compatible with the `sklearn.GridSearchCV`."""
-        super.get_estimator()
+        pass
 
 
-    def set_objective(self, X, y, sample_domain, unmasked_y_train):
+    def set_objective(self, X, y, sample_domain):
         self.X, self.y, self.sample_domain = X, y, sample_domain
-        self.unmasked_y_train = unmasked_y_train
 
         self.base_estimator = self.get_estimator()
         self.clf = GridSearchCV(
             self.base_estimator, self.param_grid, refit=False,
-            scoring=self.criterions
+            scoring=criterions
         )
 
 
     def run(self, n_iter):
-        # target_labels here is for the supervised_scorer
-        self.clf.fit(self.X, self.y, sample_domain=self.sample_domain, target_labels=self.unmasked_y_train)
+        self.cfl.fit(self.X, self.y, sample_domain=self.sample_domain)
 
         self.cv_results_ = self.clf.cv_results_
         self.dict_estimators_ = {}
         for criterion in self.criterions:
             best_index = np.argmax(self.clf.cv_results_['mean_test_' + criterion])
             best_params = self.clf.cv_results_['params'][best_index]
-            refit_estimator = clone(self.base_estimator)
+            refit_estimator = self.base_estimator.clone()
             refit_estimator.set_params(**best_params)
-            if np.any(np.isnan(self.X)):
-                import pdb; pdb.set_trace()
             refit_estimator.fit(self.X, self.y, sample_domain=self.sample_domain)
             self.dict_estimators_[criterion] = refit_estimator
 
     def get_result(self):
         return dict(
-            cv_results=self.cv_results_,
+            cv_result=self.cv_results_,
             dict_estimators=self.dict_estimators_
         )
 
