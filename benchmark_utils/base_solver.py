@@ -10,7 +10,8 @@ with safe_import_context() as import_ctx:
     from sklearn.model_selection import GridSearchCV
     from skada.metrics import SupervisedScorer
     from skada.metrics import PredictionEntropyScorer
-
+    from skada.model_selection import StratifiedDomainShuffleSplit, DomainShuffleSplit
+    from skada._utils import Y_Type, _find_y_type
 
 class DASolver(BaseSolver):
     strategy = "run_once"
@@ -31,9 +32,26 @@ class DASolver(BaseSolver):
         self.unmasked_y_train = unmasked_y_train
 
         self.base_estimator = self.get_estimator()
+
+        # check y is discrete or continuous
+        self.discrete_ = _find_y_type(self.y) == Y_Type.DISCRETE
+
+        # CV fot the gridsearch
+        if self.discrete_:
+            self.gs_cv = StratifiedDomainShuffleSplit(
+                n_splits=5,
+                test_size = 0.2
+            )
+        else:
+            # We cant use StratifiedDomainShuffleSplit if y is continuous
+            self.gs_cv = DomainShuffleSplit(
+                n_splits=5,
+                test_size = 0.2
+            )
+
         self.clf = GridSearchCV(
             self.base_estimator, self.param_grid, refit=False,
-            scoring=self.criterions
+            scoring=self.criterions, cv=self.gs_cv, error_score='raise'
         )
 
 
@@ -48,8 +66,6 @@ class DASolver(BaseSolver):
             best_params = self.clf.cv_results_['params'][best_index]
             refit_estimator = clone(self.base_estimator)
             refit_estimator.set_params(**best_params)
-            if np.any(np.isnan(self.X)):
-                import pdb; pdb.set_trace()
             refit_estimator.fit(self.X, self.y, sample_domain=self.sample_domain)
             self.dict_estimators_[criterion] = refit_estimator
 

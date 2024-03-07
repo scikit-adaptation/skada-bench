@@ -5,7 +5,7 @@ from benchopt import BaseObjective, safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     from skada.model_selection import StratifiedDomainShuffleSplit, DomainShuffleSplit
-    from skada.utils import extract_domains_indices, source_target_split
+    from skada.utils import extract_source_indices, source_target_split
     from skada._utils import Y_Type, _find_y_type
     from skada._utils import _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL, _DEFAULT_MASKED_TARGET_REGRESSION_LABEL
     from sklearn.metrics import accuracy_score
@@ -124,12 +124,11 @@ class Objective(BaseObjective):
 
         # Mask the target in the train to pass to the solver
         y_train = self.y_train.copy()
-        id_train_source, id_train_target = extract_domains_indices(
+        id_train_source = extract_source_indices(
             self.sample_domain_train
         )
-
         
-        y_train[id_train_target] = (
+        y_train[~id_train_source] = (
             _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL
             if self.discrete_ else
             _DEFAULT_MASKED_TARGET_REGRESSION_LABEL
