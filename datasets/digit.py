@@ -7,7 +7,7 @@ from benchopt import BaseDataset, safe_import_context
 with safe_import_context() as import_ctx:
     import numpy as np
     import torchvision
-    from torchvision.datasets import MNIST, SVHN
+    from torchvision.datasets import MNIST, SVHN, USPS
 
     from skada.utils import source_target_merge
 
@@ -23,7 +23,12 @@ class Dataset(BaseDataset):
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
         'n_samples_source, n_samples_target': [(1000, 1000)],
-        'source_target': [('MNIST', 'SVHN')],
+        'source_target': [('MNIST', 'SVHN'),
+                          ('MNIST', 'USPS'),
+                          ('SVHN', 'USPS'),
+                          ('SVHN', 'MNIST'),
+                          ('USPS', 'MNIST'),
+                          ('USPS', 'SVHN')],
         'random_state': [27],
     }
 
@@ -52,6 +57,18 @@ class Dataset(BaseDataset):
                 split='train',
                 transform=transform
             )
+        elif dataset_name == 'usps':
+            transform = torchvision.transforms.Compose([
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Grayscale(),
+                torchvision.transforms.Normalize((0.1307,), (0.3081,))
+            ])
+            dataset = SVHN(
+                root='./USPS',
+                download=True,
+                split='train',
+                transform=transform
+            )
         else:
             raise ValueError(f"Unknown dataset {dataset_name}")
 
@@ -75,6 +92,7 @@ class Dataset(BaseDataset):
         # API to pass data. It is customizable for each benchmark.
 
         # Generate pseudorandom data using `numpy`.
+        print(self.source_target)
         source, target = self.source_target
         X_source, y_source = self._get_dataset(source, self.n_samples_source)
         X_target, y_target = self._get_dataset(target, self.n_samples_target)

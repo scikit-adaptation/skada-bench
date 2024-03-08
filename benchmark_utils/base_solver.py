@@ -51,7 +51,7 @@ class DASolver(BaseSolver):
 
         self.clf = GridSearchCV(
             self.base_estimator, self.param_grid, refit=False,
-            scoring=self.criterions, cv=self.gs_cv
+            scoring=self.criterions, cv=self.gs_cv, error_score='raise'
         )
 
 
