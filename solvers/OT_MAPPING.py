@@ -26,7 +26,6 @@ class Solver(DASolver):
     }
 
     def get_estimator(self):
-        # return CORAL()
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             OTMappingAdapter(),
