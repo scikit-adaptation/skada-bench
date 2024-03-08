@@ -7,8 +7,8 @@ with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
     from sklearn.svm import SVC
     from sklearn.linear_model import LogisticRegression
-    from skada import make_da_pipeline
     from skada.base import SelectSource
+    from sklearn.pipeline import Pipeline
 
 
 # The benchmark solvers must be named `Solver` and
@@ -30,9 +30,6 @@ class Solver(DASolver):
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
-        # TODO: make_da_pipeline doesnt handle ('classifer', None)
-        # as a step, while sklearn.pipeline.Pipeline does.
-        # Maybe a feature to add to skada?
-        return make_da_pipeline(
-            ('classifier', LogisticRegression())
-        )
+        return Pipeline([
+            ('classifier', None)
+        ])

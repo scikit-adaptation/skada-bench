@@ -8,7 +8,7 @@ with safe_import_context() as import_ctx:
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "Office31"
+    name = "Office31SURF"
 
     # List of parameters to generate the datasets. The benchmark will consider
     # the cross product for each key in the dictionary.
@@ -35,7 +35,7 @@ class Dataset(BaseDataset):
         # to `Objective.set_data`. This defines the benchmark's
         # API to pass data. It is customizable for each benchmark.
 
-        datasets_path = './data/OFFICE_31_DATASET/'
+        datasets_path = './data/OFFICE_31_SURF_DATASET/'
         mat_dslr = scipy.io.loadmat(datasets_path+'dslr_SURF_L10.mat')
         mat_amazon = scipy.io.loadmat(datasets_path+'amazon_SURF_L10.mat')
         mat_webcam = scipy.io.loadmat(datasets_path+'webcam_SURF_L10.mat')
