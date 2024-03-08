@@ -10,8 +10,12 @@ with safe_import_context() as import_ctx:
     from sklearn.model_selection import GridSearchCV
     from skada.metrics import SupervisedScorer
     from skada.metrics import PredictionEntropyScorer
-    from skada.model_selection import StratifiedDomainShuffleSplit, DomainShuffleSplit
+    from skada.model_selection import (
+        StratifiedDomainShuffleSplit,
+        DomainShuffleSplit
+    )
     from skada._utils import Y_Type, _find_y_type
+
 
 class DASolver(BaseSolver):
     strategy = "run_once"
@@ -26,7 +30,6 @@ class DASolver(BaseSolver):
         """Return an estimator compatible with the `sklearn.GridSearchCV`."""
         pass
 
-
     def set_objective(self, X, y, sample_domain, unmasked_y_train):
         self.X, self.y, self.sample_domain = X, y, sample_domain
         self.unmasked_y_train = unmasked_y_train
@@ -40,13 +43,13 @@ class DASolver(BaseSolver):
         if self.is_discrete:
             self.gs_cv = StratifiedDomainShuffleSplit(
                 n_splits=5,
-                test_size = 0.2
+                test_size=0.2
             )
         else:
             # We cant use StratifiedDomainShuffleSplit if y is continuous
             self.gs_cv = DomainShuffleSplit(
                 n_splits=5,
-                test_size = 0.2
+                test_size=0.2
             )
 
         self.clf = GridSearchCV(
@@ -54,19 +57,27 @@ class DASolver(BaseSolver):
             scoring=self.criterions, cv=self.gs_cv, error_score='raise'
         )
 
-
     def run(self, n_iter):
         # target_labels here is for the supervised_scorer
-        self.clf.fit(self.X, self.y, sample_domain=self.sample_domain, target_labels=self.unmasked_y_train)
+        self.clf.fit(
+            self.X,
+            self.y,
+            sample_domain=self.sample_domain,
+            target_labels=self.unmasked_y_train
+        )
 
         self.cv_results_ = self.clf.cv_results_
         self.dict_estimators_ = {}
         for criterion in self.criterions:
-            best_index = np.argmax(self.clf.cv_results_['mean_test_' + criterion])
+            best_index = np.argmax(
+                self.clf.cv_results_['mean_test_' + criterion]
+            )
             best_params = self.clf.cv_results_['params'][best_index]
             refit_estimator = clone(self.base_estimator)
             refit_estimator.set_params(**best_params)
-            refit_estimator.fit(self.X, self.y, sample_domain=self.sample_domain)
+            refit_estimator.fit(
+                self.X, self.y, sample_domain=self.sample_domain
+            )
             self.dict_estimators_[criterion] = refit_estimator
 
     def get_result(self):
@@ -74,5 +85,3 @@ class DASolver(BaseSolver):
             cv_results=self.cv_results_,
             dict_estimators=self.dict_estimators_
         )
-
-

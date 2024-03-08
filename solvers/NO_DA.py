@@ -7,7 +7,6 @@ with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
     from sklearn.svm import SVC
     from sklearn.linear_model import LogisticRegression
-    from sklearn.pipeline import Pipeline
     from skada import make_da_pipeline
     from skada.base import SelectSource
 

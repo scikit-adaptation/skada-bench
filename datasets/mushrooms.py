@@ -62,7 +62,7 @@ class Dataset(BaseDataset):
 
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target)
-        
+
         # Mapping from letters to binary
         mapping = {'e': 0, 'p': 1}
 
