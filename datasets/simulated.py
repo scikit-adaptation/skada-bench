@@ -13,7 +13,7 @@ class Dataset(BaseDataset):
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
         'n_samples_source, n_samples_target': [(100, 100)],
-        'shift, label' : [
+        'shift, label': [
             ('covariate_shift', 'binary'),
             ('target_shift', 'binary'),
             ('target_shift', 'multiclass'),
@@ -24,7 +24,6 @@ class Dataset(BaseDataset):
         ],
         'random_state': list(range(5))
     }
-
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments

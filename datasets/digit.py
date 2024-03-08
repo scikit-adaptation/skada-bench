@@ -43,7 +43,10 @@ class Dataset(BaseDataset):
                 torchvision.transforms.Normalize((0.1307,), (0.3081,))
             ])
             dataset = MNIST(
-                root='./data/MNIST', download=True, train=True, transform=transform
+                root='./data/MNIST',
+                download=True,
+                train=True,
+                transform=transform
             )
         elif dataset_name == 'svhn':
             transform = torchvision.transforms.Compose([
@@ -60,13 +63,14 @@ class Dataset(BaseDataset):
         elif dataset_name == 'usps':
             transform = torchvision.transforms.Compose([
                 torchvision.transforms.ToTensor(),
+                torchvision.transforms.Pad(8),
                 torchvision.transforms.Grayscale(),
                 torchvision.transforms.Normalize((0.1307,), (0.3081,))
             ])
-            dataset = SVHN(
+            dataset = USPS(
                 root='./data/USPS',
                 download=True,
-                split='train',
+                train=True,
                 transform=transform
             )
         else:

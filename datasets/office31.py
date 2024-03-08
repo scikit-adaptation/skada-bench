@@ -3,6 +3,7 @@ with safe_import_context() as import_ctx:
     import scipy
     from skada.utils import source_target_merge
 
+
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
 class Dataset(BaseDataset):
 
@@ -29,17 +30,16 @@ class Dataset(BaseDataset):
         ],
     }
 
-
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
         # to `Objective.set_data`. This defines the benchmark's
         # API to pass data. It is customizable for each benchmark.
 
         datasets_path = './data/OFFICE_31_DATASET/'
-        mat_dslr = scipy.io.loadmat(datasets_path + 'dslr_SURF_L10.mat')
-        mat_amazon = scipy.io.loadmat(datasets_path + 'amazon_SURF_L10.mat')
-        mat_webcam = scipy.io.loadmat(datasets_path + 'webcam_SURF_L10.mat')
-        mat_caltech = scipy.io.loadmat(datasets_path + 'Caltech10_SURF_L10.mat')
+        mat_dslr = scipy.io.loadmat(datasets_path+'dslr_SURF_L10.mat')
+        mat_amazon = scipy.io.loadmat(datasets_path+'amazon_SURF_L10.mat')
+        mat_webcam = scipy.io.loadmat(datasets_path+'webcam_SURF_L10.mat')
+        mat_caltech = scipy.io.loadmat(datasets_path+'Caltech10_SURF_L10.mat')
 
         mat_dict = {
             'dslr': mat_dslr,
@@ -49,7 +49,7 @@ class Dataset(BaseDataset):
         }
         source = self.source_target[0]
         target = self.source_target[1]
-        
+
         X_source = mat_dict[source]['fts']
         X_target = mat_dict[target]['fts']
         y_source = mat_dict[source]['labels'].flatten()

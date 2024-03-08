@@ -4,7 +4,7 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    from skada import CORALAdapter, CORAL, make_da_pipeline
+    from skada import CORALAdapter, make_da_pipeline
     from benchmark_utils.base_solver import DASolver
     from sklearn.svm import SVC
 
@@ -20,7 +20,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'coraladapter__reg' : ["auto", 1e-5, 0.5]
+        'coraladapter__reg': ["auto", 1e-5, 0.5]
     }
 
     def get_estimator(self):

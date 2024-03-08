@@ -71,15 +71,22 @@ class Dataset(BaseDataset):
         }
 
         source_index = np.isin(
-                data.target,
-                [data.target_names.index(s) for s in source_dict[source]+source_dict[target]]
+            data.target,
+            [
+                data.target_names.index(s)
+                for s in source_dict[source]+source_dict[target]
+            ]
         )
         target_index = np.isin(
-                data.target,
-                [data.target_names.index(s) for s in target_dict[source]+target_dict[target]]
+            data.target,
+            [
+                data.target_names.index(s)
+                for s in target_dict[source]+target_dict[target]
+            ]
         )
         positive_index = [
-            data.target_names.index(s) for s in target_dict[source]+source_dict[source]
+            data.target_names.index(s)
+            for s in target_dict[source]+source_dict[source]
         ]
 
         X_source = X[source_index].toarray()
