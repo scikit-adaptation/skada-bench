@@ -6,7 +6,7 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from skada import CORALAdapter, make_da_pipeline
     from benchmark_utils.base_solver import DASolver
-    from sklearn.svm import SVC
+    from xgboost import XGBClassifier
 
 
 # The benchmark solvers must be named `Solver` and
@@ -28,5 +28,5 @@ class Solver(DASolver):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             CORALAdapter(),
-            SVC(kernel="rbf", probability=True),
+            XGBClassifier()
         )

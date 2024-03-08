@@ -7,8 +7,8 @@ with safe_import_context() as import_ctx:
     from skada import make_da_pipeline
     from skada.base import SelectSource
     from benchmark_utils.base_solver import DASolver
-    from sklearn.svm import SVC
     from sklearn.decomposition import PCA
+    from xgboost import XGBClassifier
 
 
 # The benchmark solvers must be named `Solver` and
@@ -30,5 +30,5 @@ class Solver(DASolver):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             SelectSource(PCA()),
-            SelectSource(SVC(kernel='linear', probability=True)),
+            SelectSource(XGBClassifier()),
         )
