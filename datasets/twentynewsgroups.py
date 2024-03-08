@@ -29,7 +29,12 @@ class Dataset(BaseDataset):
 
     parameters = {
         "source_target": [
-            ("rec", "talk"), ("rec", "sci"), ("talk", "sci"),
+            ("rec", "talk"),
+            ("rec", "sci"),
+            ("talk", "sci"),
+            ("talk", "rec"),
+            ("sci", "rec"),
+            ("sci", "talk"),
         ],
         "max_features": [5000]
     }
@@ -53,56 +58,29 @@ class Dataset(BaseDataset):
         source = self.source_target[0]
         target = self.source_target[1]
 
-        if source == "rec" and target == "talk":
-            source_rec = ['rec.autos', 'rec.motorcycles']
-            target_rec = ['rec.sport.baseball', 'rec.sport.hockey']
-            source_talk = ['talk.politics.guns', 'talk.politics.misc']
-            target_talk = ['talk.religion.misc', 'talk.politics.mideast']
-            source_index = np.isin(
-                data.target,
-                [data.target_names.index(s) for s in source_rec+source_talk]
-            )
-            target_index = np.isin(
-                data.target,
-                [data.target_names.index(s) for s in target_rec+target_talk]
-            )
-            positive_index = [
-                data.target_names.index(s) for s in target_rec+source_rec
-            ]
+        source_dict = {
+            "rec": ['rec.autos', 'rec.motorcycles'],
+            "talk": ['talk.politics.guns', 'talk.politics.misc'],
+            "sci": ['sci.crypt', 'sci.electronics']
+        }
 
-        if source == "rec" and target == "sci":
-            source_rec = ['rec.autos', 'rec.motorcycles']
-            target_rec = ['rec.sport.baseball', 'rec.sport.hockey']
-            source_sci = ['sci.crypt', 'sci.electronics']
-            target_sci = ['sci.med', 'sci.space']
-            source_index = np.isin(
-                data.target,
-                [data.target_names.index(s) for s in source_sci+source_rec]
-            )
-            target_index = np.isin(
-                data.target,
-                [data.target_names.index(s) for s in target_sci+target_rec]
-            )
-            positive_index = [
-                data.target_names.index(s) for s in target_rec+source_rec
-            ]
+        target_dict = {
+            "rec": ['rec.sport.baseball', 'rec.sport.hockey'],
+            "talk": ['talk.religion.misc', 'talk.politics.mideast'],
+            "sci": ['sci.med', 'sci.space']
+        }
 
-        if source == "talk" and target == "sci":
-            source_sci = ['sci.crypt', 'sci.electronics']
-            target_sci = ['sci.med', 'sci.space']
-            source_talk = ['talk.politics.misc', 'talk.religion.misc']
-            target_talk = ['talk.politics.guns', 'talk.politics.mideast']
-            source_index = np.isin(
+        source_index = np.isin(
                 data.target,
-                [data.target_names.index(s) for s in source_sci+source_talk]
-            )
-            target_index = np.isin(
+                [data.target_names.index(s) for s in source_dict[source]+source_dict[target]]
+        )
+        target_index = np.isin(
                 data.target,
-                [data.target_names.index(s) for s in target_sci+target_talk]
-            )
-            positive_index = [
-                data.target_names.index(s) for s in target_sci+source_sci
-            ]
+                [data.target_names.index(s) for s in target_dict[source]+target_dict[target]]
+        )
+        positive_index = [
+            data.target_names.index(s) for s in target_dict[source]+source_dict[source]
+        ]
 
         X_source = X[source_index].toarray()
         X_target = X[target_index].toarray()

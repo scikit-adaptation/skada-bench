@@ -7,7 +7,7 @@ from benchopt import BaseDataset, safe_import_context
 with safe_import_context() as import_ctx:
     import numpy as np
     import torchvision
-    from torchvision.datasets import MNIST, SVHN
+    from torchvision.datasets import MNIST, SVHN, USPS
 
     from skada.utils import source_target_merge
 
@@ -23,7 +23,12 @@ class Dataset(BaseDataset):
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
         'n_samples_source, n_samples_target': [(1000, 1000)],
-        'source_target': [('MNIST', 'SVHN')],
+        'source_target': [('MNIST', 'SVHN'),
+                          ('MNIST', 'USPS'),
+                          ('SVHN', 'USPS'),
+                          ('SVHN', 'MNIST'),
+                          ('USPS', 'MNIST'),
+                          ('USPS', 'SVHN')],
         'random_state': [27],
     }
 
@@ -38,7 +43,7 @@ class Dataset(BaseDataset):
                 torchvision.transforms.Normalize((0.1307,), (0.3081,))
             ])
             dataset = MNIST(
-                root='./MNIST', download=True, train=True, transform=transform
+                root='./data/MNIST', download=True, train=True, transform=transform
             )
         elif dataset_name == 'svhn':
             transform = torchvision.transforms.Compose([
@@ -47,7 +52,19 @@ class Dataset(BaseDataset):
                 torchvision.transforms.Normalize((0.1307,), (0.3081,))
             ])
             dataset = SVHN(
-                root='./SVHN',
+                root='./data/SVHN',
+                download=True,
+                split='train',
+                transform=transform
+            )
+        elif dataset_name == 'usps':
+            transform = torchvision.transforms.Compose([
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Grayscale(),
+                torchvision.transforms.Normalize((0.1307,), (0.3081,))
+            ])
+            dataset = SVHN(
+                root='./data/USPS',
                 download=True,
                 split='train',
                 transform=transform
