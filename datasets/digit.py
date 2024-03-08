@@ -43,7 +43,7 @@ class Dataset(BaseDataset):
                 torchvision.transforms.Normalize((0.1307,), (0.3081,))
             ])
             dataset = MNIST(
-                root='./MNIST', download=True, train=True, transform=transform
+                root='./data/MNIST', download=True, train=True, transform=transform
             )
         elif dataset_name == 'svhn':
             transform = torchvision.transforms.Compose([
@@ -52,7 +52,7 @@ class Dataset(BaseDataset):
                 torchvision.transforms.Normalize((0.1307,), (0.3081,))
             ])
             dataset = SVHN(
-                root='./SVHN',
+                root='./data/SVHN',
                 download=True,
                 split='train',
                 transform=transform
@@ -64,7 +64,7 @@ class Dataset(BaseDataset):
                 torchvision.transforms.Normalize((0.1307,), (0.3081,))
             ])
             dataset = SVHN(
-                root='./USPS',
+                root='./data/USPS',
                 download=True,
                 split='train',
                 transform=transform
@@ -92,7 +92,6 @@ class Dataset(BaseDataset):
         # API to pass data. It is customizable for each benchmark.
 
         # Generate pseudorandom data using `numpy`.
-        print(self.source_target)
         source, target = self.source_target
         X_source, y_source = self._get_dataset(source, self.n_samples_source)
         X_target, y_target = self._get_dataset(target, self.n_samples_target)

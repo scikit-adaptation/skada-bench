@@ -50,9 +50,9 @@ class Objective(BaseObjective):
         self.X, self.y, self.sample_domain = X, y, sample_domain
 
         # check y is discrete or continuous
-        self.discrete_ = _find_y_type(self.y) == Y_Type.DISCRETE
+        self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
 
-        if self.discrete_:
+        if self.is_discrete:
             self.cv = StratifiedDomainShuffleSplit(
                 n_splits=5,
                 test_size = 0.2
@@ -155,7 +155,7 @@ class Objective(BaseObjective):
         
         y_train[~id_train_source] = (
             _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL
-            if self.discrete_ else
+            if self.is_discrete else
             _DEFAULT_MASKED_TARGET_REGRESSION_LABEL
         )
 

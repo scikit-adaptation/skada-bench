@@ -13,14 +13,15 @@ class Dataset(BaseDataset):
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
         'n_samples_source, n_samples_target': [(100, 100)],
-        'shift, label' : [('covariate_shift', 'binary'),
-                          ('target_shift', 'binary'),
-                          ('target_shift', 'multiclass'),
-                          ('concept_drift', 'binary'),
-                          ('concept_drift', 'multiclass'),
-                          ('subspace', 'binary'),
-                          ('subspace', 'multiclass')
-                          ],
+        'shift, label' : [
+            ('covariate_shift', 'binary'),
+            ('target_shift', 'binary'),
+            ('target_shift', 'multiclass'),
+            ('concept_drift', 'binary'),
+            ('concept_drift', 'multiclass'),
+            ('subspace', 'binary'),
+            ('subspace', 'multiclass')
+        ],
         'random_state': list(range(5))
     }
 

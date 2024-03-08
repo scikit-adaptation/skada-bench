@@ -34,10 +34,10 @@ class DASolver(BaseSolver):
         self.base_estimator = self.get_estimator()
 
         # check y is discrete or continuous
-        self.discrete_ = _find_y_type(self.y) == Y_Type.DISCRETE
+        self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
 
         # CV fot the gridsearch
-        if self.discrete_:
+        if self.is_discrete:
             self.gs_cv = StratifiedDomainShuffleSplit(
                 n_splits=5,
                 test_size = 0.2
