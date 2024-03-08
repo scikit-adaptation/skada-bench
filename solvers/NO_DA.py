@@ -9,6 +9,7 @@ with safe_import_context() as import_ctx:
     from sklearn.linear_model import LogisticRegression
     from skada.base import SelectSource
     from sklearn.pipeline import Pipeline
+    from xgboost import XGBClassifier
 
 
 # The benchmark solvers must be named `Solver` and
@@ -25,6 +26,7 @@ class Solver(DASolver):
         'classifier': [
             SelectSource(LogisticRegression()),
             SelectSource(SVC(kernel='linear', probability=True)),
+            SelectSource(XGBClassifier())
         ]
     }
 
