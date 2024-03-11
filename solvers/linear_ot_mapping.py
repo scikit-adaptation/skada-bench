@@ -4,10 +4,8 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    from skada import make_da_pipeline
-    from skada.base import SelectSource
+    from skada import LinearOTMappingAdapter, make_da_pipeline
     from benchmark_utils.base_solver import DASolver
-    from sklearn.decomposition import PCA
     from xgboost import XGBClassifier
 
 
@@ -16,18 +14,19 @@ with safe_import_context() as import_ctx:
 class Solver(DASolver):
 
     # Name to select the solver in the CLI and to display the results.
-    name = 'PCA'
+    name = 'linear_ot_mapping'
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'pca__n_components': [20, 40, 60, 80]
+        'linearotmappingadapter__reg': [1e-08, 1e-06],
+        'linearotmappingadapter__bias': [True, False]
     }
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
-            SelectSource(PCA()),
-            SelectSource(XGBClassifier()),
+            LinearOTMappingAdapter(),
+            XGBClassifier()
         )
