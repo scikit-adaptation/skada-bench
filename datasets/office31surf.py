@@ -1,6 +1,8 @@
 from benchopt import BaseDataset, safe_import_context
 with safe_import_context() as import_ctx:
     import scipy
+    import numpy as np
+    from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
 
 
@@ -50,10 +52,29 @@ class Dataset(BaseDataset):
         source = self.source_target[0]
         target = self.source_target[1]
 
-        X_source = mat_dict[source]['fts']
-        X_target = mat_dict[target]['fts']
-        y_source = mat_dict[source]['labels'].flatten()
-        y_target = mat_dict[target]['labels'].flatten()
+        # Convert to float32 instead of int8
+        X_source = np.array(
+            mat_dict[source]['fts'],
+            dtype=np.float32
+        )
+        X_target = np.array(
+            mat_dict[target]['fts'],
+            dtype=np.float32
+        )
+        y_source = np.array(
+            mat_dict[source]['labels'].flatten(),
+            dtype=np.float32
+        )
+        y_target = np.array(
+            mat_dict[target]['labels'].flatten(),
+            dtype=np.float32
+        )
+
+        # XGBoost only supports labels in [0, num_classes-1]
+        le = LabelEncoder()
+        le.fit(np.concatenate([y_source, y_target]))
+        y_source = le.transform(y_source)
+        y_target = le.transform(y_target)
 
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target)
