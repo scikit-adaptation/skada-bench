@@ -32,7 +32,7 @@ class DASolver(BaseSolver):
         #'importance_weighted': ImportanceWeightedScorer(),
         'soft_neighborhood_density': SoftNeighborhoodDensity(),
         #'deep_embedded_validation': DeepEmbeddedValidation(),
-        #'circular_validation': CircularValidation()
+        'circular_validation': CircularValidation()
     }
 
     @abstractmethod
@@ -74,12 +74,11 @@ class DASolver(BaseSolver):
             id_train_source = extract_source_indices(
                 self.sample_domain
             )
-
             self.clf.fit(
-                self.X[~id_train_source],
-                self.unmasked_y_train[~id_train_source],
-                sample_domain=self.sample_domain[~id_train_source],
-                target_labels=self.unmasked_y_train[~id_train_source],
+                self.X,
+                self.unmasked_y_train,
+                sample_domain=self.sample_domain,
+                target_labels=self.unmasked_y_train,
             )
         else:
             # target_labels here is for the supervised_scorer
@@ -99,6 +98,7 @@ class DASolver(BaseSolver):
             best_params = self.clf.cv_results_['params'][best_index]
             refit_estimator = clone(self.base_estimator)
             refit_estimator.set_params(**best_params)
+
             if self.name == 'NO_DA_TARGET_ONLY':
                 refit_estimator.fit(
                     self.X[~id_train_source],
