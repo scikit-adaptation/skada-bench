@@ -32,4 +32,6 @@ class Solver(DASolver):
         return make_da_pipeline(
             EntropicOTMappingAdapter(),
             XGBClassifier()
+            .set_fit_request(sample_weight=True)
+            .set_score_request(sample_weight=True),
         )
