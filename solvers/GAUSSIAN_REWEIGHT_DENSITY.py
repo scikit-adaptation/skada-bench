@@ -27,5 +27,7 @@ class Solver(DASolver):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             GaussianReweightDensityAdapter(),
-            XGBClassifier().set_fit_request(sample_weight=True),
+            XGBClassifier()
+            .set_fit_request(sample_weight=True)
+            .set_score_request(sample_weight=True),
         )
