@@ -101,9 +101,9 @@ class DASolver(BaseSolver):
 
             if self.name == 'NO_DA_TARGET_ONLY':
                 refit_estimator.fit(
-                    self.X[~id_train_source],
-                    self.unmasked_y_train[~id_train_source],
-                    sample_domain=self.sample_domain[~id_train_source]
+                    self.X,
+                    self.unmasked_y_train,
+                    sample_domain=self.sample_domain
                 )
             else:
                 refit_estimator.fit(
