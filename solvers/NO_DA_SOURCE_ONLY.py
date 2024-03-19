@@ -24,9 +24,13 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
         'classifier': [
-            SelectSource(LogisticRegression()),
-            SelectSource(SVC(kernel='linear', probability=True)),
-            SelectSource(XGBClassifier())
+            SelectSource(LogisticRegression()
+                         .set_score_request(sample_weight=True)),
+            SelectSource(SVC(kernel='linear', probability=True)
+                         .set_score_request(sample_weight=True)),
+            SelectSource(XGBClassifier()
+                         .set_score_request(sample_weight=True)
+            )
         ]
     }
 
