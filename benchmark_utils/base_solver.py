@@ -16,7 +16,6 @@ with safe_import_context() as import_ctx:
         DeepEmbeddedValidation,
         CircularValidation,
     )
-    from skada.utils import extract_source_indices
     from skada.model_selection import (
         StratifiedDomainShuffleSplit,
         DomainShuffleSplit
@@ -29,10 +28,10 @@ class DASolver(BaseSolver):
     criterions = {
         'supervised': SupervisedScorer(),
         'prediction_entropy': PredictionEntropyScorer(),
-        #'importance_weighted': ImportanceWeightedScorer(),
-        #'soft_neighborhood_density': SoftNeighborhoodDensity(),
+        'importance_weighted': ImportanceWeightedScorer(),
+        'soft_neighborhood_density': SoftNeighborhoodDensity(),
         'deep_embedded_validation': DeepEmbeddedValidation(),
-        #'circular_validation': CircularValidation()
+        'circular_validation': CircularValidation()
     }
 
     @abstractmethod
