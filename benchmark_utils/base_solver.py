@@ -30,9 +30,9 @@ class DASolver(BaseSolver):
         'supervised': SupervisedScorer(),
         'prediction_entropy': PredictionEntropyScorer(),
         #'importance_weighted': ImportanceWeightedScorer(),
-        'soft_neighborhood_density': SoftNeighborhoodDensity(),
-        #'deep_embedded_validation': DeepEmbeddedValidation(),
-        'circular_validation': CircularValidation()
+        #'soft_neighborhood_density': SoftNeighborhoodDensity(),
+        'deep_embedded_validation': DeepEmbeddedValidation(),
+        #'circular_validation': CircularValidation()
     }
 
     @abstractmethod
@@ -64,16 +64,13 @@ class DASolver(BaseSolver):
 
         self.clf = GridSearchCV(
             self.base_estimator, self.param_grid, refit=False,
-            scoring=self.criterions, cv=self.gs_cv, error_score='raise'
+            scoring=self.criterions, cv=self.gs_cv, error_score=0.0
         )
 
     def run(self, n_iter):
         if self.name == 'NO_DA_TARGET_ONLY':
             # We are in a case of no domain adaptation
             # We dont need to use masked targets
-            id_train_source = extract_source_indices(
-                self.sample_domain
-            )
             self.clf.fit(
                 self.X,
                 self.unmasked_y_train,
