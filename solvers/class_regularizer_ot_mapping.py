@@ -25,7 +25,7 @@ class Solver(DASolver):
         'classregularizerotmappingadapter__norm': ["lpl1", "l1l2"],
         'classregularizerotmappingadapter__metric': ["sqeuclidean"],
         'classregularizerotmappingadapter__max_iter': [10, 100],
-        'classregularizerotmappingadapter__max_inner_iter': [200, 1000],
+        'classregularizerotmappingadapter__max_inner_iter': [100],
         'classregularizerotmappingadapter__tol': [10e-9, 10e-10],
     }
 
