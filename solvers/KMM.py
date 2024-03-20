@@ -20,11 +20,11 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'kmmreweightadapter__gamma': [0.1, 1, 10],
-        'kmmreweightadapter__B': [1000.0, 10000.0],
-        'kmmreweightadapter__tol': [1e-4, 1e-6],
-        'kmmreweightadapter__max_iter': [1000],
-        'kmmreweightadapter__smooth_weights': [True, False],
+        'kmmreweightadapter__gamma': [0.1, 1.0, 10.0],
+        'kmmreweightadapter__B': [1000.0],
+        'kmmreweightadapter__tol': [1e-6],
+        'kmmreweightadapter__max_iter': [100],
+        'kmmreweightadapter__smooth_weights': [False],
     }
 
     def get_estimator(self):

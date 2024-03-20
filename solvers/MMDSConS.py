@@ -21,10 +21,10 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
         'mmdlsconsmappingadapter__gamma': [0.1, 1, 10],
-        'mmdlsconsmappingadapter__reg_k': [1e-10, 1e-8, 1e-6],
-        'mmdlsconsmappingadapter__reg_m': [1e-10, 1e-8, 1e-6],
-        'mmdlsconsmappingadapter__tol': [1e-6, 1e-4],
-        'mmdlsconsmappingadapter__max_iter': [1000],
+        'mmdlsconsmappingadapter__reg_k': [1e-10, 1e-8],
+        'mmdlsconsmappingadapter__reg_m': [1e-10, 1e-8],
+        'mmdlsconsmappingadapter__tol': [1e-5],
+        'mmdlsconsmappingadapter__max_iter': [100],
     }
 
     def get_estimator(self):
