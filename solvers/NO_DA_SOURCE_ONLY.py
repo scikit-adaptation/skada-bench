@@ -17,25 +17,29 @@ with safe_import_context() as import_ctx:
 class Solver(DASolver):
 
     # Name to select the solver in the CLI and to display the results.
-    name = 'NO_DA_SOURCE_ONLY'
+    name = "NO_DA_SOURCE_ONLY"
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'classifier': [
-            SelectSource(LogisticRegression()
-                         .set_score_request(sample_weight=True)),
-            SelectSource(SVC(kernel='linear', probability=True)
-                         .set_score_request(sample_weight=True)),
-            SelectSource(XGBClassifier()
-                         .set_score_request(sample_weight=True)
-            )
-        ]
+    param_grid_dict = {
+        "simulated": {
+            "classifier": [
+                SelectSource(
+                    LogisticRegression().set_score_request(sample_weight=True)
+                ),
+                SelectSource(
+                    SVC(kernel="linear", probability=True).set_score_request(
+                        sample_weight=True
+                    )
+                ),
+                SelectSource(
+                    XGBClassifier().set_score_request(sample_weight=True)
+                ),
+            ]
+        }
     }
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
-        return Pipeline([
-            ('classifier', None)
-        ])
+        return Pipeline([("classifier", None)])

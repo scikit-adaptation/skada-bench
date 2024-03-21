@@ -52,11 +52,12 @@ class Objective(BaseObjective):
         'roc_auc_score': roc_auc_score,
     }
 
-    def set_data(self, X, y, sample_domain):
+    def set_data(self, X, y, sample_domain, dataset_name):
         # The keyword arguments of this function are the keys of the dictionary
         # returned by `Dataset.get_data`. This defines the benchmark's
         # API to pass data. This is customizable for each benchmark.
         self.X, self.y, self.sample_domain = X, y, sample_domain
+        self.dataset_name = dataset_name
 
         # check y is discrete or continuous
         self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
@@ -215,5 +216,6 @@ class Objective(BaseObjective):
         return dict(X=X,
                     y=y,
                     sample_domain=sample_domain,
+                    dataset_name=self.dataset_name,
                     unmasked_y_train=unmasked_y_train
                     )

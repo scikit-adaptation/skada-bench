@@ -9,7 +9,6 @@ with safe_import_context() as import_ctx:
     from sklearn.linear_model import LogisticRegression
     from skada.base import SelectTarget
     from skada import make_da_pipeline
-    from sklearn.pipeline import Pipeline
     from xgboost import XGBClassifier
 
 
@@ -18,25 +17,31 @@ with safe_import_context() as import_ctx:
 class Solver(DASolver):
 
     # Name to select the solver in the CLI and to display the results.
-    name = 'NO_DA_TARGET_ONLY'
+    name = "NO_DA_TARGET_ONLY"
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'classifier': [
-            SelectTarget(LogisticRegression()
-                         .set_score_request(sample_weight=True)),
-            SelectTarget(SVC(kernel='linear', probability=True)
-                         .set_score_request(sample_weight=True)),
-            SelectTarget(XGBClassifier()
-                         .set_score_request(sample_weight=True)
-            )
-        ]
+    param_grid_dict = {
+        "simulated": {
+            "classifier": [
+                SelectTarget(
+                    LogisticRegression().set_score_request(sample_weight=True)
+                ),
+                SelectTarget(
+                    SVC(kernel="linear", probability=True).set_score_request(
+                        sample_weight=True
+                    )
+                ),
+                SelectTarget(
+                    XGBClassifier().set_score_request(sample_weight=True)
+                ),
+            ]
+        }
     }
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
-            ('classifier', SelectTarget(LogisticRegression())),
+            ("classifier", SelectTarget(LogisticRegression())),
         )

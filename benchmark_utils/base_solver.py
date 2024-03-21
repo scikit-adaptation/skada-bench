@@ -22,6 +22,7 @@ with safe_import_context() as import_ctx:
     )
     from skada._utils import Y_Type, _find_y_type
 
+
 class DASolver(BaseSolver):
     strategy = "run_once"
 
@@ -39,8 +40,11 @@ class DASolver(BaseSolver):
         """Return an estimator compatible with the `sklearn.GridSearchCV`."""
         pass
 
-    def set_objective(self, X, y, sample_domain, unmasked_y_train):
+    def set_objective(
+        self, X, y, sample_domain, dataset_name, unmasked_y_train
+    ):
         self.X, self.y, self.sample_domain = X, y, sample_domain
+        self.dataset_name = dataset_name
         self.unmasked_y_train = unmasked_y_train
 
         self.base_estimator = self.get_estimator()
@@ -62,8 +66,9 @@ class DASolver(BaseSolver):
             )
 
         self.clf = GridSearchCV(
-            self.base_estimator, self.param_grid, refit=False,
-            scoring=self.criterions, cv=self.gs_cv, error_score=0.0
+            self.base_estimator, self.param_grid_dict[self.dataset_name],
+            refit=False, scoring=self.criterions, cv=self.gs_cv,
+            error_score=0.0
         )
 
     def run(self, n_iter):

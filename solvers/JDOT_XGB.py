@@ -19,11 +19,12 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'jdotclassifier__alpha': [0.5, 0.7, 0.9],
-        'jdotclassifier__n_iter_max': [100, 200, 300],
-        'jdotclassifier__tol': [1e-5, 1e-6],
-        'jdotclassifier__thr_weights': [1e-6, 1e-7],
+    param_grid_dict = {'simulated': {
+            'jdotclassifier__alpha': [0.5, 0.7, 0.9],
+            'jdotclassifier__n_iter_max': [100, 200, 300],
+            'jdotclassifier__tol': [1e-5, 1e-6],
+            'jdotclassifier__thr_weights': [1e-6, 1e-7],
+        }
     }
 
     def get_estimator(self):

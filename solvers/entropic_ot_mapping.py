@@ -19,12 +19,13 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'entropicotmappingadapter__reg_e': [1, 10],
-        'entropicotmappingadapter__metric': ['sqeuclidean'],
-        'entropicotmappingadapter__norm': [None, 'median', 'max'],
-        'entropicotmappingadapter__max_iter': [1000],
-        'entropicotmappingadapter__tol': [10e-9]
+    param_grid_dict = {'simulated': {
+            'entropicotmappingadapter__reg_e': [1, 10],
+            'entropicotmappingadapter__metric': ['sqeuclidean'],
+            'entropicotmappingadapter__norm': [None, 'median', 'max'],
+            'entropicotmappingadapter__max_iter': [1000],
+            'entropicotmappingadapter__tol': [10e-9]
+        }
     }
 
     def get_estimator(self):

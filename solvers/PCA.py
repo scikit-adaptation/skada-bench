@@ -21,8 +21,9 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'pca__n_components': [2]
+    param_grid_dict = {'simulated': {
+            'pca__n_components': [1]
+        }
     }
     # Raise an error if n_components > min(n_samples, n_features)
     # and doesnt save the result in the benchmark results
@@ -31,8 +32,9 @@ class Solver(DASolver):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             SelectSource(PCA()),
-            SelectSource(XGBClassifier()
-                         .set_fit_request(sample_weight=True)
-                         .set_score_request(sample_weight=True)
+            SelectSource(
+                XGBClassifier()
+                .set_fit_request(sample_weight=True)
+                .set_score_request(sample_weight=True)
             ),
         )

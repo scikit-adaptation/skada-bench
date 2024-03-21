@@ -19,12 +19,13 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'kmmreweightadapter__gamma': [0.1, 1.0, 10.0],
-        'kmmreweightadapter__B': [1000.0],
-        'kmmreweightadapter__tol': [1e-6],
-        'kmmreweightadapter__max_iter': [100],
-        'kmmreweightadapter__smooth_weights': [False],
+    param_grid_dict = {'simulated': {
+            'kmmreweightadapter__gamma': [0.1, 1.0, 10.0],
+            'kmmreweightadapter__B': [1000.0],
+            'kmmreweightadapter__tol': [1e-6],
+            'kmmreweightadapter__max_iter': [100],
+            'kmmreweightadapter__smooth_weights': [False],
+        }
     }
 
     def get_estimator(self):

@@ -44,4 +44,5 @@ class Dataset(BaseDataset):
             X=X,
             y=y,
             sample_domain=sample_domain,
+            dataset_name="simulated",
         )

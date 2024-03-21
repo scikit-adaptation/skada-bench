@@ -19,10 +19,11 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'transfercomponentanalysisadapter__kernel': ['rbf'],
-        'transfercomponentanalysisadapter__n_components': [2, 3],
-        'transfercomponentanalysisadapter__mu': [0.01, 0.1]
+    param_grid_dict = {'simulated': {
+            'transfercomponentanalysisadapter__kernel': ['rbf'],
+            'transfercomponentanalysisadapter__n_components': [1],
+            'transfercomponentanalysisadapter__mu': [0.1, 0.5, 1, 5]
+        }
     }
 
     def get_estimator(self):

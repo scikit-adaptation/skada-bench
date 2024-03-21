@@ -19,10 +19,11 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'otmappingadapter__metric': ['sqeuclidean'],
-        'otmappingadapter__norm': [None, 'median', 'max'],
-        'otmappingadapter__max_iter': [100_000]
+    param_grid_dict = {'simulated': {
+            'otmappingadapter__metric': ['sqeuclidean'],
+            'otmappingadapter__norm': [None, 'median', 'max'],
+            'otmappingadapter__max_iter': [100_000]
+        }
     }
 
     def get_estimator(self):

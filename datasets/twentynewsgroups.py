@@ -103,5 +103,6 @@ class Dataset(BaseDataset):
         return dict(
             X=X,
             y=y,
-            sample_domain=sample_domain
+            sample_domain=sample_domain,
+            dataset_name="twentynewsgroups",
         )

@@ -19,12 +19,13 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'mmdlsconsmappingadapter__gamma': [0.1, 1, 10],
-        'mmdlsconsmappingadapter__reg_k': [1e-10, 1e-8],
-        'mmdlsconsmappingadapter__reg_m': [1e-10, 1e-8],
-        'mmdlsconsmappingadapter__tol': [1e-5],
-        'mmdlsconsmappingadapter__max_iter': [100],
+    param_grid_dict = {'simulated': {
+            'mmdlsconsmappingadapter__gamma': [0.1, 1, 10],
+            'mmdlsconsmappingadapter__reg_k': [1e-10, 1e-8],
+            'mmdlsconsmappingadapter__reg_m': [1e-10, 1e-8],
+            'mmdlsconsmappingadapter__tol': [1e-5],
+            'mmdlsconsmappingadapter__max_iter': [100],
+        }
     }
 
     def get_estimator(self):

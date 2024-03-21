@@ -19,9 +19,10 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'linearotmappingadapter__reg': [1e-08, 1e-06],
-        'linearotmappingadapter__bias': [True, False]
+    param_grid_dict = {'simulated': {
+            'linearotmappingadapter__reg': [1e-08, 1e-06],
+            'linearotmappingadapter__bias': [True, False]
+        }
     }
 
     def get_estimator(self):
