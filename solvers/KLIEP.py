@@ -20,7 +20,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'kliepreweightadapter__gamma': [0.1, 1, 10],
+        'kliepreweightadapter__gamma': [0.1, 1, 10, 'auto', 'scale'],
         'kliepreweightadapter__cv': [3, 5],
         'kliepreweightadapter__n_centers': [5, 10, 20],
         'kliepreweightadapter__tol': [1e-3, 1e-4],

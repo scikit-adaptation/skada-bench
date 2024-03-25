@@ -94,18 +94,21 @@ class DASolver(BaseSolver):
             best_params = self.clf.cv_results_['params'][best_index]
             refit_estimator = clone(self.base_estimator)
             refit_estimator.set_params(**best_params)
-
-            if self.name == 'NO_DA_TARGET_ONLY':
-                refit_estimator.fit(
-                    self.X,
-                    self.unmasked_y_train,
-                    sample_domain=self.sample_domain
-                )
-            else:
-                refit_estimator.fit(
-                    self.X, self.y, sample_domain=self.sample_domain
-                )
-            self.dict_estimators_[criterion] = refit_estimator
+            
+            try:
+                if self.name == 'NO_DA_TARGET_ONLY':
+                    refit_estimator.fit(
+                        self.X,
+                        self.unmasked_y_train,
+                        sample_domain=self.sample_domain
+                    )
+                else:
+                    refit_estimator.fit(
+                        self.X, self.y, sample_domain=self.sample_domain
+                    )
+                self.dict_estimators_[criterion] = refit_estimator
+            except Exception as e:
+                print(f"Error while fitting estimator: {e}")
 
     def get_result(self):
         return dict(
