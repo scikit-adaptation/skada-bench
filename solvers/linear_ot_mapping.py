@@ -20,7 +20,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'linearotmappingadapter__reg': [1e-08, 1e-06],
+        'linearotmappingadapter__reg': [1e-08, 1e-06, 0.1, 1, 10],
         'linearotmappingadapter__bias': [True, False]
     }
 
