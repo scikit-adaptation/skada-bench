@@ -4,6 +4,7 @@ with safe_import_context() as import_ctx:
     import numpy as np
     from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
+from sklearn.decomposition import PCA
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
@@ -78,6 +79,11 @@ class Dataset(BaseDataset):
 
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target)
+        
+        # PCA explained variance: 0.9532482624053955
+        # From 800 reduced to 420
+        pca = PCA(n_components=420)
+        X = pca.fit_transform(X)
 
         return dict(
             X=X,
