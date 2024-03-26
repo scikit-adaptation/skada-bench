@@ -63,7 +63,7 @@ class DASolver(BaseSolver):
 
         self.clf = GridSearchCV(
             self.base_estimator, self.param_grid, refit=False,
-            scoring=self.criterions, cv=self.gs_cv, error_score=0.0
+            scoring=self.criterions, cv=self.gs_cv, error_score=-np.inf
         )
 
     def run(self, n_iter):
