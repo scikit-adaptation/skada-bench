@@ -21,7 +21,7 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
         'transfercomponentanalysisadapter__kernel': ['rbf'],
-        'transfercomponentanalysisadapter__n_components': [2, 3],
+        'transfercomponentanalysisadapter__n_components': [1, 2, 3],
         'transfercomponentanalysisadapter__mu': [0.01, 0.1]
     }
 

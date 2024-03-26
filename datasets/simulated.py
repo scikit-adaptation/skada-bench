@@ -35,7 +35,7 @@ class Dataset(BaseDataset):
             n_samples_source=self.n_samples_source,
             n_samples_target=self.n_samples_target,
             shift=self.shift,
-            noise=0.3,
+            noise=0.8,
             label=self.label,
             random_state=self.random_state,
         )
