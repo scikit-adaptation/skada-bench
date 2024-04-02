@@ -215,5 +215,6 @@ class Objective(BaseObjective):
         return dict(X=X,
                     y=y,
                     sample_domain=sample_domain,
-                    unmasked_y_train=unmasked_y_train
+                    unmasked_y_train=unmasked_y_train,
+                    dataset_name = self._dataset.name,
                     )

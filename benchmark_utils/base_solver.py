@@ -39,7 +39,7 @@ class DASolver(BaseSolver):
         """Return an estimator compatible with the `sklearn.GridSearchCV`."""
         pass
 
-    def set_objective(self, X, y, sample_domain, unmasked_y_train):
+    def set_objective(self, X, y, sample_domain, unmasked_y_train, **kwargs):
         self.X, self.y, self.sample_domain = X, y, sample_domain
         self.unmasked_y_train = unmasked_y_train
 
