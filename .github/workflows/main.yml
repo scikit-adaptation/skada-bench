@@ -4,24 +4,28 @@ on:
   push:
     branches:
       - main
-  create:
-    tags:
-      - '**'
   pull_request:
     branches:
       - main
-  schedule:
-    # Run every day at 7:42am UTC.
-    - cron:  '42 7 * * *'
 
 jobs:
   benchopt_dev:
-    uses: benchopt/template_benchmark/.github/workflows/test_benchmarks.yml@main
-    with:
-      benchopt_branch: benchopt@main
-  benchopt_release:
-    uses: benchopt/template_benchmark/.github/workflows/test_benchmarks.yml@main
-    with:
-      benchopt_version: latest
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Run tests
+        uses: benchopt/template_benchmark/.github/workflows/test_benchmarks.yml@main
+        with:
+          benchopt_branch: benchopt@main
   lint:
-    uses: benchopt/template_benchmark/.github/workflows/lint_benchmarks.yml@main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Lint code
+        uses: benchopt/template_benchmark/.github/workflows/lint_benchmarks.yml@main
