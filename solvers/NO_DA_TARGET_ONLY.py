@@ -9,7 +9,6 @@ with safe_import_context() as import_ctx:
     from sklearn.linear_model import LogisticRegression
     from skada.base import SelectTarget
     from skada import make_da_pipeline
-    from sklearn.pipeline import Pipeline
     from xgboost import XGBClassifier
 
 
@@ -30,8 +29,7 @@ class Solver(DASolver):
             SelectTarget(SVC(kernel='linear', probability=True)
                          .set_score_request(sample_weight=True)),
             SelectTarget(XGBClassifier()
-                         .set_score_request(sample_weight=True)
-            )
+                         .set_score_request(sample_weight=True)),
         ]
     }
 

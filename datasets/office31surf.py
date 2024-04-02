@@ -79,7 +79,7 @@ class Dataset(BaseDataset):
 
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target)
-        
+
         # PCA explained variance: 0.9532482624053955
         # From 800 reduced to 420
         pca = PCA(n_components=420)
