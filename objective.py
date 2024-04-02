@@ -39,7 +39,8 @@ class Objective(BaseObjective):
     # List of packages needed to run the benchmark.
     requirements = [
         'pip:scikit-learn',
-        'pip:git+https://github.com/scikit-adaptation/skada.git'
+        'pip:git+https://github.com/scikit-adaptation/skada.git',
+        'pip:POT',
     ]
     # Minimal version of benchopt required to run this benchmark.
     # Bump it up if the benchmark depends on a new feature of benchopt.
@@ -120,7 +121,7 @@ class Objective(BaseObjective):
             y_pred_test_target = estimator.predict(X_test_target)
             y_pred_test_target_proba = estimator.predict_proba(X_test_target)
 
-            for metric_name, metric in self.metrics.items():
+            for metric_name, metric in metrics.items():
                 if metric_name == 'roc_auc_score':
                     if len(
                         np.unique(np.concatenate((self.y_train, self.y_test)))
