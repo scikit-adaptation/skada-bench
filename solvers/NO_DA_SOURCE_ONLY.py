@@ -29,8 +29,7 @@ class Solver(DASolver):
             SelectSource(SVC(kernel='linear', probability=True)
                          .set_score_request(sample_weight=True)),
             SelectSource(XGBClassifier()
-                         .set_score_request(sample_weight=True)
-            )
+                         .set_score_request(sample_weight=True)),
         ]
     }
 

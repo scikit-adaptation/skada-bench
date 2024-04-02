@@ -22,6 +22,7 @@ with safe_import_context() as import_ctx:
     )
     from skada._utils import Y_Type, _find_y_type
 
+
 class DASolver(BaseSolver):
     strategy = "run_once"
 
@@ -94,7 +95,7 @@ class DASolver(BaseSolver):
             best_params = self.clf.cv_results_['params'][best_index]
             refit_estimator = clone(self.base_estimator)
             refit_estimator.set_params(**best_params)
-            
+
             try:
                 if self.name == 'NO_DA_TARGET_ONLY':
                     refit_estimator.fit(

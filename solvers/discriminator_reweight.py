@@ -29,4 +29,3 @@ class Solver(DASolver):
             .set_fit_request(sample_weight=True)
             .set_score_request(sample_weight=True),
         )
-
