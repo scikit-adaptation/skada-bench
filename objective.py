@@ -181,6 +181,13 @@ class Objective(BaseObjective):
     def get_one_result(self):
         # Return one solution. The return value should be an object compatible
         # with `self.evaluate_result`. This is mainly for testing purposes.
+        self.X_train = np.ones((10, 2))
+        self.y_train = np.ones(10)
+        self.sample_domain_train = np.concatenate((np.ones(5), np.zeros(5)))
+
+        self.X_test = np.ones((10, 2))
+        self.y_test = np.ones(10)
+        self.sample_domain_test = np.concatenate((np.ones(5), np.zeros(5)))
         return dict(cv_results={}, dict_estimators={})
 
     def split(self, cv_fold, X, y, sample_domain):
