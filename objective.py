@@ -39,6 +39,7 @@ class Objective(BaseObjective):
     # List of packages needed to run the benchmark.
     requirements = [
         'pip:scikit-learn',
+        'pip:torch',
         'pip:git+https://github.com/scikit-adaptation/skada.git',
         'pip:POT',
         'pip:xgboost'
