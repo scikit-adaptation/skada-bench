@@ -16,8 +16,11 @@ class Solver(DASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'entropic_ot_mapping'
 
-    requirements = ["pip:POT",
-                    "pip:xgboost"]
+    requirements = [
+        'pip:git+https://github.com/scikit-adaptation/skada.git',
+        "pip:xgboost",
+        "pip:POT",
+    ]
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.

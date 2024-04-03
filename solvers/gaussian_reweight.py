@@ -16,7 +16,10 @@ class Solver(DASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'gaussian_reweight'
 
-    requirements = ["pip:xgboost"]
+    requirements = [
+        'pip:git+https://github.com/scikit-adaptation/skada.git',
+        "pip:xgboost",
+    ]
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
