@@ -180,7 +180,7 @@ class Objective(BaseObjective):
     def get_one_result(self):
         # Return one solution. The return value should be an object compatible
         # with `self.evaluate_result`. This is mainly for testing purposes.
-        return dict(beta=np.zeros(self.X.shape[1]))
+        return dict(cv_results={}, dict_estimators={})
 
     def split(self, cv_fold, X, y, sample_domain):
         id_train, id_test = cv_fold

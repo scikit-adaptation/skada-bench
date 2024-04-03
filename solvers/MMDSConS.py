@@ -19,6 +19,7 @@ class Solver(DASolver):
     requirements = [
         'pip:git+https://github.com/scikit-adaptation/skada.git',
         "pip:xgboost",
+        "pip:torch"
     ]
 
     # List of parameters for the solver. The benchmark will consider
