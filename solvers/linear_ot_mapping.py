@@ -17,7 +17,6 @@ class Solver(DASolver):
     name = 'linear_ot_mapping'
 
     requirements = [
-        'pip:git+https://github.com/scikit-adaptation/skada.git',
         "pip:xgboost",
         "pip:POT",
     ]

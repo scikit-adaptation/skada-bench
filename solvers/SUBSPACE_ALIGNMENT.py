@@ -17,7 +17,6 @@ class Solver(DASolver):
     name = 'subspace_alignment'
 
     requirements = [
-        'pip:git+https://github.com/scikit-adaptation/skada.git',
         "pip:xgboost",
     ]
 

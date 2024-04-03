@@ -17,7 +17,6 @@ class Solver(DASolver):
     name = 'KLIEP'
 
     requirements = [
-        'pip:git+https://github.com/scikit-adaptation/skada.git',
         "pip:xgboost",
     ]
 

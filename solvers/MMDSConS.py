@@ -17,7 +17,6 @@ class Solver(DASolver):
     name = 'MMDSConS'
 
     requirements = [
-        'pip:git+https://github.com/scikit-adaptation/skada.git',
         "pip:xgboost",
         "pip:torch"
     ]

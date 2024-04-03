@@ -20,7 +20,6 @@ class Solver(DASolver):
     name = 'NO_DA_TARGET_ONLY'
 
     requirements = [
-        'pip:git+https://github.com/scikit-adaptation/skada.git',
         "pip:xgboost",
     ]
 
