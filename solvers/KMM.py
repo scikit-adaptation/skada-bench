@@ -16,6 +16,10 @@ class Solver(DASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'KMM'
 
+    requirements = [
+        "pip:xgboost",
+    ]
+
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.

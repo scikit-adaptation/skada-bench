@@ -38,4 +38,5 @@ class Solver(DASolver):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             DASVMClassifier()
+            .set_score_request(sample_weight=True)
         )
