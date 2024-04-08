@@ -8,8 +8,8 @@ with safe_import_context() as import_ctx:
     from sklearn.svm import SVC
     from sklearn.linear_model import LogisticRegression
     from skada.base import SelectSource
-    from sklearn.pipeline import Pipeline
     from xgboost import XGBClassifier
+    from skada import make_da_pipeline
 
 
 # The benchmark solvers must be named `Solver` and
@@ -39,6 +39,7 @@ class Solver(DASolver):
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
-        return Pipeline([
-            ('classifier', None)
-        ])
+        return make_da_pipeline(
+            ('classifier', SelectSource(LogisticRegression())),
+        )
+
