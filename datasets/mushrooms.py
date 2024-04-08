@@ -28,6 +28,8 @@ class Dataset(BaseDataset):
     ]
 
     parameters = {
+        'source_target': [('enlarging', 'tapering'),
+                          ('tapering', 'enlarging')],
     }
 
     def get_data(self):
@@ -51,9 +53,17 @@ class Dataset(BaseDataset):
         X = data.drop(["target"], axis=1)
         y = data["target"]
 
-        X_source = X.loc[X["stalk-shape"] == "t"]
+        domain_dict = {
+            'enlarging': 'e',
+            'tapering': 't',
+        }
+
+        source = self.source_target[0]
+        target = self.source_target[1]
+
+        X_source = X.loc[X["stalk-shape"] == domain_dict[source]]
         y_source = y.loc[X_source.index].values
-        X_target = X.loc[X["stalk-shape"] == "e"]
+        X_target = X.loc[X["stalk-shape"] == domain_dict[target]]
         y_target = y.loc[X_target.index].values
 
         ohe = OneHotEncoder(sparse_output=False).fit(X)

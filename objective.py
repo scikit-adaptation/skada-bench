@@ -38,19 +38,15 @@ class Objective(BaseObjective):
 
     # List of packages needed to run the benchmark.
     requirements = [
-        'pip:git+https://github.com/scikit-adaptation/skada.git'
+        'pip:scikit-learn',
+        'pip:torch',
+        'pip:git+https://github.com/scikit-adaptation/skada.git',
+        'pip:POT',
+        'pip:xgboost'
     ]
-
     # Minimal version of benchopt required to run this benchmark.
     # Bump it up if the benchmark depends on a new feature of benchopt.
     min_benchopt_version = "1.5"
-
-    metrics = {
-        'accuracy': accuracy_score,
-        'balanced_accuracy': balanced_accuracy_score,
-        'f1_score': f1_score,
-        'roc_auc_score': roc_auc_score,
-    }
 
     def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary
@@ -81,6 +77,13 @@ class Objective(BaseObjective):
 
         # This method can return many metrics in a dictionary. One of these
         # metrics needs to be `value` for convergence detection purposes.
+
+        metrics = {
+            'accuracy': accuracy_score,
+            'balanced_accuracy': balanced_accuracy_score,
+            'f1_score': f1_score,
+            'roc_auc_score': roc_auc_score,
+        }
 
         # Train target-source split
         (X_train_source, X_train_target,
@@ -119,7 +122,7 @@ class Objective(BaseObjective):
             y_pred_test_target = estimator.predict(X_test_target)
             y_pred_test_target_proba = estimator.predict_proba(X_test_target)
 
-            for metric_name, metric in self.metrics.items():
+            for metric_name, metric in metrics.items():
                 if metric_name == 'roc_auc_score':
                     if len(
                         np.unique(np.concatenate((self.y_train, self.y_test)))
@@ -177,7 +180,14 @@ class Objective(BaseObjective):
     def get_one_result(self):
         # Return one solution. The return value should be an object compatible
         # with `self.evaluate_result`. This is mainly for testing purposes.
-        return dict(beta=np.zeros(self.X.shape[1]))
+        self.X_train = np.ones((10, 2))
+        self.y_train = np.ones(10)
+        self.sample_domain_train = np.concatenate((np.ones(5), np.zeros(5)))
+
+        self.X_test = np.ones((10, 2))
+        self.y_test = np.ones(10)
+        self.sample_domain_test = np.concatenate((np.ones(5), np.zeros(5)))
+        return dict(cv_results={}, dict_estimators={})
 
     def split(self, cv_fold, X, y, sample_domain):
         id_train, id_test = cv_fold

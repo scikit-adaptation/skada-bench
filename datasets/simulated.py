@@ -6,7 +6,7 @@ from skada.datasets import make_shifted_datasets
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "Simulated_shifts"
+    name = "Simulated"
 
     # List of parameters to generate the datasets. The benchmark will consider
     # the cross product for each key in the dictionary.
