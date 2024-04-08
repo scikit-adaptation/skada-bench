@@ -42,4 +42,3 @@ class Solver(DASolver):
         return make_da_pipeline(
             ('classifier', SelectSource(LogisticRegression())),
         )
-
