@@ -24,7 +24,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'subspacealignmentadapter__n_components': [2],
+        'subspacealignmentadapter__n_components': [1, 2, 5, 10, 20, 50, 100],
     }
 
     def get_estimator(self):

@@ -26,7 +26,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'pca__n_components': [1, 2]
+        'pca__n_components': [1, 2, 5, 10, 20, 50, 100]
     }
     # Raise an error if n_components > min(n_samples, n_features)
     # and doesnt save the result in the benchmark results
