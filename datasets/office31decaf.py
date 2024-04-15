@@ -3,7 +3,7 @@ with safe_import_context() as import_ctx:
     import numpy as np
     from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
-    from skada.datasets import fetch_office31_decaf_all
+    from skada.datasets import fetch_office31_decaf_all, Office31CategoriesPreset
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
@@ -32,7 +32,10 @@ class Dataset(BaseDataset):
         # API to pass data. It is customizable for each benchmark.
 
         tmp_folder = './data/OFFICE_31_DECAF_DATASET/'
-        dataset = fetch_office31_decaf_all(data_home=tmp_folder)
+        dataset = fetch_office31_decaf_all(
+            categories=Office31CategoriesPreset.CALTECH256,
+            data_home=tmp_folder
+        )
 
         source = self.source_target[0]
         target = self.source_target[1]
@@ -45,7 +48,7 @@ class Dataset(BaseDataset):
         le.fit(np.concatenate([y_source, y_target]))
         y_source = le.transform(y_source)
         y_target = le.transform(y_target)
-
+        import pdb; pdb.set_trace()
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target)
 
