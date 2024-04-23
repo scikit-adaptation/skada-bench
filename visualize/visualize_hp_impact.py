@@ -5,6 +5,32 @@ for each solver.
 The script reads the CSV or Parquet files from the specified directory
 and plots the validation curves for each solver.
 
+Example usage:
+    # For Binary simulted dataset
+    # python visualize_hp_impact.py
+    # --directory ../output_choleski/outputs_binary_simulated
+
+    # For Office31Surf dataset
+    # python visualize_hp_impact.py
+    # --directory ../output_choleski/outputs_office31surf
+
+    # For Digit dataset
+    # python visualize_hp_impact.py
+    # --directory ../output_choleski/outputs_digits
+
+    # For 20news dataset
+    # python visualize_hp_impact.py
+    # --directory ../output_choleski/outputs_20newsgroup
+
+    # For Mushroom dataset
+    # python visualize_hp_impact.py
+    # --directory ../output_choleski/outputs_mushrooms
+
+    # For Office31Decaf dataset
+    # python visualize_hp_impact.py
+    # --directory ../output_choleski/outputs_office31decaf
+
+
 #TODO: Add an argparse to specify the metric to plot
 (right now it's fixed to 'mean_test_supervised')
 """
