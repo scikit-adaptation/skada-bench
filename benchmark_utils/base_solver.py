@@ -35,6 +35,9 @@ class DASolver(BaseSolver):
         'circular_validation': CircularValidation()
     }
 
+    # Random state
+    random_state = 0
+
     @abstractmethod
     def get_estimator(self):
         """Return an estimator compatible with the `sklearn.GridSearchCV`."""
@@ -53,13 +56,15 @@ class DASolver(BaseSolver):
         if self.is_discrete:
             self.gs_cv = StratifiedDomainShuffleSplit(
                 n_splits=5,
-                test_size=0.2
+                test_size=0.2,
+                random_state=self.random_state,
             )
         else:
             # We cant use StratifiedDomainShuffleSplit if y is continuous
             self.gs_cv = DomainShuffleSplit(
                 n_splits=5,
-                test_size=0.2
+                test_size=0.2,
+                random_state=self.random_state,
             )
 
         self.clf = GridSearchCV(
