@@ -89,7 +89,7 @@ ESTIMATOR_DICT = {
     'subspace_alignment': 'SA',
     'transfer_component_analysis': 'TCA',
     'class_regularizer_ot_mapping': 'ClassRegOT',
-    'MMDSConS': 'MMDS',
+    'MMDSConS': 'MMD-LS',
     'TarS': 'MMDTarS',
     'KMM': 'KMM',
     'NO_DA_SOURCE_ONLY': 'Train Src',
