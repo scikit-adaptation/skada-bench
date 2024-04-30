@@ -7,26 +7,21 @@ with safe_import_context() as import_ctx:
     from skada import make_da_pipeline
     from skada.base import SelectSource
     from sklearn.decomposition import PCA
-    from xgboost import XGBClassifier
-    from benchmark_utils.base_solver import DASolver
+    from benchmark_utils.base_solver import DASolver, FinalEstimator
 
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
 class Solver(DASolver):
-
     # Name to select the solver in the CLI and to display the results.
     name = 'PCA'
-
-    requirements = [
-        "pip:xgboost",
-    ]
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'pca__n_components': [1, 2, 5, 10, 20, 50, 100]
+        'pca__n_components': [1, 2, 5, 10, 20, 50, 100],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
     # Raise an error if n_components > min(n_samples, n_features)
     # and doesnt save the result in the benchmark results
@@ -35,8 +30,5 @@ class Solver(DASolver):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             SelectSource(PCA()),
-            SelectSource(XGBClassifier()
-                         .set_fit_request(sample_weight=True)
-                         .set_score_request(sample_weight=True)
-                         ),
-                         )
+            SelectSource(FinalEstimator()),
+        )

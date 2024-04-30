@@ -22,10 +22,38 @@ with safe_import_context() as import_ctx:
     )
     from skada._utils import Y_Type, _find_y_type
 
+    from sklearn.base import BaseEstimator
     from xgboost import XGBClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
-    from sklearn.neural_network import MLPClassifier
+
+
+BASE_ESTIMATOR_DICT = {
+    "LR": LogisticRegression(),
+    "SVC": SVC(probability=True),
+    "XGB": XGBClassifier(),
+}
+
+class FinalEstimator(BaseEstimator):
+    __metadata_request__fit = {"sample_weight": True}
+    __metadata_request__score = {"sample_weight": True}
+
+    def __init__(self, estimator_name="LR"):
+        self.estimator_name = estimator_name
+
+    def fit(self, X, y, sample_weight=None, **fit_params):
+        self.estimator_ = BASE_ESTIMATOR_DICT[self.estimator_name]
+        self.estimator_.fit(X, y, sample_weight=sample_weight, **fit_params)
+        return self
+
+    def predict(self, X, **predict_params):
+        return self.estimator_.predict(X)
+
+    def score(self, X, y, **score_params):
+        return self.estimator_.score(X, y, **score_params)
+
+    def predict_proba(self, X, **predict_params):
+        return self.estimator_.predict_proba(X, **predict_params)
 
 
 class DASolver(BaseSolver):
@@ -44,40 +72,31 @@ class DASolver(BaseSolver):
         'circular_validation': CircularValidation()
     }
 
-    base_estimators_dict = {
-        "LR": LogisticRegression(),
-        "SVC": SVC(),
-        "XGB": XGBClassifier(),
-        "MLP": MLPClassifier(hidden_layer_sizes=(100, 100, 100))
-    }
-
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     parameters = {
-        "base_estimator": ["LR"],
-        "base_estimator_params": [None],
         "param_grid": ["default"]
     }
 
     # Random state
     random_state = 0
-    n_splits = 5
-    test_size = 0.2
+    n_splits_cv = 5
+    test_size_cv = 0.2
 
     @abstractmethod
     def get_estimator(self):
         """Return an estimator compatible with the `sklearn.GridSearchCV`."""
         pass
 
-    def get_base_estimator(self):
-        # The estimator passed should have a 'predict_proba' method.
-        estimator = self.base_estimators_dict[self.base_estimator]
-        if self.base_estimator_params is not None:
-            estimator.set_params(**self.base_estimator_params)
-        estimator.set_fit_request(sample_weight=True)
-        estimator.set_score_request(sample_weight=True)
-        return estimator
+    # def get_base_estimator(self):
+    #     # The estimator passed should have a 'predict_proba' method.
+    #     estimator = self.base_estimators_dict[self.base_estimator]
+    #     if self.base_estimator_params is not None:
+    #         estimator.set_params(**self.base_estimator_params)
+    #     estimator.set_fit_request(sample_weight=True)
+    #     estimator.set_score_request(sample_weight=True)
+    #     return estimator
 
     def set_objective(self, X, y, sample_domain, unmasked_y_train, **kwargs):
         self.X, self.y, self.sample_domain = X, y, sample_domain
@@ -91,15 +110,15 @@ class DASolver(BaseSolver):
         # CV for the gridsearch
         if self.is_discrete:
             self.gs_cv = StratifiedDomainShuffleSplit(
-                n_splits=self.n_splits,
-                test_size=self.test_size,
+                n_splits=self.n_splits_cv,
+                test_size=self.test_size_cv,
                 random_state=self.random_state,
             )
         else:
             # We cant use StratifiedDomainShuffleSplit if y is continuous
             self.gs_cv = DomainShuffleSplit(
-                n_splits=self.n_splits,
-                test_size=self.test_size,
+                n_splits=self.n_splits_cv,
+                test_size=self.test_size_cv,
                 random_state=self.random_state,
             )
 

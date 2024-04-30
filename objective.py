@@ -50,8 +50,8 @@ class Objective(BaseObjective):
 
     # Random state
     random_state = 0
-    n_splits = 5
-    test_size = 0.2
+    n_splits_data = 5
+    test_size_data = 0.2
 
     def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary
@@ -64,15 +64,15 @@ class Objective(BaseObjective):
 
         if self.is_discrete:
             self.cv = StratifiedDomainShuffleSplit(
-                n_splits=self.n_splits,
-                test_size=self.test_size,
+                n_splits=self.n_splits_data,
+                test_size=self.test_size_data,
                 random_state=self.random_state,
             )
         else:
             # We cant use StratifiedDomainShuffleSplit if y is continuous
             self.cv = DomainShuffleSplit(
-                n_splits=self.n_splits,
-                test_size=self.test_size,
+                n_splits=self.n_splits_data,
+                test_size=self.test_size_data,
                 random_state=self.random_state,
             )
 
