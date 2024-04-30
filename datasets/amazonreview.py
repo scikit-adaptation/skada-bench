@@ -4,6 +4,7 @@ with safe_import_context() as import_ctx:
     import numpy as np
     from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
+    from skada.datasets import fetch_amazon_review_all
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
@@ -38,39 +39,16 @@ class Dataset(BaseDataset):
         # to `Objective.set_data`. This defines the benchmark's
         # API to pass data. It is customizable for each benchmark.
 
-        datasets_path = './data/amazon_review/'
-        mat_books = scipy.io.loadmat(datasets_path+'books_400.mat')
-        mat_dvd = scipy.io.loadmat(datasets_path+'dvd_400.mat')
-        mat_elec = scipy.io.loadmat(datasets_path+'elec_400.mat')
-        mat_kitchen = scipy.io.loadmat(datasets_path+'kitchen_400.mat')
-
-        mat_dict = {
-            'books': mat_books,
-            'dvd': mat_dvd,
-            'elec': mat_elec,
-            'kitchen': mat_kitchen
-        }
+        tmp_folder = './data/amazon_review/'
+        dataset = fetch_amazon_review_all(
+            data_home=tmp_folder
+        )
 
         source = self.source_target[0]
         target = self.source_target[1]
 
-        # Convert to float32 instead of int8
-        X_source = np.array(
-            mat_dict[source]['fts'],
-            dtype=np.float32
-        )
-        X_target = np.array(
-            mat_dict[target]['fts'],
-            dtype=np.float32
-        )
-        y_source = np.array(
-            mat_dict[source]['labels'].flatten(),
-            dtype=np.float32
-        )
-        y_target = np.array(
-            mat_dict[target]['labels'].flatten(),
-            dtype=np.float32
-        )
+        X_source, y_source = dataset.get_domain(source)
+        X_target, y_target = dataset.get_domain(target)
 
         # XGBoost only supports labels in [0, num_classes-1]
         le = LabelEncoder()
