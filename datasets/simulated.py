@@ -12,7 +12,7 @@ class Dataset(BaseDataset):
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
-        'n_samples_source, n_samples_target': [(100, 100)],
+        'n_samples_source, n_samples_target': [(50, 50)],
         'shift, label': [
             ('covariate_shift', 'binary'),
             ('target_shift', 'binary'),
@@ -31,11 +31,17 @@ class Dataset(BaseDataset):
         # API to pass data. It is customizable for each benchmark.
 
         # Generate pseudorandom data using `numpy`.
+        if self.shift == "subspace":
+            m = 3
+            noise = 0.4
+        else:
+            m = 1
+            noise = 0.8
         X, y, sample_domain = make_shifted_datasets(
-            n_samples_source=self.n_samples_source,
-            n_samples_target=self.n_samples_target,
+            n_samples_source=m*self.n_samples_source,
+            n_samples_target=m*self.n_samples_target,
             shift=self.shift,
-            noise=0.8,
+            noise=noise,
             label=self.label,
             random_state=self.random_state,
         )
