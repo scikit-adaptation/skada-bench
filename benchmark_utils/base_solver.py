@@ -22,7 +22,7 @@ with safe_import_context() as import_ctx:
     )
     from skada._utils import Y_Type, _find_y_type
 
-    from sklearn.base import BaseEstimator
+    from sklearn.base import BaseEstimator, clone
     from xgboost import XGBClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
@@ -42,7 +42,7 @@ class FinalEstimator(BaseEstimator):
         self.estimator_name = estimator_name
 
     def fit(self, X, y, sample_weight=None, **fit_params):
-        self.estimator_ = BASE_ESTIMATOR_DICT[self.estimator_name]
+        self.estimator_ = clone(BASE_ESTIMATOR_DICT[self.estimator_name])
         self.estimator_.fit(X, y, sample_weight=sample_weight, **fit_params)
         return self
 
