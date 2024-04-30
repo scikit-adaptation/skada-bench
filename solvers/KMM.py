@@ -34,7 +34,7 @@ class Solver(DASolver):
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
-            KMMReweightAdapter(gamma=0.1),
+            KMMReweightAdapter(),
             XGBClassifier()
             .set_fit_request(sample_weight=True)
             .set_score_request(sample_weight=True),

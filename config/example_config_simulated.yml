@@ -1,0 +1,6 @@
+dataset:
+    - Simulated[label=binary,n_samples_source=100,n_samples_target=100,random_state=0,shift=covariate_shift]
+solver:
+    - KLIEP[base_estimator=LR,base_estimator_params=None,param_grid=None]
+    - KMM[base_estimator=LR,base_estimator_params=None,param_grid=None]
+n-repetitions: 1
