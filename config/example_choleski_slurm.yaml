@@ -1,3 +1,8 @@
+# This is an example of a configuration file to launch the experiments on a SLURM cluster
+# Before running the experiments, you need to change the following parameters:
+# - mail-user: the email address to receive notifications
+# - source activate env_name: the name of the conda environment to activate
+
 slurm_time: 01:00:00        # max runtime 1 hour
 slurm_additional_parameters:
   job-name: skada-bench # Job name

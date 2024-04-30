@@ -48,6 +48,11 @@ class Objective(BaseObjective):
     # Bump it up if the benchmark depends on a new feature of benchopt.
     min_benchopt_version = "1.5"
 
+    # Random state
+    random_state = 0
+    n_splits_data = 5
+    test_size_data = 0.2
+
     def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary
         # returned by `Dataset.get_data`. This defines the benchmark's
@@ -59,14 +64,16 @@ class Objective(BaseObjective):
 
         if self.is_discrete:
             self.cv = StratifiedDomainShuffleSplit(
-                n_splits=5,
-                test_size=0.2
+                n_splits=self.n_splits_data,
+                test_size=self.test_size_data,
+                random_state=self.random_state,
             )
         else:
             # We cant use StratifiedDomainShuffleSplit if y is continuous
             self.cv = DomainShuffleSplit(
-                n_splits=5,
-                test_size=0.2
+                n_splits=self.n_splits_data,
+                test_size=self.test_size_data,
+                random_state=self.random_state,
             )
 
     def evaluate_result(self, cv_results, dict_estimators):
@@ -180,6 +187,7 @@ class Objective(BaseObjective):
     def get_one_result(self):
         # Return one solution. The return value should be an object compatible
         # with `self.evaluate_result`. This is mainly for testing purposes.
+        # This function is for testing purposes only.
         self.X_train = np.ones((10, 2))
         self.y_train = np.ones(10)
         self.sample_domain_train = np.concatenate((np.ones(5), np.zeros(5)))
