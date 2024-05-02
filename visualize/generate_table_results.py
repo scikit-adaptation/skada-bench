@@ -664,6 +664,9 @@ def generate_all_tables(
 
     exlude_solvers = [solver.lower() for solver in exlude_solvers]
 
+    # We remove '[param_grid=default]' in each method name
+    df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=default]')[0]))
+
     # We keep only the rows with the dataset in the index
     filtered_df = df[
         [dataset in index_tuple[0].lower() for index_tuple in df.index]
