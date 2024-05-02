@@ -16,3 +16,7 @@ benchopt.ini
 
 .DS_Store
 coverage.xml
+
+# Results
+20newsgroup/
+
