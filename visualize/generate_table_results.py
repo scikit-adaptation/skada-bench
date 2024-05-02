@@ -321,8 +321,15 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
         df_value,
         min_value=0,
         max_value=1,
-        train_on_source=0.5
+        train_on_source=0.5,
+        is_delta_table=False,
     ):
+        # If is_delta_table, we want green > 0
+        # red < 0 and transparent = 0
+        if is_delta_table:
+            train_on_source = 0
+
+        # Intensity range for the green and red colors
         intensity_range = (10, 90)
         green_threshold = train_on_source
 
@@ -344,6 +351,10 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                 )
             return '\\cellcolor{green!%d}{%s}' % (intensity, df_value)
         else:
+            # No color if value = 0 for the delta table
+            if is_delta_table and mean_value == 0:
+                return df_value
+
             red_min = min_value
             red_max = green_threshold
             if red_min - red_max == 0:
@@ -406,7 +417,8 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                     'solvers_vs_datasets_relative_perf_table.tex',
                     'solvers_vs_datasets_relative_perf_normalized_table.tex',
                 ]:
-                    # We don't have the train_on_source value for these tables
+                    # We don't have the train_on_source value for
+                    # solvers_vs_datasets_relative_perf_* tables
                     train_on_source = 0
                 else:
                     train_on_source = means.loc[
@@ -422,6 +434,7 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                     min_value=means.min(),
                     max_value=means.max(),
                     train_on_source=train_on_source,
+                    is_delta_table=latex_file_name == 'delta_table.tex'
                 )
 
             # We put the best value in bold
