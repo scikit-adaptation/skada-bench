@@ -63,11 +63,15 @@ DA_TECHNIQUES = {
         'linear_ot_mapping',
         'entropic_ot_mapping',
         'ot_mapping',
-        'class_regularizer_ot_mapping'
+        'class_regularizer_ot_mapping',
+        'transfer_joint_matching'
     ],
     'Subspace': [
         'transfer_component_analysis',
         'subspace_alignment',
+        'transfer_subspace_learning',
+        'joint_distribution_adaptation',
+        'conditional_transferable_components',
         'PCA'
     ],
     'Other': [
@@ -88,6 +92,10 @@ ESTIMATOR_DICT = {
     'ot_mapping': 'MapOT',
     'subspace_alignment': 'SA',
     'transfer_component_analysis': 'TCA',
+    'transfer_joint_matching': 'TJM',
+    'transfer_subspace_learning': 'TSL',
+    'joint_distribution_adaptation': 'JDA',
+    'conditional_transferable_components': 'CTC',
     'class_regularizer_ot_mapping': 'ClassRegOT',
     'MMDSConS': 'MMD-LS',
     'TarS': 'MMDTarS',
