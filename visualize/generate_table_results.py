@@ -64,7 +64,6 @@ DA_TECHNIQUES = {
         'entropic_ot_mapping',
         'ot_mapping',
         'class_regularizer_ot_mapping',
-        'transfer_joint_matching'
     ],
     'Subspace': [
         'transfer_component_analysis',
@@ -72,7 +71,8 @@ DA_TECHNIQUES = {
         'transfer_subspace_learning',
         'joint_distribution_adaptation',
         'conditional_transferable_components',
-        'PCA'
+        'transfer_joint_matching',
+        'PCA',
     ],
     'Other': [
         'JDOT_XGB',
