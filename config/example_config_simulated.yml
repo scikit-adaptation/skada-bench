@@ -18,4 +18,4 @@ solver:
     - TarS[param_grid=None]
     - transfer_component_analysis[param_grid=None]
     - transfer_joint_matching[param_grid=None]
-n-repetitions: 1
+max-runs: 0
