@@ -7,5 +7,3 @@ solver:
 # We define the datasets
 dataset:
     - Office31SURF
-
-max-runs: 0

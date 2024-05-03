@@ -7,5 +7,3 @@ solver:
 # We define the datasets
 dataset:
   - 20NewsGroups[max_features=5, source_target=[('rec', 'talk')]]
-
-max-runs: 0
