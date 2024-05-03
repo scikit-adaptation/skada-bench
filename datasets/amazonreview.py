@@ -31,7 +31,6 @@ class Dataset(BaseDataset):
             ('kitchen', 'dvd'),
             ('kitchen', 'elec')
         ],
-        "max_features": [5000],
     }
 
     def get_data(self):
