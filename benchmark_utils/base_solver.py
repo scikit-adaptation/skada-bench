@@ -57,7 +57,7 @@ class FinalEstimator(BaseEstimator):
 
 
 class DASolver(BaseSolver):
-    strategy = "run_once"
+    sampling_strategy = "run_once"
 
     requirements = [
         "pip:xgboost",
