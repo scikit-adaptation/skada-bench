@@ -18,11 +18,11 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'transfersubspacelearningadapter__n_components': [1, 2, 3],
-        'transfersubspacelearningadapter__base_method': ['pca', 'flda', 'lpp'],
-        'transfersubspacelearningadapter__length_scale': [1, 5, 10],
+        'transfersubspacelearningadapter__n_components': [1, 2, 5, 10, 20, 50, 100],
+        'transfersubspacelearningadapter__base_method': ['flda'],
+        'transfersubspacelearningadapter__length_scale': [2],
         'transfersubspacelearningadapter__mu': [0.1, 1, 10],
-        'transfersubspacelearningadapter__reg': [1e-3, 0.1, 1,],
+        'transfersubspacelearningadapter__reg': [1e-4],
         'transfersubspacelearningadapter__max_iter': [300],
         'transfersubspacelearningadapter__tol': [1e-4],
         'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
