@@ -6,8 +6,8 @@ from benchopt import BaseDataset, safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     import numpy as np
+    import pickle
     from sklearn.datasets import fetch_20newsgroups
-    from sklearn.feature_extraction.text import TfidfVectorizer
 
     from skada.utils import source_target_merge
 
@@ -36,7 +36,10 @@ class Dataset(BaseDataset):
             ("sci", "rec"),
             ("sci", "talk"),
         ],
-        "max_features": [5000]
+        "preprocessing": [
+            "min_hash",
+            "sentence_transformers"
+        ]
     }
 
     def get_data(self):
@@ -47,13 +50,10 @@ class Dataset(BaseDataset):
         # Set download_if_missing to True if not downloaded yet
         data = fetch_20newsgroups(download_if_missing=True, subset="all")
 
-        vectorizer = TfidfVectorizer(stop_words="english",
-                                     analyzer="word",
-                                     min_df=5,
-                                     max_df=0.1,
-                                     max_features=self.max_features)
-
-        X = vectorizer.fit_transform(data.data)
+        # Load preprocessed data
+        with open('data/20newsgroups_preprocessed.pkl', 'rb') as f:
+            data_preprocessed = pickle.load(f)
+        X = data_preprocessed[self.preprocessing]
 
         source = self.source_target[0]
         target = self.source_target[1]
@@ -89,8 +89,8 @@ class Dataset(BaseDataset):
             for s in target_dict[source]+source_dict[source]
         ]
 
-        X_source = X[source_index].toarray()
-        X_target = X[target_index].toarray()
+        X_source = X[source_index]
+        X_target = X[target_index]
 
         y_source = np.isin(data.target[source_index],
                            positive_index).astype(int)
