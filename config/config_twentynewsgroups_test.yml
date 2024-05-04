@@ -3,7 +3,9 @@
 # We define the solvers
 solver:
   - NO_DA_SOURCE_ONLY
+  - NO_DA_TARGET_ONLY
+  - CORAL
 
 # We define the datasets
 dataset:
-  - 20NewsGroups[preprocessing='sentence_transformers', source_target=[('rec', 'talk')]]
+  - 20NewsGroups[preprocessing='sentence_transformers']
