@@ -1,6 +1,6 @@
 """ File to preprocess Digit datasets
 - Download the datasets
-- Vectorize the images using CNN
+- preprocess and flatten the images
 - Store the preprocessed data in a dictionary and save it in a pickle file.
 - The pickle file is stored in the datasets folder.
 """
@@ -13,16 +13,13 @@ from sklearn.decomposition import PCA
 import torch
 import torchvision
 from torchvision.datasets import MNIST, SVHN, USPS
-import timm
 
 
 if __name__ == "__main__":
     DATASETS = ['MNIST', 'SVHN', 'USPS']
     RANDOM_STATE = 27
-    MODEL_NAME = 'resnet50'
     BATCH_SIZE = 2048
     N_COMPONENTS = 50
-    DEVICE = "cuda"
     N_JOBS = os.cpu_count()
 
     preprocessed_data = dict()
@@ -36,7 +33,6 @@ if __name__ == "__main__":
                 torchvision.transforms.ToTensor(),
                 torchvision.transforms.Pad(2),
                 torchvision.transforms.Normalize((0.1307,), (0.3081,)),
-                torchvision.transforms.Lambda(lambda x: x.repeat(3, 1, 1))
             ])
             dataset = MNIST(
                 root='./data/MNIST',
@@ -49,7 +45,6 @@ if __name__ == "__main__":
                 torchvision.transforms.ToTensor(),
                 torchvision.transforms.Grayscale(),
                 torchvision.transforms.Normalize((0.1307,), (0.3081,)),
-                torchvision.transforms.Lambda(lambda x: x.repeat(3, 1, 1))
             ])
             dataset = SVHN(
                 root='./data/SVHN',
@@ -63,7 +58,6 @@ if __name__ == "__main__":
                 torchvision.transforms.Pad(8),
                 torchvision.transforms.Grayscale(),
                 torchvision.transforms.Normalize((0.1307,), (0.3081,)),
-                torchvision.transforms.Lambda(lambda x: x.repeat(3, 1, 1))
             ])
             dataset = USPS(
                 root='./data/USPS',
@@ -74,23 +68,20 @@ if __name__ == "__main__":
         else:
             raise ValueError(f"Unknown dataset {dataset_name}")
 
-        # Vectorize the images using CNN
+        # Vectorize the images
         dataloader = torch.utils.data.DataLoader(
             dataset,
             batch_size=BATCH_SIZE,
             shuffle=False,
             num_workers=N_JOBS
         )
-        model = timm.create_model(MODEL_NAME, pretrained=True)
-        model.to(DEVICE)
-        model.eval()
         embeddings = list()
         with torch.no_grad():
             for images, _ in dataloader:
-                images = images.to(DEVICE)
-                embeddings.append(model(images))
+                embeddings.append(images)
         embeddings = torch.cat(embeddings, dim=0)
         embeddings = embeddings.cpu().numpy()
+        embeddings = embeddings.reshape(embeddings.shape[0], -1)
 
         # Save the preprocessed data
         preprocessed_data[dataset_name] = {
@@ -101,10 +92,18 @@ if __name__ == "__main__":
     # Apply PCA to reduce the dimensionality of the embeddings
     print("Applying PCA...")
     full_X = torch.cat(
-        [torch.tensor(preprocessed_data[dataset_name.lower()]['X']) for dataset_name in DATASETS],
+        [
+            torch.tensor(
+                preprocessed_data[dataset_name.lower()]['X']
+            ) for dataset_name in DATASETS
+        ],
         dim=0
     )
-    pca = PCA(n_components=N_COMPONENTS)
+    pca = PCA(
+        n_components=N_COMPONENTS,
+        whiten=True,
+        random_state=RANDOM_STATE
+    )
     pca.fit(full_X)
     for dataset_name in DATASETS:
         preprocessed_data[dataset_name.lower()]['X'] = pca.transform(
