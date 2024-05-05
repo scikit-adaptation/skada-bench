@@ -6,8 +6,7 @@ from benchopt import BaseDataset, safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     import numpy as np
-    import torchvision
-    from torchvision.datasets import MNIST, SVHN, USPS
+    import pickle
 
     from skada.utils import source_target_merge
 
@@ -36,57 +35,15 @@ class Dataset(BaseDataset):
         rng = np.random.RandomState(self.random_state)
 
         dataset_name = dataset_name.lower()
-        if dataset_name == 'mnist':
-            transform = torchvision.transforms.Compose([
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Pad(2),
-                torchvision.transforms.Normalize((0.1307,), (0.3081,))
-            ])
-            dataset = MNIST(
-                root='./data/MNIST',
-                download=True,
-                train=True,
-                transform=transform
-            )
-        elif dataset_name == 'svhn':
-            transform = torchvision.transforms.Compose([
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Grayscale(),
-                torchvision.transforms.Normalize((0.1307,), (0.3081,))
-            ])
-            dataset = SVHN(
-                root='./data/SVHN',
-                download=True,
-                split='train',
-                transform=transform
-            )
-        elif dataset_name == 'usps':
-            transform = torchvision.transforms.Compose([
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Pad(8),
-                torchvision.transforms.Grayscale(),
-                torchvision.transforms.Normalize((0.1307,), (0.3081,))
-            ])
-            dataset = USPS(
-                root='./data/USPS',
-                download=True,
-                train=True,
-                transform=transform
-            )
-        else:
-            raise ValueError(f"Unknown dataset {dataset_name}")
 
-        X, y = list(), list()
-        for i in range(len(dataset)):
-            X.append(dataset[i][0].numpy().reshape(-1, 32*32))
-            y.append(dataset[i][1])
-        X = np.concatenate(X, axis=0)
-        y = np.array(y)
-        if n_samples is None:
-            n_samples = len(X)
+        # Load preprocessed data
+        with open(f'data/digit.pkl', 'rb') as f:
+            data = pickle.load(f)
+
+        # Sample data
+        X, y = data[dataset_name]['X'], data[dataset_name]['y']
         indices = rng.choice(len(X), n_samples, replace=False)
-        X = X[indices]
-        y = y[indices]
+        X, y = X[indices], y[indices]
 
         return X, y
 
