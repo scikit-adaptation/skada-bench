@@ -21,7 +21,7 @@ class Dataset(BaseDataset):
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
-        'n_samples_source, n_samples_target': [(1000, 1000)],
+        'n_samples_source, n_samples_target': [(10000, 10000)],
         'source_target': [('MNIST', 'SVHN'),
                           ('MNIST', 'USPS'),
                           ('SVHN', 'USPS'),
@@ -42,8 +42,9 @@ class Dataset(BaseDataset):
 
         # Sample data
         X, y = data[dataset_name]['X'], data[dataset_name]['y']
-        indices = rng.choice(len(X), n_samples, replace=False)
-        X, y = X[indices], y[indices]
+        if (n_samples is not None) and (n_samples < len(X)):
+            indices = rng.choice(len(X), n_samples, replace=False)
+            X, y = X[indices], y[indices]
 
         return X, y
 
