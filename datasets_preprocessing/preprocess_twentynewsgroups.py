@@ -19,7 +19,6 @@ if __name__ == "__main__":
     NGRAM_RANGE = (2, 10)
 
     # Sentence Transformers hyperparameters
-    # MODEL_NAME = "Salesforce/SFR-Embedding-Mistral"
     MODEL_NAME = "BAAI/bge-large-en-v1.5"
     BATCH_SIZE = 512
     # MODEL_NAME = "BAAI/bge-small-en-v1.5"
@@ -41,6 +40,7 @@ if __name__ == "__main__":
     X_sentence_transformers = X_sentence_transformers.astype("float64")
 
     # Apply PCA to reduce the dimensionality of the embeddings
+    print("Applying PCA...")
     pca = PCA(n_components=N_COMPONENTS)
     X_sentence_transformers = pca.fit_transform(X_sentence_transformers)
 
