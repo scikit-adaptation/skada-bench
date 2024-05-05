@@ -7,6 +7,8 @@ __cache__
 .coverage
 **/outputs
 joblib/
+data/
+slurm_output.txt
 
 # IDE specific folders
 .vscode
@@ -18,5 +20,6 @@ benchopt.ini
 coverage.xml
 
 # Results
+benchopt_run/
 20newsgroup/
 

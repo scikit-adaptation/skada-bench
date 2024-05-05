@@ -4,32 +4,32 @@ with safe_import_context() as import_ctx:
     import numpy as np
     from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
-    from skada.datasets import fetch_amazon_review_all
+    from skada.datasets import fetch_office_home_all
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "AmazonReview"
+    name = "OfficeHomeResnet"
 
     # List of parameters to generate the datasets. The benchmark will consider
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
         'source_target': [
-            ('books', 'dvd'),
-            ('books', 'elec'),
-            ('books', 'kitchen'),
-            ('dvd', 'books'),
-            ('dvd', 'elec'),
-            ('dvd', 'kitchen'),
-            ('elec', 'books'),
-            ('elec', 'dvd'),
-            ('elec', 'kitchen'),
-            ('kitchen', 'books'),
-            ('kitchen', 'dvd'),
-            ('kitchen', 'elec')
+            ('art', 'clipart'),
+            ('art', 'product'),
+            ('art', 'realworld'),
+            ('clipart', 'art'),
+            ('clipart', 'product'),
+            ('clipart', 'realworld'),
+            ('product', 'art'),
+            ('product', 'clipart'),
+            ('product', 'realworld'),
+            ('realworld', 'art'),
+            ('realworld', 'clipart'),
+            ('realworld', 'product'),
         ],
     }
 
@@ -38,8 +38,8 @@ class Dataset(BaseDataset):
         # to `Objective.set_data`. This defines the benchmark's
         # API to pass data. It is customizable for each benchmark.
 
-        tmp_folder = './data/amazon_review/'
-        dataset = fetch_amazon_review_all(
+        tmp_folder = './data/office_home_resnet/'
+        dataset = fetch_office_home_all(
             data_home=tmp_folder
         )
 
