@@ -10,9 +10,7 @@ Binary encoding was used to generate feature vectors.
 
 Each feature vector was normalized to maintain unit-length.
 
-There are 4 domains: Books, DVDs, Electronics, and Kitchen appliances.
-
-Each domain has around 2000 samples belongs to 2 classes: positive or negative.
+There are 11055 samples with features of dimension 68.
 
 For reference, please refer to:
 
