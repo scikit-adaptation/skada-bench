@@ -1,4 +1,5 @@
 from benchopt import BaseDataset, safe_import_context
+
 with safe_import_context() as import_ctx:
     import scipy
     import numpy as np
@@ -17,19 +18,19 @@ class Dataset(BaseDataset):
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
-        'source_target': [
-            ('books', 'dvd'),
-            ('books', 'elec'),
-            ('books', 'kitchen'),
-            ('dvd', 'books'),
-            ('dvd', 'elec'),
-            ('dvd', 'kitchen'),
-            ('elec', 'books'),
-            ('elec', 'dvd'),
-            ('elec', 'kitchen'),
-            ('kitchen', 'books'),
-            ('kitchen', 'dvd'),
-            ('kitchen', 'elec')
+        "source_target": [
+            ("books", "dvd"),
+            ("books", "elec"),
+            ("books", "kitchen"),
+            ("dvd", "books"),
+            ("dvd", "elec"),
+            ("dvd", "kitchen"),
+            ("elec", "books"),
+            ("elec", "dvd"),
+            ("elec", "kitchen"),
+            ("kitchen", "books"),
+            ("kitchen", "dvd"),
+            ("kitchen", "elec"),
         ],
     }
 
@@ -38,10 +39,8 @@ class Dataset(BaseDataset):
         # to `Objective.set_data`. This defines the benchmark's
         # API to pass data. It is customizable for each benchmark.
 
-        tmp_folder = './data/amazon_review/'
-        dataset = fetch_amazon_review_all(
-            data_home=tmp_folder
-        )
+        tmp_folder = "./data/amazon_review/"
+        dataset = fetch_amazon_review_all(data_home=tmp_folder)
 
         source = self.source_target[0]
         target = self.source_target[1]
@@ -56,7 +55,8 @@ class Dataset(BaseDataset):
         y_target = le.transform(y_target)
 
         X, y, sample_domain = source_target_merge(
-            X_source, X_target, y_source, y_target)
+            X_source, X_target, y_source, y_target
+        )
 
         return dict(
             X=X,
