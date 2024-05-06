@@ -6,7 +6,7 @@ from benchopt import BaseSolver, safe_import_context
 with safe_import_context() as import_ctx:
     from abc import abstractmethod
     import numpy as np
-    import submitit
+    import os
     from sklearn.base import clone
     from sklearn.model_selection import GridSearchCV
     from skada.metrics import (
@@ -85,8 +85,7 @@ class DASolver(BaseSolver):
     n_splits_cv = 5
     test_size_cv = 0.2
 
-    if submitit.is_launcher():
-        # The code is launched with Submitit
+    if 'SLURM_CPUS_PER_TASK' in os.environ:
         n_jobs = int(os.environ['SLURM_CPUS_PER_TASK'])
     else:
         n_jobs = 1
