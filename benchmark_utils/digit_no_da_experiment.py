@@ -37,8 +37,8 @@ pipe = make_pipeline(SVC(kernel='rbf', C=100, gamma=0.01))
 
 # Perform GridSearchCV
 param_grid = {
-    'svc__C': [10, 100, 1000],
-    'svc__gamma': [0.001, 0.01, 0.1]
+    'svc__C': [100],
+    'svc__gamma': [0.01]
 }
 grid = GridSearchCV(pipe, param_grid, cv=5, n_jobs=-1)
 grid.fit(X_train, y_train)
