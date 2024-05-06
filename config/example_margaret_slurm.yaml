@@ -16,4 +16,4 @@ slurm_setup:  # sbatch script commands added before the main job
   - module purge
   - echo "current directory is $(pwd)"
   - module load anaconda3
-  - source activate da # TO CHANGE TO YOUR ENVIRONMENT NAME
+  - source activate env # TO CHANGE TO YOUR ENVIRONMENT NAME
