@@ -6,8 +6,10 @@ from benchopt import BaseDataset, safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     import numpy as np
+    from pathlib import Path
     import pickle
     from sklearn.datasets import fetch_20newsgroups
+    import urllib.request
 
     from skada.utils import source_target_merge
 
@@ -42,6 +44,9 @@ class Dataset(BaseDataset):
         ]
     }
 
+    path_preprocessed_data = Path("data/20newsgroups_preprocessed.pkl")
+    url_preprocessed_data = "https://figshare.com/ndownloader/files/46120377?private_link=dc7d508b76a6006757f6"
+
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
         # to `Objective.set_data`. This defines the benchmark's
@@ -50,8 +55,17 @@ class Dataset(BaseDataset):
         # Set download_if_missing to True if not downloaded yet
         data = fetch_20newsgroups(download_if_missing=True, subset="all")
 
+        # Check if the preprocessed data is available
+        # If not, download them
+        path_preprocessed_data = Path(self.path_preprocessed_data)
+        if not path_preprocessed_data.exists():
+            urllib.request.urlretrieve(
+                self.url_preprocessed_data,
+                path_preprocessed_data
+            )
+
         # Load preprocessed data
-        with open('data/20newsgroups_preprocessed.pkl', 'rb') as f:
+        with open(path_preprocessed_data, "rb") as f:
             data_preprocessed = pickle.load(f)
         X = data_preprocessed[self.preprocessing]
 
