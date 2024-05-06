@@ -14,7 +14,7 @@ with safe_import_context() as import_ctx:
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "Phishing Website"
+    name = "Phishing"
 
     install_cmd = "conda"
 
@@ -69,7 +69,7 @@ class Dataset(BaseDataset):
             "target",
         ]
 
-        path_data = "../data/phishing/phishing.arff"
+        path_data = "./data/phishing/phishing.arff"
         raw_data = loadarff(path_data)
         data = pd.DataFrame(raw_data[0])
         data.columns = columns
