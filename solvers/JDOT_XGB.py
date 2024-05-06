@@ -31,6 +31,16 @@ class Solver(DASolver):
         'jdotclassifier__thr_weights': [1e-6, 1e-7],
     }
 
+    def skip(self, X, y, sample_domain, unmasked_y_train, dataset_name):
+         datasets_to_avoid = [
+             'Digit',
+         ]
+
+         if dataset_name.split("[")[0] in datasets_to_avoid:
+             return True, f"solver does not support the dataset {dataset_name}."
+
+         return False, None
+
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
