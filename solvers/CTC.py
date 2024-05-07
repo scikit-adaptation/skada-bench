@@ -18,10 +18,10 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'conditionaltransfercomponentanalysisadapter__n_components': [1, 2, 5, 10, 20, 50, 100],
-        'conditionaltransfercomponentanalysisadapter__lmbd': [1e-6, 1e-4, 1e-3],
-        'conditionaltransfercomponentanalysisadapter__lmbd_s': [1e-6, 1e-4, 1e-3],
-        'conditionaltransfercomponentanalysisadapter__lmbd_l': [1e-6, 1e-4, 1e-3],
+        'conditionaltransferablecomponentsadapter__n_components': [1, 2, 5, 10, 20, 50, 100],
+        'conditionaltransferablecomponentsadapter__lmbd': [1e-6, 1e-4, 1e-3],
+        'conditionaltransferablecomponentsadapter__lmbd_s': [1e-6, 1e-4, 1e-3],
+        'conditionaltransferablecomponentsadapter__lmbd_l': [1e-6, 1e-4, 1e-3],
         'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
