@@ -2,9 +2,8 @@
 
 # We define the solvers
 solver:
-    - CORAL
+  - NO_DA_SOURCE_ONLY
 
 # We define the datasets
 dataset:
-    - Office31SURF
-
+  - 20NewsGroups[max_features=5, source_target=[('rec', 'talk')]]

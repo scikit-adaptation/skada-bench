@@ -93,12 +93,15 @@ class Dataset(BaseDataset):
         X_target = X[target_index].toarray()
 
         y_source = np.isin(data.target[source_index],
-                           positive_index).astype(float)
+                           positive_index).astype(int)
         y_target = np.isin(data.target[target_index],
-                           positive_index).astype(float)
+                           positive_index).astype(int)
+        sample_domain = np.array([1]*len(y_source)+[-2]*len(y_target))
 
         X, y, sample_domain = source_target_merge(
-            X_source, X_target, y_source, y_target)
+            X_source, X_target, y_source, y_target,
+            sample_domain=sample_domain
+        )
 
         return dict(
             X=X,
