@@ -4,7 +4,7 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    from skada import DiscriminatorReweightAdapter, make_da_pipeline
+    from skada import DensityReweightAdapter, make_da_pipeline
     from benchmark_utils.base_solver import DASolver, FinalEstimator
 
 
@@ -22,6 +22,6 @@ class Solver(DASolver):
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
-            DiscriminatorReweightAdapter(),
+            DensityReweightAdapter(),
             FinalEstimator(),
         )
