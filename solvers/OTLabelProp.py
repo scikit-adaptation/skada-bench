@@ -19,8 +19,8 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
         'otlabelpropadapter__metric': ['sqeuclidean','euclidean'],
-        'otlabelpropadapter__reg': [None,],
-        'finalestimator__estimator_name': ["SVC", "XGB"],
+        'otlabelpropadapter__reg': [None, 0.1],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):
