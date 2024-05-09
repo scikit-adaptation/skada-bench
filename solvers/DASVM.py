@@ -22,12 +22,14 @@ class Solver(DASolver):
         'dasvmclassifier__k': [3, 5, 7],
     }
 
-    def skip(self, X, y, sample_domain, unmasked_y_train, dataset_name):
+    def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
         datasets_to_avoid = [
             'Office31SURF',
             'Digit',
             '20NewsGroups',
         ]
+
+        dataset_name = dataset.name
 
         if dataset_name.split("[")[0] in datasets_to_avoid:
             return True, f"solver does not support the dataset {dataset_name}."

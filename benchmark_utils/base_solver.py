@@ -134,6 +134,9 @@ class DASolver(BaseSolver):
             n_jobs=self.n_jobs
         )
 
+        self.dataset_name = str(kwargs['dataset'])
+        log_experiment(self.dataset_name, self.name, 'Running')
+
     def run(self, n_iter):
         if self.name == 'NO_DA_TARGET_ONLY':
             # We are in a case of no domain adaptation
@@ -177,9 +180,44 @@ class DASolver(BaseSolver):
                 self.dict_estimators_[criterion] = refit_estimator
             except Exception as e:
                 print(f"Error while fitting estimator: {e}")
+        
+        log_experiment(self.dataset_name, self.name, 'Finished')
 
     def get_result(self):
         return dict(
             cv_results=self.cv_results_,
             dict_estimators=self.dict_estimators_
         )
+
+
+import os
+import pandas as pd
+def log_experiment(dataset_name, solver, status):
+    # Define the directory path
+    directory = "./exp_logs"
+
+    # Check if the directory exists, if not, create it
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    # Define the file path
+    file_name = f"{directory}/experiment_log.csv"
+
+    # Read the CSV file into a DataFrame or create a new one if it doesn't exist
+    if os.path.exists(file_name):
+        df = pd.read_csv(file_name)
+    else:
+        df = pd.DataFrame(columns=['Dataset', 'Solver', 'Status'])
+
+    # Update the status of the existing row
+    mask = (df['Dataset'] == dataset_name) & (df['Solver'] == solver)
+
+    # If row doesnt exist yet, create it
+    if mask.sum() == 0:
+        new_row = pd.DataFrame({'Dataset': [dataset_name], 'Solver': [solver], 'Status': [status]})
+        df = pd.concat([df, new_row], ignore_index=True)
+    else:
+        df.loc[mask, 'Status'] = status
+
+    # Write the DataFrame back to the CSV file
+    df.to_csv(file_name, index=False)

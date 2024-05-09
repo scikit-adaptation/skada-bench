@@ -234,5 +234,5 @@ class Objective(BaseObjective):
                     y=y,
                     sample_domain=sample_domain,
                     unmasked_y_train=unmasked_y_train,
-                    dataset_name=self._dataset.name,
+                    dataset=self._dataset,
                     )
