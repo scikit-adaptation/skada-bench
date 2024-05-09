@@ -11,15 +11,20 @@ The purpose of this script is to facilitate the logging of running and finished 
 
 1. Run your experiment using Benchopt, it will generate a csv file in the `./exp_logs` folder.
 
-2. Run the Python script.
+2. Run the Python script, providing the path to the CSV file containing experiment status information. Optionally, you can also specify a SLURM configuration YAML file using the --slurm flag.
 
 ```python
-python experiment_log_analyzer.py
+python experiment_log_analyzer.py experiment_log.csv --slurm slurm_config.yaml
 ```
 
 3. The script will output the status of finished and running experiments, along with the corresponding Benchopt commands for both scenarios.
 
 4. The generated Benchopt commands will be written to separate Bash scripts for executing finished and unfinished experiments. These 2 batch files can be found in `../` i.e in the `skada-bench` folder.
+
+### Arguments:
+
+- `experiment_log.csv`: Path to the CSV file containing experiment status information.
+- `--slurm slurm_config.yaml`: Optional. Path to the SLURM configuration YAML file.
 
 ### Example:
 
