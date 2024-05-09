@@ -7,6 +7,7 @@ with safe_import_context() as import_ctx:
     from abc import abstractmethod
     import numpy as np
     import os
+    import pandas as pd
     from sklearn.base import clone
     from sklearn.model_selection import GridSearchCV
     from skada.metrics import (
@@ -134,6 +135,7 @@ class DASolver(BaseSolver):
             n_jobs=self.n_jobs
         )
 
+        # To log the experiment in a csv file
         self.dataset_name = str(kwargs['dataset'])
         log_experiment(self.dataset_name, self.name, 'Running')
 
@@ -181,6 +183,7 @@ class DASolver(BaseSolver):
             except Exception as e:
                 print(f"Error while fitting estimator: {e}")
         
+        # To log the experiment in a csv file
         log_experiment(self.dataset_name, self.name, 'Finished')
 
     def get_result(self):
@@ -190,8 +193,6 @@ class DASolver(BaseSolver):
         )
 
 
-import os
-import pandas as pd
 def log_experiment(dataset_name, solver, status):
     # Define the directory path
     directory = "./exp_logs"
