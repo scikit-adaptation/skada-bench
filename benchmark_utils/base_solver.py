@@ -23,7 +23,7 @@ with safe_import_context() as import_ctx:
     )
     from skada._utils import Y_Type, _find_y_type
 
-    from sklearn.base import BaseEstimator, clone
+    from sklearn.base import BaseEstimator
     from xgboost import XGBClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
@@ -34,6 +34,7 @@ BASE_ESTIMATOR_DICT = {
     "SVC": SVC(probability=True),
     "XGB": XGBClassifier(),
 }
+
 
 class FinalEstimator(BaseEstimator):
     __metadata_request__fit = {"sample_weight": True}
