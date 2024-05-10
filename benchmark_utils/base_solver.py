@@ -136,8 +136,8 @@ class DASolver(BaseSolver):
         )
 
         # To log the experiment in a csv file
-        self.dataset_name = str(kwargs['dataset'])
-        log_experiment(self.dataset_name, self.name, 'Running')
+        self.dataset = kwargs['dataset']
+        log_experiment(self.dataset, self.name, 'Running')
 
     def run(self, n_iter):
         if self.name == 'NO_DA_TARGET_ONLY':
@@ -184,7 +184,7 @@ class DASolver(BaseSolver):
                 print(f"Error while fitting estimator: {e}")
         
         # To log the experiment in a csv file
-        log_experiment(self.dataset_name, self.name, 'Finished')
+        log_experiment(self.dataset, self.name, 'Finished')
 
     def get_result(self):
         return dict(
@@ -193,7 +193,7 @@ class DASolver(BaseSolver):
         )
 
 
-def log_experiment(dataset_name, solver, status):
+def log_experiment(dataset, solver, status):
     # Define the directory path
     directory = "./exp_logs"
 
@@ -202,7 +202,9 @@ def log_experiment(dataset_name, solver, status):
         os.makedirs(directory)
 
     # Define the file path
-    file_name = f"{directory}/experiment_log.csv"
+    file_name = f"{directory}/{dataset.name}_experiment_log.csv"
+
+    dataset_name = str(dataset)
 
     # Read the CSV file into a DataFrame or create a new one if it doesn't exist
     if os.path.exists(file_name):
