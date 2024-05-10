@@ -2,7 +2,7 @@ import pandas as pd
 import argparse
 
 
-BENCHOPT_RUNNING_FORMAT = "benchopt run -d {} -s {} --output {} {}"
+BENCHOPT_RUNNING_FORMAT = 'benchopt run -d "{}" -s {} --output "{}" {}'
 
 def check_experiment_status(csv_file):
     df = pd.read_csv(csv_file)
