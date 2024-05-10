@@ -30,7 +30,7 @@ def generate_benchopt_commands(experiments, slurm_yaml=None):
 
     # Groupby per dataset
     grouped = experiments.groupby('Dataset')['Solver'].unique()
-    import pdb; pdb.set_trace()
+
     for dataset, solvers in grouped.items():
         dataset = enclose_with_brackets(dataset)
         solver_string = " -s ".join(solvers)
