@@ -29,15 +29,19 @@ def generate_benchopt_commands(experiments, slurm_yaml=None):
     commands = []
 
     # Groupby per dataset
-    for idx, exp in experiments.iterrows():
-        output_filename = f"output_{exp['Dataset']}_{exp['Solver']}"
+    grouped = experiments.groupby('Dataset')['Solver'].unique()
+    import pdb; pdb.set_trace()
+    for dataset, solvers in grouped.items():
+        dataset = enclose_with_brackets(dataset)
+        solver_string = " -s ".join(solvers)
+    
+        output_filename = f"output_{dataset}_{'_'.join(solvers)}"
         slurm_option = f"--slurm {slurm_yaml}" if slurm_yaml else ""
 
-        dataset = enclose_with_brackets(exp['Dataset'])
-
         commands.append(
-            BENCHOPT_RUNNING_FORMAT.format(dataset, exp['Solver'], output_filename, slurm_option)
+            BENCHOPT_RUNNING_FORMAT.format(dataset, solver_string, output_filename, slurm_option)
         )
+
     return commands
 
 
