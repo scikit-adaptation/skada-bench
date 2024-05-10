@@ -1,8 +1,23 @@
 import pandas as pd
 import argparse
+import re
 
 
 BENCHOPT_RUNNING_FORMAT = 'benchopt run -d "{}" -s {} --output "{}" {}'
+
+# To make Benchopt parser happy
+def enclose_with_brackets(text):
+    # Define a regular expression pattern to find strings inside parentheses
+    pattern = r'\((.*?)\)'
+
+    # Define a function to add square brackets around matched strings
+    def replace(match):
+        return '[' + match.group(0) + ']'
+
+    # Use re.sub() to replace matched strings with the modified version
+    modified_text = re.sub(pattern, replace, text)
+
+    return modified_text
 
 def check_experiment_status(csv_file):
     df = pd.read_csv(csv_file)
@@ -17,8 +32,11 @@ def generate_benchopt_commands(experiments, slurm_yaml=None):
     for idx, exp in experiments.iterrows():
         output_filename = f"output_{exp['Dataset']}_{exp['Solver']}"
         slurm_option = f"--slurm {slurm_yaml}" if slurm_yaml else ""
+
+        dataset = enclose_with_brackets(exp['Dataset'])
+
         commands.append(
-            BENCHOPT_RUNNING_FORMAT.format(exp['Dataset'], exp['Solver'], output_filename, slurm_option)
+            BENCHOPT_RUNNING_FORMAT.format(dataset, exp['Solver'], output_filename, slurm_option)
         )
     return commands
 
