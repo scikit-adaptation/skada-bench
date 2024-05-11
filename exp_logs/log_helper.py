@@ -4,7 +4,7 @@ import re
 
 
 BENCHOPT_RUNNING_FORMAT = 'benchopt run -d "{}" -s {} --output "{}" {}'
-MAX_FILENAME_LEN = 50
+MAX_FILENAME_LEN = 100
 
 # To make Benchopt parser happy
 def enclose_with_brackets(text):
