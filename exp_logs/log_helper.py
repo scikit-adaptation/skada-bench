@@ -4,6 +4,7 @@ import re
 
 
 BENCHOPT_RUNNING_FORMAT = 'benchopt run -d "{}" -s {} --output "{}" {}'
+MAX_FILENAME_LEN = 50
 
 # To make Benchopt parser happy
 def enclose_with_brackets(text):
@@ -36,6 +37,8 @@ def generate_benchopt_commands(experiments, slurm_yaml=None):
         solver_string = " -s ".join(solvers)
     
         output_filename = f"output_{dataset}_{'_'.join(solvers)}"
+        output_filename = truncate_filename(output_filename)
+    
         slurm_option = f"--slurm {slurm_yaml}" if slurm_yaml else ""
 
         commands.append(
@@ -43,6 +46,14 @@ def generate_benchopt_commands(experiments, slurm_yaml=None):
         )
 
     return commands
+
+# Truncate filename if it is too long
+# To prevent the OSError: [Errno 36] File name too long
+# With Cholesky
+def truncate_filename(filename, max_length=MAX_FILENAME_LEN):
+    if len(filename) > max_length:
+        return filename[:max_length] + "..."
+    return filename
 
 
 if __name__ == "__main__":
