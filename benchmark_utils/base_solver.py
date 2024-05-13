@@ -230,29 +230,30 @@ def log_experiment(dataset, solver, status):
 
     # Acquire a file lock
     with open(file_name, 'a') as f:
-        fcntl.flock(f, fcntl.LOCK_EX)
-
-        # Read the CSV file into a DataFrame
-        # If the file is empty, create an empty DataFrame
-        # The error should occur the 1st time only
-        # when the csv is still empty
         try:
-            df = pd.read_csv(file_name)
-        except pd.errors.EmptyDataError:
-            df = pd.DataFrame(columns=['Dataset', 'Solver', 'Status'])
+            fcntl.flock(f, fcntl.LOCK_EX)
 
-        # Update the status of the existing row
-        mask = (df['Dataset'] == dataset_name) & (df['Solver'] == solver)
+            # Read the CSV file into a DataFrame
+            # If the file is empty, create an empty DataFrame
+            # The error should occur the 1st time only
+            # when the csv is still empty
+            try:
+                df = pd.read_csv(file_name)
+            except pd.errors.EmptyDataError:
+                df = pd.DataFrame(columns=['Dataset', 'Solver', 'Status'])
 
-        # If row doesnt exist yet, create it
-        if mask.sum() == 0:
-            new_row = pd.DataFrame({'Dataset': [dataset_name], 'Solver': [solver], 'Status': [status]})
-            df = pd.concat([df, new_row], ignore_index=True)
-        else:
-            df.loc[mask, 'Status'] = status
+            # Update the status of the existing row
+            mask = (df['Dataset'] == dataset_name) & (df['Solver'] == solver)
 
-        # Write the DataFrame back to the CSV file
-        df.to_csv(file_name, index=False)
+            # If row doesnt exist yet, create it
+            if mask.sum() == 0:
+                new_row = pd.DataFrame({'Dataset': [dataset_name], 'Solver': [solver], 'Status': [status]})
+                df = pd.concat([df, new_row], ignore_index=True)
+            else:
+                df.loc[mask, 'Status'] = status
 
-        # Release the file lock
-        fcntl.flock(f, fcntl.LOCK_UN)
+            # Write the DataFrame back to the CSV file
+            df.to_csv(file_name, index=False, mode='a')
+        finally:
+            # Release the file lock
+            fcntl.flock(f, fcntl.LOCK_UN)
