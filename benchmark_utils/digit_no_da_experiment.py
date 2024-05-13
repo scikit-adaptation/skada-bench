@@ -8,7 +8,6 @@
 import pickle
 from sklearn.decomposition import PCA
 from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 from sklearn.svm import SVC
 
