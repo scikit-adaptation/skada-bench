@@ -220,7 +220,14 @@ def log_experiment(dataset, solver, status):
         new_row = pd.DataFrame({'Dataset': [dataset_name], 'Solver': [solver], 'Status': [status]})
         df = pd.concat([df, new_row], ignore_index=True)
     else:
-        df.loc[mask, 'Status'] = status
+        if status == 'Finished':
+            df.loc[mask, 'Status'] = status
+        else:
+            # Seems like benchopt executes set_objective() but not run()
+            # When the experimenent is already done and cached
+            # Thus it will set a done exp to 'Running' BUT it will not reset
+            # it to 'Finish' after the run() method.
+            pass
 
     # Write the DataFrame back to the CSV file
     df.to_csv(file_name, index=False)
