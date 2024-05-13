@@ -3,7 +3,7 @@ import argparse
 import re
 
 
-BENCHOPT_RUNNING_FORMAT = 'benchopt run -d "{}" -s {} --output "{}" {}'
+BENCHOPT_RUNNING_FORMAT = 'benchopt run -d "{}" -s {} --no-plot --no-html --output "{}" {}'
 MAX_FILENAME_LEN = 100
 
 # To make Benchopt parser happy
