@@ -219,10 +219,13 @@ def log_experiment(dataset, solver, status):
     with open(file_name, 'a') as f:
         fcntl.flock(f, fcntl.LOCK_EX)
 
-        # Read the CSV file into a DataFrame or create a new one if it doesn't exist
-        if os.path.exists(file_name):
+        # Read the CSV file into a DataFrame
+        # If the file is empty, create an empty DataFrame
+        # The error should occur the 1st time only
+        # when the csv is still empty
+        try:
             df = pd.read_csv(file_name)
-        else:
+        except pd.errors.EmptyDataError:
             df = pd.DataFrame(columns=['Dataset', 'Solver', 'Status'])
 
         # Update the status of the existing row
