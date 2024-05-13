@@ -106,7 +106,15 @@ class DASolver(BaseSolver):
     #     estimator.set_score_request(sample_weight=True)
     #     return estimator
 
-    def set_objective(self, X, y, sample_domain, unmasked_y_train, **kwargs):
+    def set_objective(
+            self,
+            X,
+            y,
+            sample_domain,
+            unmasked_y_train, 
+            dataset,
+            **kwargs
+        ):
         self.X, self.y, self.sample_domain = X, y, sample_domain
         self.unmasked_y_train = unmasked_y_train
 
@@ -137,7 +145,7 @@ class DASolver(BaseSolver):
         )
 
         # To log the experiment in a csv file
-        self.dataset = kwargs['dataset']
+        self.dataset = dataset
 
         # Seems like benchopt executes set_objective() but not run()
         # When the experimenent is already done and cached
