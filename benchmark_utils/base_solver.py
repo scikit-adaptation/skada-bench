@@ -213,7 +213,9 @@ class DASolver(BaseSolver):
 
 def log_experiment(dataset, solver, status):
     # Define the directory path
-    directory = "./exp_logs"
+    # This directory will be deleted
+    # when doing `benchopt clean`
+    directory = "./__cache__/exp_logs"
 
     # Check if the directory exists, if not, create it
     directory = Path(directory)
