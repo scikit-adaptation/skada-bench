@@ -7,6 +7,7 @@ with safe_import_context() as import_ctx:
     from abc import abstractmethod
     import numpy as np
     import os
+    from pathlib import Path
     import fcntl
     import pandas as pd
     from sklearn.base import clone
@@ -215,8 +216,10 @@ def log_experiment(dataset, solver, status):
     directory = "./exp_logs"
 
     # Check if the directory exists, if not, create it
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    directory = Path(directory)
+
+    if not directory.exists():
+        directory.mkdir(parents=True)
 
     # Define the file path
     file_name = f"{directory}/{dataset.name}_experiment_log.csv"
