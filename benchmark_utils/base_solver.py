@@ -253,7 +253,7 @@ def log_experiment(dataset, solver, status):
                 df.loc[mask, 'Status'] = status
 
             # Write the DataFrame back to the CSV file
-            df.to_csv(file_name, index=False, mode='a')
+            df.to_csv(file_name, index=False, mode='w')
         finally:
             # Release the file lock
             fcntl.flock(f, fcntl.LOCK_UN)
