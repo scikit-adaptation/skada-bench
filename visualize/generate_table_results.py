@@ -72,6 +72,7 @@ DA_TECHNIQUES = {
         'joint_distribution_adaptation',
         'conditional_transferable_components',
         'transfer_joint_matching',
+        'CTC',
         'PCA',
     ],
     'Other': [
@@ -103,6 +104,7 @@ ESTIMATOR_DICT = {
     'NO_DA_SOURCE_ONLY': 'Train Src',
     'NO_DA_TARGET_ONLY': 'Train Tgt',
     'DASVM': 'DASVM',
+    'CTC': 'CTC'
 }
 
 SHIFT_ACRONYMS = {
