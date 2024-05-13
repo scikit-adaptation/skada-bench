@@ -7,6 +7,7 @@ with safe_import_context() as import_ctx:
     from abc import abstractmethod
     import numpy as np
     import os
+    import fcntl
     import pandas as pd
     from sklearn.base import clone
     from sklearn.model_selection import GridSearchCV
@@ -214,21 +215,28 @@ def log_experiment(dataset, solver, status):
 
     dataset_name = str(dataset)
 
-    # Read the CSV file into a DataFrame or create a new one if it doesn't exist
-    if os.path.exists(file_name):
-        df = pd.read_csv(file_name)
-    else:
-        df = pd.DataFrame(columns=['Dataset', 'Solver', 'Status'])
+    # Acquire a file lock
+    with open(file_name, 'a') as f:
+        fcntl.flock(f, fcntl.LOCK_EX)
 
-    # Update the status of the existing row
-    mask = (df['Dataset'] == dataset_name) & (df['Solver'] == solver)
+        # Read the CSV file into a DataFrame or create a new one if it doesn't exist
+        if os.path.exists(file_name):
+            df = pd.read_csv(file_name)
+        else:
+            df = pd.DataFrame(columns=['Dataset', 'Solver', 'Status'])
 
-    # If row doesnt exist yet, create it
-    if mask.sum() == 0:
-        new_row = pd.DataFrame({'Dataset': [dataset_name], 'Solver': [solver], 'Status': [status]})
-        df = pd.concat([df, new_row], ignore_index=True)
-    else:
-        df.loc[mask, 'Status'] = status
+        # Update the status of the existing row
+        mask = (df['Dataset'] == dataset_name) & (df['Solver'] == solver)
 
-    # Write the DataFrame back to the CSV file
-    df.to_csv(file_name, index=False)
+        # If row doesnt exist yet, create it
+        if mask.sum() == 0:
+            new_row = pd.DataFrame({'Dataset': [dataset_name], 'Solver': [solver], 'Status': [status]})
+            df = pd.concat([df, new_row], ignore_index=True)
+        else:
+            df.loc[mask, 'Status'] = status
+
+        # Write the DataFrame back to the CSV file
+        df.to_csv(file_name, index=False)
+
+        # Release the file lock
+        fcntl.flock(f, fcntl.LOCK_UN)
