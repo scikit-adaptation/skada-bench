@@ -6,6 +6,7 @@ from benchopt import BaseSolver, safe_import_context
 with safe_import_context() as import_ctx:
     from abc import abstractmethod
     import numpy as np
+    import os
     from sklearn.base import clone
     from sklearn.model_selection import GridSearchCV
     from skada.metrics import (
@@ -84,6 +85,11 @@ class DASolver(BaseSolver):
     n_splits_cv = 5
     test_size_cv = 0.2
 
+    if 'SLURM_CPUS_PER_TASK' in os.environ:
+        n_jobs = int(os.environ['SLURM_CPUS_PER_TASK'])
+    else:
+        n_jobs = 1
+
     @abstractmethod
     def get_estimator(self):
         """Return an estimator compatible with the `sklearn.GridSearchCV`."""
@@ -124,7 +130,8 @@ class DASolver(BaseSolver):
 
         self.clf = GridSearchCV(
             self.da_estimator, self.param_grid, refit=False,
-            scoring=self.criterions, cv=self.gs_cv, error_score=-np.inf
+            scoring=self.criterions, cv=self.gs_cv, error_score=-np.inf,
+            n_jobs=self.n_jobs
         )
 
     def run(self, n_iter):
