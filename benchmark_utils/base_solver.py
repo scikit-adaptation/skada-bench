@@ -137,9 +137,17 @@ class DASolver(BaseSolver):
 
         # To log the experiment in a csv file
         self.dataset = kwargs['dataset']
-        log_experiment(self.dataset, self.name, 'Running')
+
+        # Seems like benchopt executes set_objective() but not run()
+        # When the experimenent is already done and cached
+        # So we set each exp to finished and if it runs it,
+        # it will be set to running
+        log_experiment(self.dataset, self.name, 'Finished')
 
     def run(self, n_iter):
+        # Set the experiment to running
+        log_experiment(self.dataset, self.name, 'Running')
+
         if self.name == 'NO_DA_TARGET_ONLY':
             # We are in a case of no domain adaptation
             # We dont need to use masked targets
@@ -220,14 +228,7 @@ def log_experiment(dataset, solver, status):
         new_row = pd.DataFrame({'Dataset': [dataset_name], 'Solver': [solver], 'Status': [status]})
         df = pd.concat([df, new_row], ignore_index=True)
     else:
-        if status == 'Finished':
-            df.loc[mask, 'Status'] = status
-        else:
-            # Seems like benchopt executes set_objective() but not run()
-            # When the experimenent is already done and cached
-            # Thus it will set a done exp to 'Running' BUT it will not reset
-            # it to 'Finish' after the run() method.
-            pass
+        df.loc[mask, 'Status'] = status
 
     # Write the DataFrame back to the CSV file
     df.to_csv(file_name, index=False)
