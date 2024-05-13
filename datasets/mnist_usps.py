@@ -23,7 +23,7 @@ class Dataset(BaseDataset):
     parameters = {
         'n_samples_source, n_samples_target': [(10000, 10000)],
         'source_target': [('MNIST', 'USPS'),
-                          ('USPS', 'MNIST')]
+                          ('USPS', 'MNIST')],
         'random_state': [27],
     }
 
