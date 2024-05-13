@@ -15,19 +15,15 @@ with safe_import_context() as import_ctx:
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "Digit"
+    name = "mnis_usps"
 
     # List of parameters to generate the datasets. The benchmark will consider
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
         'n_samples_source, n_samples_target': [(10000, 10000)],
-        'source_target': [('MNIST', 'SVHN'),
-                          ('MNIST', 'USPS'),
-                          ('SVHN', 'USPS'),
-                          ('SVHN', 'MNIST'),
-                          ('USPS', 'MNIST'),
-                          ('USPS', 'SVHN')],
+        'source_target': [('MNIST', 'USPS'),
+                          ('USPS', 'MNIST')]
         'random_state': [27],
     }
 

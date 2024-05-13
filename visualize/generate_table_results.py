@@ -12,9 +12,9 @@ Example usage:
     # python generate_table_results.py ../output_choleski/outputs_office31surf
     # --dataset office31surf
 
-    # For Digit dataset
-    # python generate_table_results.py ../output_choleski/outputs_digits
-    # --dataset digit
+    # For mnist_usps dataset
+    # python generate_table_results.py ../output_choleski/outputs_mnist_usps
+    # --dataset mnist_usps
 
     # For 20news dataset
     # python generate_table_results.py ../output_choleski/outputs_20newsgroup

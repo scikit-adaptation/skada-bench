@@ -14,9 +14,9 @@ Example usage:
     # python visualize_hp_impact.py
     # --directory ../output_choleski/outputs_office31surf
 
-    # For Digit dataset
+    # For mnist_usps dataset
     # python visualize_hp_impact.py
-    # --directory ../output_choleski/outputs_digits
+    # --directory ../output_choleski/outputs_mnist_usps
 
     # For 20news dataset
     # python visualize_hp_impact.py

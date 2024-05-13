@@ -25,7 +25,7 @@ class Solver(DASolver):
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset_name):
         datasets_to_avoid = [
             'Office31SURF',
-            'Digit',
+            'mnist_usps',
             '20NewsGroups',
         ]
 

@@ -8,4 +8,4 @@ solver:
 
 # We define the datasets
 dataset:
-  - Digit
+  - mnist_usps
