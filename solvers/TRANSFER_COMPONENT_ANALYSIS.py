@@ -21,7 +21,7 @@ class Solver(DASolver):
         'transfercomponentanalysisadapter__kernel': ['rbf'],
         'transfercomponentanalysisadapter__n_components': [1, 2, 3],
         'transfercomponentanalysisadapter__mu': [0.01, 0.1],
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset_name):

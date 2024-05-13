@@ -31,7 +31,8 @@ with safe_import_context() as import_ctx:
 
 BASE_ESTIMATOR_DICT = {
     "LR": LogisticRegression(),
-    "SVC": SVC(probability=True, kernel='rbf', C=100, gamma=0.01),
+    "SVC": SVC(probability=True),
+    "SVC_mnist_usps": SVC(probability=True, kernel='rbf', C=100, gamma=0.01),
     "XGB": XGBClassifier(),
 }
 

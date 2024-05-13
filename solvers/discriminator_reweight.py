@@ -17,7 +17,7 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {'finalestimator__estimator_name': ["LR", "SVC", "XGB"],}
+    param_grid = {'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"]}
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.

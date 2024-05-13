@@ -22,7 +22,7 @@ class Solver(DASolver):
         'mmdtarsreweightadapter__reg': [1e-10, 1e-8, 1e-6],
         'mmdtarsreweightadapter__tol': [1e-6, 1e-4],
         'mmdtarsreweightadapter__max_iter': [1000],
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset_name):

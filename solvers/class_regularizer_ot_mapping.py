@@ -25,7 +25,7 @@ class Solver(DASolver):
         'classregularizerotmappingadapter__max_iter': [100],
         'classregularizerotmappingadapter__max_inner_iter': [100],
         'classregularizerotmappingadapter__tol': [10e-9],
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset_name):

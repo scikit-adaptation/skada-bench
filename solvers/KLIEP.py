@@ -22,7 +22,7 @@ class Solver(DASolver):
         'kliepreweightadapter__tol': [1e-6],
         'kliepreweightadapter__max_iter': [1000],
         'kliepreweightadapter__random_state': [0],
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 
     def get_estimator(self):
