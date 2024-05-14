@@ -17,7 +17,12 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {'finalestimator__estimator_name': ["LR", "SVC", "XGB"],}
+    param_grid = {
+        'nearestneighborreweightadapter__n_neighbors': [1, 2, 5, 10, 20],
+        'nearestneighborreweightadapter__weights': ['uniform', 'distance'],
+        'nearestneighborreweightadapter__leaf_size': [20, 30, 50],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+    }
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
