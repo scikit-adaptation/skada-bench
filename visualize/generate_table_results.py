@@ -55,7 +55,9 @@ DA_TECHNIQUES = {
         'KLIEP',
         'discriminator_reweight',
         'KMM',
-        "TarS"
+        "TarS",
+        'density_reweight',
+        'nearest_neighbor_reweight',
     ],
     'Mapping': [
         'CORAL',
@@ -104,7 +106,9 @@ ESTIMATOR_DICT = {
     'NO_DA_SOURCE_ONLY': 'Train Src',
     'NO_DA_TARGET_ONLY': 'Train Tgt',
     'DASVM': 'DASVM',
-    'CTC': 'CTC'
+    'CTC': 'CTC',
+    'density_reweight': 'Dens. RW',
+    'nearest_neighbor_reweight': 'NN RW',
 }
 
 SHIFT_ACRONYMS = {
