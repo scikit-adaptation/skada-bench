@@ -18,7 +18,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'mmdlsconsmappingadapter__gamma': [0.1, 1, 10],
+        'mmdlsconsmappingadapter__gamma': [0.1, 1, 10, 15, 20, 30],
         'mmdlsconsmappingadapter__reg_k': [1e-10, 1e-8],
         'mmdlsconsmappingadapter__reg_m': [1e-10, 1e-8],
         'mmdlsconsmappingadapter__tol': [1e-5],
