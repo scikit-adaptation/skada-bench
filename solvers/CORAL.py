@@ -18,7 +18,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'coraladapter__reg': ["auto", 1e-5, 0.5],
+        'coraladapter__reg': ["auto"],
         'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
