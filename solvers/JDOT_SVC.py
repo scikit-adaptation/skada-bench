@@ -24,7 +24,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'jdotclassifier__alpha': [0.5, 0.7, 0.9],
+        'jdotclassifier__alpha': [0.1, 0.3, 0.5, 0.7, 0.9],
         'jdotclassifier__n_iter_max': [100],
         'jdotclassifier__tol': [1e-6],
         'jdotclassifier__thr_weights': [1e-7],
