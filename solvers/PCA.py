@@ -21,7 +21,7 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
         'pca__n_components': [1, 2, 5, 10, 20, 50, 100],
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
     # Raise an error if n_components > min(n_samples, n_features)
     # and doesnt save the result in the benchmark results

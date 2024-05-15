@@ -4,37 +4,29 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    from skada import JDOTClassifier, make_da_pipeline
-    from benchmark_utils.base_solver import DASolver
-    from xgboost import XGBClassifier
+    from skada import NearestNeighborReweightAdapter, make_da_pipeline
+    from benchmark_utils.base_solver import DASolver, FinalEstimator
 
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
 class Solver(DASolver):
-
     # Name to select the solver in the CLI and to display the results.
-    name = 'JDOT_XGB'
-
-    requirements = [
-        "pip:xgboost",
-        "pip:POT",
-    ]
+    name = 'nearest_neighbor_reweight'
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {
-        'jdotclassifier__alpha': [0.5, 0.7, 0.9],
-        'jdotclassifier__n_iter_max': [100, 200, 300],
-        'jdotclassifier__tol': [1e-5, 1e-6],
-        'jdotclassifier__thr_weights': [1e-6, 1e-7],
+        'nearestneighborreweightadapter__n_neighbors': [1, 2, 5, 10, 20],
+        'nearestneighborreweightadapter__weights': ['uniform', 'distance'],
+        'nearestneighborreweightadapter__leaf_size': [20, 30, 50],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
-            JDOTClassifier(base_estimator=XGBClassifier())
-            .set_fit_request(sample_weight=True)
-            .set_score_request(sample_weight=True),
+            NearestNeighborReweightAdapter(),
+            FinalEstimator(),
         )

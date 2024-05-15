@@ -1,0 +1,43 @@
+# This is the Config file for the Simulated dataset
+
+# We define the solvers
+solver:
+    # Baseline
+    - NO_DA_TARGET_ONLY
+    - NO_DA_SOURCE_ONLY
+
+    # Reweighting
+    - KLIEP
+    - density_reweight
+    - gaussian_reweight
+    - discriminator_reweight
+    - KMM
+    - nearest_neighbor_reweight
+    - TarS
+
+    # Mapping
+    - CORAL
+    - MMDSConS
+    - ot_mapping
+    - entropic_ot_mapping
+    - linear_ot_mapping
+    - class_regularizer_ot_mapping
+
+    # Subspace
+    - PCA
+    - subspace_alignment
+    - transfer_component_analysis
+    - transfer_joint_matching
+    - transfer_subspace_learning
+
+    # Other
+    - DASVM
+    - JDOT_SVC
+    - OTLabelProp
+
+# We define the datasets
+dataset:
+    - Simulated
+    # debug
+    # - Simulated[random_state=0,shift=covariate_shift,label=binary]
+

@@ -20,7 +20,7 @@ class Solver(DASolver):
     param_grid = {
         'otlabelpropadapter__metric': ['sqeuclidean','euclidean'],
         'otlabelpropadapter__reg': [None, 0.1],
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 
     def get_estimator(self):

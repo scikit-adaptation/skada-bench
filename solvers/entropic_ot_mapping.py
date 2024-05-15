@@ -23,7 +23,7 @@ class Solver(DASolver):
         'entropicotmappingadapter__norm': [None, 'median', 'max'],
         'entropicotmappingadapter__max_iter': [1000],
         'entropicotmappingadapter__tol': [10e-9],
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 
     def get_estimator(self):

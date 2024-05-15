@@ -12,9 +12,9 @@ Example usage:
     # python generate_table_results.py ../output_choleski/outputs_office31surf
     # --dataset office31surf
 
-    # For Digit dataset
-    # python generate_table_results.py ../output_choleski/outputs_digits
-    # --dataset digit
+    # For mnist_usps dataset
+    # python generate_table_results.py ../output_choleski/outputs_mnist_usps
+    # --dataset mnist_usps
 
     # For 20news dataset
     # python generate_table_results.py ../output_choleski/outputs_20newsgroup
@@ -55,7 +55,9 @@ DA_TECHNIQUES = {
         'KLIEP',
         'discriminator_reweight',
         'KMM',
-        "TarS"
+        "TarS",
+        'density_reweight',
+        'nearest_neighbor_reweight',
     ],
     'Mapping': [
         'CORAL',
@@ -103,6 +105,8 @@ ESTIMATOR_DICT = {
     'NO_DA_SOURCE_ONLY': 'Train Src',
     'NO_DA_TARGET_ONLY': 'Train Tgt',
     'DASVM': 'DASVM',
+    'density_reweight': 'Dens. RW',
+    'nearest_neighbor_reweight': 'NN RW',
 }
 
 SHIFT_ACRONYMS = {
@@ -321,22 +325,24 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
         df_value,
         min_value=0,
         max_value=1,
-        train_on_source=0.5,
+        train_on_source_mean=0.5,
+        train_on_source_std=0,
         is_delta_table=False,
     ):
         # If is_delta_table, we want green > 0
         # red < 0 and transparent = 0
         if is_delta_table:
-            train_on_source = 0
+            train_on_source_mean = 0
+            train_on_source_std = 0
 
         # Intensity range for the green and red colors
         intensity_range = (10, 90)
-        green_threshold = train_on_source
+        green_threshold = train_on_source_mean
 
         if mean_value == 'nan' or np.isnan(mean_value):
             # Return the nan value
             return df_value
-        elif mean_value > green_threshold:
+        elif mean_value > (green_threshold + train_on_source_std):
             green_min = green_threshold
             green_max = max_value
             if green_max - green_min == 0:
@@ -350,7 +356,7 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                     (green_max - green_min)
                 )
             return '\\cellcolor{green!%d}{%s}' % (intensity, df_value)
-        else:
+        elif mean_value < (green_threshold - train_on_source_std):
             # No color if value = 0 for the delta table
             if is_delta_table and mean_value == 0:
                 return df_value
@@ -368,6 +374,8 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                     (red_min - red_max)
                 )
             return '\\cellcolor{red!%d}{%s}' % (intensity, df_value)
+        else:
+            return df_value
 
     # Put in bold the best value for each shift
     if latex_file_name in TABLES_TO_PUT_IN_BOLD:
@@ -419,21 +427,35 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                 ]:
                     # We don't have the train_on_source value for
                     # solvers_vs_datasets_relative_perf_* tables
-                    train_on_source = 0
+                    train_on_source_mean = 0
+                    train_on_source_std = 0
                 else:
-                    train_on_source = means.loc[
+                    train_on_source_mean = means.loc[
                         ESTIMATOR_DICT.get(
                             'NO_DA_SOURCE_ONLY',
                             'NO_DA_SOURCE_ONLY'
                         )
                     ]
 
+                    if not latex_file_name == 'delta_table.tex':
+                        train_on_source_std = float(
+                            df[shift].loc[
+                                ESTIMATOR_DICT.get(
+                                    'NO_DA_SOURCE_ONLY',
+                                    'NO_DA_SOURCE_ONLY'
+                                )
+                            ].split(' ± ')[1]
+                        )
+                    else:
+                        train_on_source_std = 0
+
                 df.loc[value_index][shift] = shade_of_green_red(
                     means.loc[value_index],
                     df.loc[value_index][shift],
                     min_value=means.min(),
                     max_value=means.max(),
-                    train_on_source=train_on_source,
+                    train_on_source_mean=train_on_source_mean,
+                    train_on_source_std=train_on_source_std,
                     is_delta_table=latex_file_name == 'delta_table.tex'
                 )
 

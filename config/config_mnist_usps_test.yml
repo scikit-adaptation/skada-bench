@@ -8,4 +8,4 @@ solver:
 
 # We define the datasets
 dataset:
-  - 20NewsGroups[preprocessing='sentence_transformers']
+  - mnist_usps
