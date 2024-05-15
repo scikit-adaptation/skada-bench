@@ -25,7 +25,7 @@ class Solver(DASolver):
         'transfersubspacelearningadapter__reg': [1e-4],
         'transfersubspacelearningadapter__max_iter': [300],
         'transfersubspacelearningadapter__tol': [1e-4],
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 
     def get_estimator(self):

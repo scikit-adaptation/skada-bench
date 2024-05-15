@@ -21,7 +21,7 @@ class Solver(DASolver):
         'transferjointmatchingadapter__kernel': ['rbf'],
         'transferjointmatchingadapter__n_components': [1, 2, 3],
         'transferjointmatchingadapter__tradeoff': [0, 1e-4, 1e-2],
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 
     def get_estimator(self):
