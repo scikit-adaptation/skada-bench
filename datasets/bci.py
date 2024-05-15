@@ -54,14 +54,9 @@ class Dataset(BaseDataset):
         preprocessors = [
             Preprocessor("pick_types", eeg=True, meg=False, stim=False),
             Preprocessor(lambda data: multiply(data, factor)),
-        ]
-
-        preprocessors += [
             Preprocessor(
                 "filter", l_freq=low_cut_hz, h_freq=high_cut_hz
             ),
-        ]
-        preprocessors += [
             Preprocessor(
                 exponential_moving_standardize,
                 factor_new=factor_new,
@@ -124,7 +119,6 @@ class Dataset(BaseDataset):
             Covariances(estimator="oas"), TangentSpace()
         )
         X = ts_projector.fit_transform(X)
-
         return dict(
             X=X,
             y=y,
