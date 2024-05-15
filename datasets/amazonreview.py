@@ -1,7 +1,6 @@
 from benchopt import BaseDataset, safe_import_context
 
 with safe_import_context() as import_ctx:
-    import scipy
     import numpy as np
     from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
