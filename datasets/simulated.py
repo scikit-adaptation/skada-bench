@@ -16,11 +16,8 @@ class Dataset(BaseDataset):
         'shift, label': [
             ('covariate_shift', 'binary'),
             ('target_shift', 'binary'),
-            ('target_shift', 'multiclass'),
             ('concept_drift', 'binary'),
-            ('concept_drift', 'multiclass'),
             ('subspace', 'binary'),
-            ('subspace', 'multiclass')
         ],
         'random_state': list(range(5))
     }
