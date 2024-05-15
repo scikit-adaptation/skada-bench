@@ -27,12 +27,12 @@ class Dataset(BaseDataset):
     # Name to select the dataset in the CLI and to display the results.
     name = "BCI"
 
-    install_cmd = 'conda'
+    install_cmd = "conda"
 
-    requirements = ['braindecode']
+    requirements = ["braindecode"]
 
     parameters = {
-        'subject_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
+        "subject_id": [1, 2, 3, 4, 5, 6, 7, 8, 9],
     }
 
     def get_data(self):
@@ -54,9 +54,7 @@ class Dataset(BaseDataset):
         preprocessors = [
             Preprocessor("pick_types", eeg=True, meg=False, stim=False),
             Preprocessor(lambda data: multiply(data, factor)),
-            Preprocessor(
-                "filter", l_freq=low_cut_hz, h_freq=high_cut_hz
-            ),
+            Preprocessor("filter", l_freq=low_cut_hz, h_freq=high_cut_hz),
             Preprocessor(
                 exponential_moving_standardize,
                 factor_new=factor_new,
@@ -113,14 +111,9 @@ class Dataset(BaseDataset):
         y_target = np.array(y)
 
         X, y, sample_domain = source_target_merge(
-                    X_source, X_target, y_source, y_target)
+            X_source, X_target, y_source, y_target
+        )
 
-        ts_projector = make_pipeline(
-            Covariances(estimator="oas"), TangentSpace()
-        )
+        ts_projector = make_pipeline(Covariances(estimator="oas"), TangentSpace())
         X = ts_projector.fit_transform(X)
-        return dict(
-            X=X,
-            y=y,
-            sample_domain=sample_domain
-        )
+        return dict(X=X, y=y, sample_domain=sample_domain)

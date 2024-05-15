@@ -12,14 +12,14 @@ class Dataset(BaseDataset):
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
-        'n_samples_source, n_samples_target': [(50, 50)],
-        'shift, label': [
-            ('covariate_shift', 'binary'),
-            ('target_shift', 'binary'),
-            ('concept_drift', 'binary'),
-            ('subspace', 'binary'),
+        "n_samples_source, n_samples_target": [(50, 50)],
+        "shift, label": [
+            ("covariate_shift", "binary"),
+            ("target_shift", "binary"),
+            ("concept_drift", "binary"),
+            ("subspace", "binary"),
         ],
-        'random_state': list(range(5))
+        "random_state": list(range(5)),
     }
 
     def get_data(self):
@@ -35,8 +35,8 @@ class Dataset(BaseDataset):
             m = 1
             noise = 0.8
         X, y, sample_domain = make_shifted_datasets(
-            n_samples_source=m*self.n_samples_source,
-            n_samples_target=m*self.n_samples_target,
+            n_samples_source=m * self.n_samples_source,
+            n_samples_target=m * self.n_samples_target,
             shift=self.shift,
             noise=noise,
             label=self.label,

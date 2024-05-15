@@ -19,9 +19,9 @@ class Dataset(BaseDataset):
     # Name to select the dataset in the CLI and to display the results.
     name = "20NewsGroups"
 
-    install_cmd = 'conda'
+    install_cmd = "conda"
 
-    requirements = ['scikit-learn']
+    requirements = ["scikit-learn"]
 
     references = [
         "Dai W., Yang Q., Xue G., and Yu Y, "
@@ -38,10 +38,7 @@ class Dataset(BaseDataset):
             ("sci", "rec"),
             ("sci", "talk"),
         ],
-        "preprocessing": [
-            "min_hash",
-            "sentence_transformers"
-        ]
+        "preprocessing": ["min_hash", "sentence_transformers"],
     }
 
     path_preprocessed_data = Path("data/20newsgroups_preprocessed.pkl")
@@ -60,8 +57,7 @@ class Dataset(BaseDataset):
         path_preprocessed_data = Path(self.path_preprocessed_data)
         if not path_preprocessed_data.exists():
             urllib.request.urlretrieve(
-                self.url_preprocessed_data,
-                path_preprocessed_data
+                self.url_preprocessed_data, path_preprocessed_data
             )
 
         # Load preprocessed data
@@ -73,52 +69,45 @@ class Dataset(BaseDataset):
         target = self.source_target[1]
 
         source_dict = {
-            "rec": ['rec.autos', 'rec.motorcycles'],
-            "talk": ['talk.politics.guns', 'talk.politics.misc'],
-            "sci": ['sci.crypt', 'sci.electronics']
+            "rec": ["rec.autos", "rec.motorcycles"],
+            "talk": ["talk.politics.guns", "talk.politics.misc"],
+            "sci": ["sci.crypt", "sci.electronics"],
         }
 
         target_dict = {
-            "rec": ['rec.sport.baseball', 'rec.sport.hockey'],
-            "talk": ['talk.religion.misc', 'talk.politics.mideast'],
-            "sci": ['sci.med', 'sci.space']
+            "rec": ["rec.sport.baseball", "rec.sport.hockey"],
+            "talk": ["talk.religion.misc", "talk.politics.mideast"],
+            "sci": ["sci.med", "sci.space"],
         }
 
         source_index = np.isin(
             data.target,
             [
                 data.target_names.index(s)
-                for s in source_dict[source]+source_dict[target]
-            ]
+                for s in source_dict[source] + source_dict[target]
+            ],
         )
         target_index = np.isin(
             data.target,
             [
                 data.target_names.index(s)
-                for s in target_dict[source]+target_dict[target]
-            ]
+                for s in target_dict[source] + target_dict[target]
+            ],
         )
         positive_index = [
             data.target_names.index(s)
-            for s in target_dict[source]+source_dict[source]
+            for s in target_dict[source] + source_dict[source]
         ]
 
         X_source = X[source_index]
         X_target = X[target_index]
 
-        y_source = np.isin(data.target[source_index],
-                           positive_index).astype(int)
-        y_target = np.isin(data.target[target_index],
-                           positive_index).astype(int)
-        sample_domain = np.array([1]*len(y_source)+[-2]*len(y_target))
+        y_source = np.isin(data.target[source_index], positive_index).astype(int)
+        y_target = np.isin(data.target[target_index], positive_index).astype(int)
+        sample_domain = np.array([1] * len(y_source) + [-2] * len(y_target))
 
         X, y, sample_domain = source_target_merge(
-            X_source, X_target, y_source, y_target,
-            sample_domain=sample_domain
+            X_source, X_target, y_source, y_target, sample_domain=sample_domain
         )
 
-        return dict(
-            X=X,
-            y=y,
-            sample_domain=sample_domain
-        )
+        return dict(X=X, y=y, sample_domain=sample_domain)
