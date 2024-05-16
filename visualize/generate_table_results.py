@@ -77,14 +77,15 @@ DA_TECHNIQUES = {
         'PCA',
     ],
     'Other': [
-        'JDOT_XGB',
-        'DASVM'
+        'JDOT_SVC',
+        'DASVM',
+        'OTLabelProp'
     ],
 }
 
 ESTIMATOR_DICT = {
     'CORAL': 'CORAL',
-    'JDOT_XGB': 'JDOT',
+    'JDOT_SVC': 'JDOT',
     'KLIEP': 'KLIEP',
     'PCA': 'JPCA',
     'discriminator_reweight': 'Disc. RW',
@@ -107,6 +108,7 @@ ESTIMATOR_DICT = {
     'DASVM': 'DASVM',
     'density_reweight': 'Dens. RW',
     'nearest_neighbor_reweight': 'NN RW',
+    'OTLabelProp': 'OTLabelProp'
 }
 
 SHIFT_ACRONYMS = {
@@ -887,16 +889,19 @@ def generate_latex_all_tables(all_latex_tables, dataset_name):
     print(f'LaTeX all tables saved to {latex_file_name}')
 
 
-def keep_only_best_scorer_per_estimator(df):
+def keep_only_best_scorer_per_estimator(df, specific_col = None):
     df_copy = df.copy()
     df_copy['estimator'] = [index_tuple[1] for index_tuple in df.index]
     df_copy.index = [index_tuple[0] for index_tuple in df.index]
 
     mean_index = None
-    for i in range(0, len(df.columns)):
-        if df.columns[i][2] == 'mean':
-            mean_index = i
-            break
+    if not specific_col:
+        for i in range(0, len(df.columns)):
+            if df.columns[i][2] == 'mean':
+                mean_index = i
+                break
+    else:
+        mean_index = df.columns.get_loc(specific_col)
 
     if mean_index is None:
         raise ValueError('No mean column found')

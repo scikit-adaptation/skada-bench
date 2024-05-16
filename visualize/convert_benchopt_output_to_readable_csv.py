@@ -23,9 +23,12 @@ Example:
 import os
 import argparse
 
+import pandas as pd
+
 from generate_table_results import (
-    generate_df,
     process_files_in_directory,
+    keep_only_best_scorer_per_estimator,
+    regex_match,
     DA_TECHNIQUES,
     ESTIMATOR_DICT,
 )
@@ -45,6 +48,33 @@ def clean_benchopt_df(df):
 
     filtered_columns.append('scorer')
     df = df.loc[:, filtered_columns]
+
+    # Get df for the best unsupervised scorer
+    # First we remove the "supervised" scorer
+    best_unsupervised = df[df['scorer'] != 'supervised']
+    best_unsupervised = keep_only_best_scorer_per_estimator(
+        best_unsupervised,
+        specific_col = ('target_accuracy', 'test', 'mean'),
+    )
+
+    # Remove NO_DA methods from the best_unsupervised df
+    no_da_methods = [solver for solver in DA_TECHNIQUES['NO DA']]
+    best_unsupervised = best_unsupervised[
+        ~best_unsupervised.index.get_level_values(1).isin(no_da_methods)
+    ]
+
+    # For the NO_DA methods, we use the results from the supervised scorer
+    no_da_methods = [solver for solver in DA_TECHNIQUES['NO DA']]
+    no_da_df = df[df.index.get_level_values(1).isin(no_da_methods)]
+    no_da_df = no_da_df[no_da_df['scorer'] == 'supervised']
+
+    # Concatenate the two dataframes
+    best_scores_df = pd.concat([best_unsupervised, no_da_df])
+    best_scores_df['scorer'] = "best_scorer"
+
+    # Add the best scores to the original df
+    df = pd.concat([df, best_scores_df])
+    
 
     # Rename the columns by concatenating the tuples with a hyphen, except 'scorer'
     df.columns = [
@@ -72,17 +102,28 @@ def clean_benchopt_df(df):
     df['type'].fillna('Unknown', inplace=True)
 
     # Rename solvers with ESTIMATOR_DICT
-    df['estimator'] = df['estimator'].map(ESTIMATOR_DICT)
+    df['estimator'] = df['estimator'].map(lambda x: ESTIMATOR_DICT.get(x, x))
+
+    # Function to extract shift value
+    def extract_shift(dataset):
+        if 'shift' in dataset:
+            return dataset.split('=')[1].strip(']')
+        elif 'source_target' in dataset:
+            regex = ".*source_target=\('([^']+)', '([^']+)'\).*"
+            return regex_match(regex, dataset)
+        return None
+    
+    # Add shift as a new column
+    df['shift'] = df['dataset'].apply(extract_shift)
 
     # Remove the params in the dataset name
     df['dataset'] = df['dataset'].apply(lambda x: x.split('[')[0])
 
     # Reorganize df
     df = df[
-        ['dataset', 'estimator', 'scorer', 'type'] +
-        [col for col in df.columns if col not in ['dataset', 'estimator', 'scorer', 'type']]
+        ['dataset', 'shift', 'estimator', 'scorer', 'type'] +
+        [col for col in df.columns if col not in ['dataset', 'shift', 'estimator', 'scorer', 'type']]
     ]
-
     return df
 
 
