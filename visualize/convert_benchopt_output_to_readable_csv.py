@@ -1,6 +1,8 @@
 """
 This script processes and cleans output files from Benchopt, converting them
 into a more readable CSV format.
+Note: The rows with 'best_scorer' as the scorer are the best unsupervised scorers,
+except for the NO_DA methods, which use the supervised scorer.
 
 The script performs the following steps:
 1. Loads data from a specified directory containing CSV or Parquet files.
@@ -8,7 +10,7 @@ The script performs the following steps:
 3. Exports the cleaned dataframe to a specified output directory.
 
 Usage:
-    python clean_benchopt_output.py --directory <input_directory> --output <output_directory>
+    python clean_benchopt_output_to_readable_format.py --directory <input_directory> --output <output_directory>
 
 Arguments:
     --directory: Path to the directory containing the CSV or Parquet files.
@@ -17,7 +19,7 @@ Arguments:
                  Default is './cleaned_outputs'.
 
 Example:
-    python clean_benchopt_output.py --directory ../outputs --output ./cleaned_outputs
+    python clean_benchopt_output_to_readable_format.py --directory ../outputs --output ./cleaned_outputs
 """
 
 import os
