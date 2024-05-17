@@ -109,7 +109,7 @@ def clean_benchopt_df(df):
     # Function to extract shift value
     def extract_shift(dataset):
         if 'shift' in dataset:
-            return dataset.split('=')[1].strip(']')
+            return dataset.split('shift=')[1].strip(']')
         elif 'source_target' in dataset:
             regex = ".*source_target=\('([^']+)', '([^']+)'\).*"
             return regex_match(regex, dataset)
