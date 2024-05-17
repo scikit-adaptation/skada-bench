@@ -919,7 +919,8 @@ def generate_latex_all_tables(all_latex_tables, dataset_name):
 def keep_only_best_scorer_per_estimator(df, specific_col = None):
     df_copy = df.copy()
     df_copy['estimator'] = [index_tuple[1] for index_tuple in df.index]
-    df_copy.index = [index_tuple[0] for index_tuple in df.index]
+    df_copy['dataset'] = [index_tuple[0] for index_tuple in df.index]
+    df_copy = df_copy.reset_index(drop=True)
 
     mean_index = None
     if not specific_col:
@@ -932,30 +933,13 @@ def keep_only_best_scorer_per_estimator(df, specific_col = None):
 
     if mean_index is None:
         raise ValueError('No mean column found')
+    
+    max_indices = df_copy.groupby([df_copy['dataset'], 'estimator'])[[df_copy.columns[mean_index]]].idxmax()
+    max_rows = df_copy.iloc[max_indices.values.flatten()]
 
-    result = df_copy.groupby(
-        [df_copy.index, 'estimator']
-        )[
-            [df_copy.columns[mean_index], 'scorer']
-        ].agg('max')
+    max_rows = max_rows.set_index(['dataset', 'estimator'])
 
-    to_keep_masks = []
-    for index, row in result.iterrows():
-        # Step 1: Perform boolean indexing to select rows based on condition
-        mask_index = ~df.index.isin([index])
-        mask_scorer = df['scorer'] != row['scorer']
-
-        # Step 2: Assign the selected rows back to the DataFrame
-        # Combine the masks
-        combined_mask = mask_index | mask_scorer
-
-        to_keep_masks.append(~combined_mask)
-
-    to_keep_masks = np.array(to_keep_masks)
-    combined_mask = np.any(to_keep_masks, axis=0)
-
-    df = df.loc[combined_mask]
-    return df
+    return max_rows
 
 
 def compute_delta_supervised_best_scorer_df(supervised_df, best_scorer_df):
