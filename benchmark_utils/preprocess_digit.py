@@ -114,5 +114,5 @@ if __name__ == "__main__":
     print("Saving the preprocessed data...")
     path = Path('data')
     path.mkdir(exist_ok=True)
-    with open(path / 'digit.pkl', 'wb') as f:
+    with open(path / 'digit_preprocessed.pkl', 'wb') as f:
         pickle.dump(preprocessed_data, f)

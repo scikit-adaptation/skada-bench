@@ -6,7 +6,9 @@ from benchopt import BaseDataset, safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     import numpy as np
+    from pathlib import Path
     import pickle
+    import urllib.request
 
     from skada.utils import source_target_merge
 
@@ -27,13 +29,25 @@ class Dataset(BaseDataset):
         'random_state': [27],
     }
 
+    path_preprocessed_data = "data/digit_preprocessed.pkl"
+    url_preprocessed_data = "https://figshare.com/ndownloader/files/46363525?private_link=f15a4a7c81084815114b"
+
     def _get_dataset(self, dataset_name, n_samples=None):
         rng = np.random.RandomState(self.random_state)
 
         dataset_name = dataset_name.lower()
 
+        # Check if the preprocessed data is available
+        # If not, download them
+        path_preprocessed_data = Path(self.path_preprocessed_data)
+        if not path_preprocessed_data.exists():
+            urllib.request.urlretrieve(
+                self.url_preprocessed_data,
+                path_preprocessed_data
+            )
+
         # Load preprocessed data
-        with open(f'data/digit.pkl', 'rb') as f:
+        with open(path_preprocessed_data, 'rb') as f:
             data = pickle.load(f)
 
         # Sample data
