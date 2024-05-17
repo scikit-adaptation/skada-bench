@@ -16,7 +16,7 @@ class Solver(DASolver):
     name = 'KLIEP'
 
     param_grid = {
-        'kliepreweightadapter__gamma': [0.01, 0.1, 1., 10., 100. 'auto', 'scale'],
+        'kliepreweightadapter__gamma': [0.01, 0.1, 1., 10., 100., 'auto', 'scale'],
         'kliepreweightadapter__n_centers': [100, 1000],
         'kliepreweightadapter__cv': [5],
         'kliepreweightadapter__tol': [1e-6],
