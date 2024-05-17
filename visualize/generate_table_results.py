@@ -757,7 +757,24 @@ def generate_all_tables(
     # First we remove the "supervised" scorer
     filtered_df = filtered_df[filtered_df['scorer'] != 'supervised']
 
-    other_scorers_df = keep_only_best_scorer_per_estimator(filtered_df)
+    # We keep only the best unsupervised scorer for each estimator
+    # in best_unsupervised_df. Except for the NO_DA methods,
+    # where we keep the supervised scorer
+    best_unsupervised_df = keep_only_best_scorer_per_estimator(filtered_df)
+
+    # Remove NO_DA methods from the best_unsupervised df
+    no_da_methods = [solver for solver in DA_TECHNIQUES['NO DA']]
+    best_unsupervised_df = best_unsupervised_df[
+        ~best_unsupervised_df.index.get_level_values(1).isin(no_da_methods)
+    ]
+
+    # For the NO_DA methods, we use the results from the supervised scorer
+    no_da_methods = [solver for solver in DA_TECHNIQUES['NO DA']]
+    no_da_df = supervised_scorer_df[supervised_scorer_df.index.get_level_values(1).isin(no_da_methods)]
+
+    # Concatenate the two dataframes
+    best_scores_df = pd.concat([best_unsupervised_df, no_da_df])
+    best_scores_df['scorer'] = "best_scorer"
 
     ###########################################
     supervised_scorer_df = create_solver_vs_shift_df(
@@ -766,8 +783,8 @@ def generate_all_tables(
     )
     # supervised_scorer_df = compute_avg_ranking(supervised_scorer_df)
 
-    other_scorers_df = create_solver_vs_shift_df(other_scorers_df, shift_name)
-    # other_scorers_df = compute_avg_ranking(other_scorers_df)
+    best_scores_df = create_solver_vs_shift_df(best_scores_df, shift_name)
+    # best_unsupervised_df = compute_avg_ranking(best_unsupervised_df)
 
     all_latex_tables = {}
 
@@ -781,19 +798,19 @@ def generate_all_tables(
         )
         all_latex_tables['Supervised scorer'] = supervised_scorer_table
     else:
-        print('Computing other scorers DataFrame')
-        other_scorers_table = generate_latex_table(
-            other_scorers_df,
+        print('Computing best unsupervised scorer DataFrame')
+        best_unsupervised_table = generate_latex_table(
+            best_scores_df,
             folder=table_prefix,
             latex_file_name='other_scorers_table.tex'
         )
-        all_latex_tables['Best realistic scorer'] = other_scorers_table
+        all_latex_tables['Best unsupervised scorer'] = best_unsupervised_table
 
     print('\n')
     print('Computing delta between the supervised scorer and the best scorer:')
     diff_df = compute_delta_supervised_best_scorer_df(
         supervised_scorer_df,
-        other_scorers_df
+        best_scores_df
     )
     delta_table = generate_latex_table(
         diff_df,
@@ -830,7 +847,7 @@ def generate_all_tables(
 
     # Plot the relative performances per estimator
     plot_relative_performances_per_estimator(
-        other_scorers_df,
+        best_scores_df,
         folder=table_prefix,
         plot_file_name='relative_performances_per_estimator.jpg',
         normalize=False
@@ -838,14 +855,14 @@ def generate_all_tables(
 
     # Normalized version of the plot
     plot_relative_performances_per_estimator(
-        other_scorers_df,
+        best_scores_df,
         folder=table_prefix,
         plot_file_name='relative_performances_per_estimator_normalized.jpg',
         normalize=True
     )
 
     plot_accuracy_vs_shifts(
-        other_scorers_df,
+        best_scores_df,
         folder=table_prefix,
         plot_file_name='accuracy_vs_shift.jpg'
     )
@@ -861,7 +878,7 @@ def generate_all_tables(
     print(f"Exclude solvers: {exlude_solvers}")
     print(f"Supervised scorer only: {supervised_scorer_only}")
 
-    return other_scorers_df
+    return best_unsupervised_df
 
 
 def generate_latex_all_tables(all_latex_tables, dataset_name):
@@ -1235,7 +1252,7 @@ def compute_relative_perf_df(df, normalize=False, handle_nan=True):
     # compared to NO_DA_TARGET_ONLY as a baseline
 
     df = df.map(lambda x: '0.0 ± 0.0' if pd.isna(x) else x)
-    df = df.apply(lambda x: x.str.split(' ± ').apply(lambda x: float(x[0])))
+    df = df.apply(lambda x: x.str.split(' ± ').apply(lambda x: float(x[0])))    
 
     if 'NO_DA_SOURCE_ONLY' not in df.index:
         Warning('NO_DA_SOURCE_ONLY not found in the index \
@@ -1669,7 +1686,7 @@ if __name__ == "__main__":
     # Process files in the specified directory + Cleanup the DataFrames
     df = process_files_in_directory(args.directory)
 
-    other_scorers_df = generate_all_tables(
+    best_unsupervised_df = generate_all_tables(
         df,
         exlude_solvers=args.exlude_solvers,
         supervised_scorer_only=args.supervised_scorer_only,
