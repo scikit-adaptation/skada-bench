@@ -6,6 +6,10 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from skada import DiscriminatorReweightAdapter, make_da_pipeline
     from benchmark_utils.base_solver import DASolver, FinalEstimator
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.neighbors import KNeighborsClassifier
+    from sklearn.svm import SVC
+    from xgboost import XGBClassifier
 
 
 # The benchmark solvers must be named `Solver` and
@@ -18,6 +22,15 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     param_grid = {'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"]}
+    param_grid = {
+        'discriminatorreweightadapter__domain_classifier': [
+            LogisticRegression(),
+            KNeighborsClassifier(),
+            SVC(probability=True),
+            XGBClassifier(),
+        ],
+        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+    }
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.

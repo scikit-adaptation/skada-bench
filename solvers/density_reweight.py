@@ -6,6 +6,7 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from skada import DensityReweightAdapter, make_da_pipeline
     from benchmark_utils.base_solver import DASolver, FinalEstimator
+    from sklearn.neighbors import KernelDensity
 
 
 # The benchmark solvers must be named `Solver` and
@@ -17,7 +18,16 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {'finalestimator__estimator_name': ["LR", "SVC", "XGB"],}
+    param_grid = {
+    'densityreweightadapter__weight_estimator': [
+        KernelDensity(bandwidth=0.01),
+        KernelDensity(bandwidth=0.1),
+        KernelDensity(bandwidth=1.),
+        KernelDensity(bandwidth=10.),
+        KernelDensity(bandwidth=100.)
+    ],
+    'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+    }
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
