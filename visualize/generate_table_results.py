@@ -330,11 +330,15 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
         train_on_source_mean=0.5,
         train_on_source_std=0,
         is_delta_table=False,
+        skip_std=False,
     ):
         # If is_delta_table, we want green > 0
         # red < 0 and transparent = 0
         if is_delta_table:
             train_on_source_mean = 0
+            train_on_source_std = 0
+        
+        if skip_std:
             train_on_source_std = 0
 
         # Intensity range for the green and red colors
@@ -450,6 +454,11 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                         )
                     else:
                         train_on_source_std = 0
+                
+                # Since in the mean col we have huge stds
+                # We should not consider it when
+                # coloring our tables
+                skip_std = True if shift == 'Mean' else False
 
                 df.loc[value_index][shift] = shade_of_green_red(
                     means.loc[value_index],
@@ -458,7 +467,8 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                     max_value=means.max(),
                     train_on_source_mean=train_on_source_mean,
                     train_on_source_std=train_on_source_std,
-                    is_delta_table=latex_file_name == 'delta_table.tex'
+                    is_delta_table=latex_file_name == 'delta_table.tex',
+                    skip_std=skip_std,
                 )
 
             # We put the best value in bold
