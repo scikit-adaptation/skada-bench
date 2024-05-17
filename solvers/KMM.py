@@ -16,7 +16,7 @@ class Solver(DASolver):
     name = 'KMM'
 
     param_grid = {
-        'kmmreweightadapter__gamma': [0.1, 1.0, 10.0],
+        'kmmreweightadapter__gamma': [0.01, 0.1, 1.0, 10.0, 100.],
         'kmmreweightadapter__B': [1000.0],
         'kmmreweightadapter__tol': [1e-6],
         'kmmreweightadapter__max_iter': [1000],
