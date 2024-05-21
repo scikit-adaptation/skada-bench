@@ -393,19 +393,7 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                 for key, value in DA_TECHNIQUES.items()
                 if key != 'NO DA'
             }
-
-            values_to_select = np.concatenate(
-                list(filtered_da_techniques.values())
-            )
-            values_to_select = [
-                ESTIMATOR_DICT.get(value, value) for value in values_to_select
-            ]
-            values_to_select = [
-                value for value in values_to_select if value in df.index
-            ]
-
-            max_index = df.loc[values_to_select][shift].dropna().idxmax()
-
+            
             # Add a '+' sign to the values that are not negative
             if latex_file_name in ADD_PLUS_SIGN_TABLES:
                 for value_index in df[shift].index:
@@ -417,6 +405,8 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                 lambda x: float(x.split(' ± ')[0])
                 if not pd.isna(x) else x
             )
+
+            max_index = means.dropna().idxmax()
 
             # We add a shade of green and red to the values
             # depending on their value
@@ -580,7 +570,7 @@ def generate_latex_table(
     df_copy = df.copy()
     df_copy = beautify_df(df_copy)
 
-    df_str = df_copy.map(lambda x: str(x).replace('+', r'+'))
+    df_str = df_copy.applymap(lambda x: str(x).replace('+', r'+'))
 
     # Convert DataFrame to LaTeX table
     latex_table = tabulate_but_better_estimator_index(df_str, latex_file_name)
@@ -1245,7 +1235,7 @@ def compute_relative_perf_df(df, normalize=False, handle_nan=True):
     # Compute the relative performance of each solver
     # compared to NO_DA_TARGET_ONLY as a baseline
 
-    df = df.map(lambda x: '0.0 ± 0.0' if pd.isna(x) else x)
+    df = df.applymap(lambda x: '0.0 ± 0.0' if pd.isna(x) else x)
     df = df.apply(lambda x: x.str.split(' ± ').apply(lambda x: float(x[0])))    
 
     if 'NO_DA_SOURCE_ONLY' not in df.index:
@@ -1335,7 +1325,7 @@ def plot_accuracy_vs_shifts(df, folder, plot_file_name):
     df = df.reindex(sorted_index)
 
     # Split means and stds
-    df = df.map(lambda x: '0.0 ± 0.0' if pd.isna(x) else x)
+    df = df.applymap(lambda x: '0.0 ± 0.0' if pd.isna(x) else x)
     means = df.apply(lambda x: x.str.split(' ± ').apply(lambda x: float(x[0])))
     stds = df.apply(lambda x: x.str.split(' ± ').apply(lambda x: float(x[1])))
 
