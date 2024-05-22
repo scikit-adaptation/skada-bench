@@ -29,12 +29,45 @@ with safe_import_context() as import_ctx:
     from sklearn.svm import SVC
 
 
+LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
+             0.2, 0.5, 1., 2., 5., 10., 20.,
+             50., 100., 200., 500., 1000.]
+
+SVC_C_GRID = [0.001, 0.01, 0.1, 1., 10., 100., 1000.]
+SVC_GAMMA_GRID = [0.001, 0.01, 0.1, 1., 10., 100., 1000.]
+
+XGB_SUBSAMPLE_GRID = [0.5, 0.65, 0.8]
+XGB_COLSAMPLE_GRID = [0.5, 0.65, 0.8]
+XGB_MAXDEPTH_GRID = [3, 6, 10, 20]
+
+
 BASE_ESTIMATOR_DICT = {
     "LR": LogisticRegression(),
     "SVC": SVC(probability=True),
     "SVC_mnist_usps": SVC(probability=True, kernel='rbf', C=100, gamma=0.01),
     "XGB": XGBClassifier(),
 }
+
+for c in LR_C_GRID:
+    k = "LR_C%s"%str(c)
+    BASE_ESTIMATOR_DICT[k] = LogisticRegression(C=c)
+
+for c in SVC_C_GRID:
+    for gamma in SVC_GAMMA_GRID:
+        k = "SVC_C%s_Gamma%s"%(str(c), str(gamma))
+        BASE_ESTIMATOR_DICT[k] = SVC(probability=True, kernel="rbf", C=c, gamma=gamma)
+
+for subsample in XGB_SUBSAMPLE_GRID:
+    for colsample in XGB_COLSAMPLE_GRID:
+        for maxdepth in XGB_MAXDEPTH_GRID:
+            k = "XGB_subsample%s_colsample%s_maxdepth%s"%(str(subsample),
+                                                          str(colsample),
+                                                          str(maxdepth))
+            BASE_ESTIMATOR_DICT[k] = XGBClassifier(max_depth=maxdepth,
+                                 subsample=subsample,
+                                 colsample_bytree=colsample,
+                                 colsample_bylevel=colsample,
+                                 colsample_bynode=colsample)
 
 
 class FinalEstimator(BaseEstimator):

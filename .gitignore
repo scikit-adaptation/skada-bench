@@ -1,5 +1,6 @@
 # Cache directories
 *.ipynb_checkpoints
+*.ipynb
 .pytest_cache
 __pycache__
 __cache__
