@@ -12,7 +12,7 @@ class Dataset(BaseDataset):
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
-        'n_samples_source, n_samples_target': [(50, 50)],
+        'n_samples_source, n_samples_target': [(100, 100)],
         'shift, label': [
             ('covariate_shift', 'binary'),
             ('target_shift', 'binary'),
