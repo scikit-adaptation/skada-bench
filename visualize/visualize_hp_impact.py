@@ -251,6 +251,17 @@ def extract_from_str_params(string):
 
     desired_part = desired_part.replace(' ', '')
 
+    # General regex pattern to match any function call
+    pattern = re.compile(r"\b\w+\(.*?\)")
+
+    # Replace any function call with its string representation
+    desired_part = pattern.sub(lambda x: f"'{x.group()}'", desired_part)
+
+    # Pattern to remove all the params of intricated XGBClassifiers
+    pattern = r'XGBClassifier\([^()]*\)'
+    desired_part = re.sub(pattern, "'XGBClassifier'", desired_part)
+
+    
     try:
         params = ast.literal_eval(desired_part)
     except SyntaxError:
@@ -259,6 +270,7 @@ def extract_from_str_params(string):
         estimators = re.findall(r'base_estimator=([^,()]+)', desired_part)
         # params should be a list of dictionaries
         params = [{'base_estimator': estimator} for estimator in estimators]
+
     return params
 
 
