@@ -27,6 +27,7 @@ with safe_import_context() as import_ctx:
     from xgboost import XGBClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
+    from sklearn.neighbors import KNeighborsClassifier
 
 
 LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
@@ -46,6 +47,7 @@ BASE_ESTIMATOR_DICT = {
     "SVC": SVC(probability=True),
     "SVC_mnist_usps": SVC(probability=True, kernel='rbf', C=100, gamma=0.01),
     "XGB": XGBClassifier(),
+    "KNN": KNeighborsClassifier()
 }
 
 for c in LR_C_GRID:
