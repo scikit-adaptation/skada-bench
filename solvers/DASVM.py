@@ -27,6 +27,7 @@ class Solver(DASolver):
             'Office31SURF',
             'mnist_usps',
             '20NewsGroups',
+            'BCI',
         ]
 
         if dataset_name.split("[")[0] in datasets_to_avoid:

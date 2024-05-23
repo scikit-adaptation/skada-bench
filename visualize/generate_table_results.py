@@ -434,14 +434,20 @@ def tabulate_but_better_estimator_index(df, latex_file_name):
                     ]
 
                     if not latex_file_name == 'delta_table.tex':
-                        train_on_source_std = float(
+                        train_on_source_std = (
                             df[shift].loc[
                                 ESTIMATOR_DICT.get(
                                     'NO_DA_SOURCE_ONLY',
                                     'NO_DA_SOURCE_ONLY'
                                 )
-                            ].split(' ± ')[1]
+                            ]
                         )
+                        if pd.isna(train_on_source_std):
+                            train_on_source_std = 0
+                        else:
+                            train_on_source_std = float(
+                                train_on_source_std.split(' ± ')[1]
+                            )
                     else:
                         train_on_source_std = 0
                 

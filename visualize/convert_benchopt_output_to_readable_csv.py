@@ -113,6 +113,8 @@ def clean_benchopt_df(df):
         elif 'source_target' in dataset:
             regex = ".*source_target=\('([^']+)', '([^']+)'\).*"
             return regex_match(regex, dataset)
+        elif 'subject_id' in dataset:
+            return dataset.split('subject_id=')[1].strip(']')
         return None
     
     # Add shift as a new column
