@@ -4,7 +4,7 @@ import yaml
 with open("./config/best_base_estimators.yml") as stream:
     best_base_estimators = yaml.safe_load(stream)
 
-df = pd.read_csv("readable_csv.csv")
+df = pd.read_csv("./results/results_base_estim_experiments.csv")
 
 def rename_estimator(x):
     return x.split("['")[-1].split("']")[0]
