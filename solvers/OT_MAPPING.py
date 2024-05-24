@@ -17,10 +17,10 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'otmappingadapter__metric': ['sqeuclidean'],
-        'otmappingadapter__norm': [None, 'median', 'max'],
-        'otmappingadapter__max_iter': [100_000],
+    default_param_grid = {
+        'otmappingadapter__metric': ['sqeuclidean', 'cosine', 'cityblock'],
+        'otmappingadapter__norm': ['median'],
+        'otmappingadapter__max_iter': [1_000_000],
         'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 

@@ -17,10 +17,10 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'mmdtarsreweightadapter__gamma': [0.1, 1, 10],
-        'mmdtarsreweightadapter__reg': [1e-10, 1e-8, 1e-6],
-        'mmdtarsreweightadapter__tol': [1e-6, 1e-4],
+    default_param_grid = {
+        'mmdtarsreweightadapter__gamma': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100., 1000., None],
+        'mmdtarsreweightadapter__reg': [1e-6],
+        'mmdtarsreweightadapter__tol': [1e-6],
         'mmdtarsreweightadapter__max_iter': [1000],
         'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
