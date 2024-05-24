@@ -27,7 +27,6 @@ for dataset in dataset_list:
     
     DD = {}
     DD["dataset"] = [dataset]
-    DD["n-repetitions"] = 5
     DD["solver"] = []
 
     for i, name in enumerate(filenames):

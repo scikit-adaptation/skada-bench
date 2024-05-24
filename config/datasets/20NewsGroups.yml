@@ -1,6 +1,5 @@
 dataset:
 - 20NewsGroups
-n-repetitions: 5
 solver:
 - class_regularizer_ot_mapping:
     param_grid:

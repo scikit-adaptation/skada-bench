@@ -17,7 +17,6 @@ dataset_list = [
 ]
 
 param_dict["dataset"] = dataset_list
-param_dict["n-repetitions"] = 5
 
 with open('config/find_best_base_estimators_per_dataset.yml', 'w+') as ff:
     yaml.dump(param_dict, ff)

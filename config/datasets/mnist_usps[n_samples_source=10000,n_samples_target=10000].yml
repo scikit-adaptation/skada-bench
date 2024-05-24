@@ -1,6 +1,5 @@
 dataset:
 - mnist_usps[n_samples_source=10000,n_samples_target=10000]
-n-repetitions: 5
 solver:
 - class_regularizer_ot_mapping:
     param_grid:
