@@ -10,16 +10,17 @@ The script performs the following steps:
 3. Exports the cleaned dataframe to a specified output directory.
 
 Usage:
-    python clean_benchopt_output_to_readable_format.py --directory <input_directory> --output <output_directory>
+    python clean_benchopt_output_to_readable_format.py --directory <input_directory> --domain <target-source> --output <output_directory>
 
 Arguments:
     --directory: Path to the directory containing the CSV or Parquet files.
                  Default is '../outputs'.
+    --domain:    Specify whether to output the results of the 'target' or 'source' domains.
     --output:    Path to the directory where the cleaned CSV file will be saved.
                  Default is './cleaned_outputs'.
 
 Example:
-    python clean_benchopt_output_to_readable_format.py --directory ../outputs --output ./cleaned_outputs
+    python clean_benchopt_output_to_readable_format.py --directory ../outputs --domain target --output ./cleaned_outputs
 """
 
 import os
