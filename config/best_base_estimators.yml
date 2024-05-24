@@ -1,29 +1,27 @@
-# This is theBest base estimators per dataset
-
-AmazonReview:
-    Best: LR
-    BestSVC: SVC
-BCI:
-    Best: LR
-    BestSVC: SVC
-Mushrooms:
-    Best: LR
-    BestSVC: SVC
-mnist_usps[n_samples_source=10000,n_samples_target=10000]:
-    Best: LR
-    BestSVC: SVC
-mnist_usps[n_samples_source=3000,n_samples_target=3000]:
-    Best: LR
-    BestSVC: SVC
-Office31:
-    Best: LR
-    BestSVC: SVC
-OfficeHomeResnet:
-    Best: LR
-    BestSVC: SVC
-Phishing:
-    Best: LR
-    BestSVC: SVC
 20NewsGroups:
-    Best: LR
-    BestSVC: SVC
+  Best: LR
+  BestSVC: SVC
+AmazonReview:
+  Best: LR
+  BestSVC: SVC
+BCI:
+  Best: LR
+  BestSVC: SVC
+Mushrooms:
+  Best: LR
+  BestSVC: SVC
+Office31:
+  Best: LR
+  BestSVC: SVC
+OfficeHomeResnet:
+  Best: LR
+  BestSVC: SVC
+Phishing:
+  Best: LR
+  BestSVC: SVC
+mnist_usps[n_samples_source=10000,n_samples_target=10000]:
+  Best: LR
+  BestSVC: SVC
+mnist_usps[n_samples_source=3000,n_samples_target=3000]:
+  Best: LR
+  BestSVC: SVC
