@@ -17,7 +17,7 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
+    default_param_grid = {
         'gaussianreweightadapter__reg': ["auto", 1e-5, 0.01, 0.5],
         'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }

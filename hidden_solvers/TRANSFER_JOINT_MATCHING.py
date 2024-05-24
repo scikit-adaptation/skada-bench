@@ -17,10 +17,10 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
+    default_param_grid = {
         'transferjointmatchingadapter__kernel': ['rbf'],
         'transferjointmatchingadapter__n_components': [1, 2, 5, 10, 20, 50, 100],
-        'transferjointmatchingadapter__tradeoff': [0, 1e-4, 1e-2],
+        'transferjointmatchingadapter__tradeoff': [0, 1e-2],
         'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 

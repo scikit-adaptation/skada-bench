@@ -15,9 +15,9 @@ class Solver(DASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'KLIEP'
 
-    param_grid = {
-        'kliepreweightadapter__gamma': [0.01, 0.1, 1., 10., 100., 'auto', 'scale'],
-        'kliepreweightadapter__n_centers': [100, 1000],
+    default_param_grid = {
+        'kliepreweightadapter__gamma': [0.0001, 0.001, 0.01, 0.1, 1., 10., 100., 1000., 'auto', 'scale'],
+        'kliepreweightadapter__n_centers': [100],
         'kliepreweightadapter__cv': [5],
         'kliepreweightadapter__tol': [1e-6],
         'kliepreweightadapter__max_iter': [1000],

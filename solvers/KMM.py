@@ -15,8 +15,8 @@ class Solver(DASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'KMM'
 
-    param_grid = {
-        'kmmreweightadapter__gamma': [0.01, 0.1, 1.0, 10.0, 100.],
+    default_param_grid = {
+        'kmmreweightadapter__gamma': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100., 1000., None],
         'kmmreweightadapter__B': [1000.0],
         'kmmreweightadapter__tol': [1e-6],
         'kmmreweightadapter__max_iter': [1000],

@@ -162,6 +162,9 @@ class DASolver(BaseSolver):
                 random_state=self.random_state,
             )
 
+        if self.param_grid == "default":
+            self.param_grid = self.default_param_grid
+        
         print("Param Grid", self.param_grid)
         
         self.clf = GridSearchCV(

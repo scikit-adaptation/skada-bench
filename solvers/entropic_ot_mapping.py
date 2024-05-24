@@ -17,12 +17,12 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    param_grid = {
-        'entropicotmappingadapter__reg_e': [1, 10],
-        'entropicotmappingadapter__metric': ['sqeuclidean'],
-        'entropicotmappingadapter__norm': [None, 'median', 'max'],
+    default_param_grid = {
+        'entropicotmappingadapter__reg_e': [0.1, 0.5, 1.],
+        'entropicotmappingadapter__metric': ['sqeuclidean', 'cosine', 'cityblock'],
+        'entropicotmappingadapter__norm': ['median'],
         'entropicotmappingadapter__max_iter': [1000],
-        'entropicotmappingadapter__tol': [10e-9],
+        'entropicotmappingadapter__tol': [1e-6],
         'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
     }
 

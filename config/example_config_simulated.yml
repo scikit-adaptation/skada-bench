@@ -1,20 +1,25 @@
 dataset:
     - Simulated[label=binary,n_samples_source=100,n_samples_target=100,random_state=0,shift=covariate_shift]
 solver:
-    - KLIEP[param_grid=None]
-    - KMM[param_grid=None]
-    - class_regularizer_ot_mapping[param_grid=None]
-    - CORAL[param_grid=None]
-    - discriminator_reweight[param_grid=None]
-    - entropic_ot_mapping[param_grid=None]
-    - gaussian_reweight[param_grid=None]
-    - linear_ot_mapping[param_grid=None]
-    - MMDSConS[param_grid=None]
-    - NO_DA_SOURCE_ONLY[param_grid=None]
-    - NO_DA_TARGET_ONLY[param_grid=None]
-    - ot_mapping[param_grid=None]
-    - PCA[param_grid=None]
-    - subspace_alignment[param_grid=None]
-    - TarS[param_grid=None]
-    - transfer_component_analysis[param_grid=None]
-    - transfer_joint_matching[param_grid=None]
+    # - KLIEP[param_grid=None]
+    - KMM[param_grid=default]
+    # - class_regularizer_ot_mapping[param_grid=None]
+    # - CORAL[param_grid=default]
+        # param_grid:
+        # - finalestimator__estimator_name:
+        #   - LR
+        #   'coraladapter__reg':
+        #   - auto
+    # - discriminator_reweight[param_grid=None]
+    # - entropic_ot_mapping[param_grid=None]
+    # - gaussian_reweight[param_grid=None]
+    # - linear_ot_mapping[param_grid=None]
+    # - MMDSConS[param_grid=None]
+    # - NO_DA_SOURCE_ONLY[param_grid=None]
+    # - NO_DA_TARGET_ONLY[param_grid=None]
+    # - ot_mapping[param_grid=None]
+    # - PCA[param_grid=None]
+    # - subspace_alignment[param_grid=None]
+    # - TarS[param_grid=None]
+    # - transfer_component_analysis[param_grid=None]
+    # - transfer_joint_matching[param_grid=None]
