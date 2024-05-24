@@ -16,8 +16,6 @@ class Solver(DASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'NO_DA_SOURCE_ONLY_BASE_ESTIM'
 
-    param_grid = {'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"]}
-
     def get_estimator(self):
         # We only use the supervised scorer!
         self.criterions = {
