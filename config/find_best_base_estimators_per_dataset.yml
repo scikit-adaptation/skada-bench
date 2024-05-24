@@ -2,7 +2,8 @@ dataset:
 - AmazonReview
 - BCI
 - Mushrooms
-- mnist_usps
+- mnist_usps[n_samples_source=10000,n_samples_target=10000]
+- mnist_usps[n_samples_source=3000,n_samples_target=3000]
 - Office31
 - OfficeHomeResnet
 - Phishing
@@ -11,6 +12,12 @@ n-repetitions: 1
 solver:
   NO_DA_SOURCE_ONLY_BASE_ESTIM:
     param_grid:
+    - finalestimator__estimator_name:
+      - LR
+    - finalestimator__estimator_name:
+      - SVC
+    - finalestimator__estimator_name:
+      - XGB
     - finalestimator__estimator_name:
       - LR_C0.001
     - finalestimator__estimator_name:

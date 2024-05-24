@@ -33,7 +33,7 @@ class Dataset(BaseDataset):
 
         tmp_folder = './data/OFFICE_31_DECAF_DATASET/'
         dataset = fetch_office31_decaf_all(
-            categories=Office31CategoriesPreset.CALTECH256,
+            # categories=Office31CategoriesPreset.CALTECH256,
             data_home=tmp_folder
         )
 

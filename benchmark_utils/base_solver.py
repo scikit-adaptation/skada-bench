@@ -44,7 +44,6 @@ XGB_MAXDEPTH_GRID = [3, 6, 10, 20]
 BASE_ESTIMATOR_DICT = {
     "LR": LogisticRegression(),
     "SVC": SVC(probability=True),
-    "SVC_mnist_usps": SVC(probability=True, kernel='rbf', C=100, gamma=0.01),
     "XGB": XGBClassifier(),
 }
 
@@ -163,6 +162,8 @@ class DASolver(BaseSolver):
                 random_state=self.random_state,
             )
 
+        print("Param Grid", self.param_grid)
+        
         self.clf = GridSearchCV(
             self.da_estimator, self.param_grid, refit=False,
             scoring=self.criterions, cv=self.gs_cv, error_score=-np.inf,
