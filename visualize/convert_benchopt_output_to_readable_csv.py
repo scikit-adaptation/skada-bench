@@ -10,16 +10,17 @@ The script performs the following steps:
 3. Exports the cleaned dataframe to a specified output directory.
 
 Usage:
-    python clean_benchopt_output_to_readable_format.py --directory <input_directory> --output <output_directory>
+    python clean_benchopt_output_to_readable_format.py --directory <input_directory> --domain <target-source> --output <output_directory>
 
 Arguments:
     --directory: Path to the directory containing the CSV or Parquet files.
                  Default is '../outputs'.
+    --domain:    Specify whether to output the results of the 'target' or 'source' domains.
     --output:    Path to the directory where the cleaned CSV file will be saved.
                  Default is './cleaned_outputs'.
 
 Example:
-    python clean_benchopt_output_to_readable_format.py --directory ../outputs --output ./cleaned_outputs
+    python clean_benchopt_output_to_readable_format.py --directory ../outputs --domain target --output ./cleaned_outputs
 """
 
 import os
@@ -35,15 +36,15 @@ from generate_table_results import (
     ESTIMATOR_DICT,
 )
 
-def clean_benchopt_df(df):
+def clean_benchopt_df(df, domain):
     # We remove '[param_grid=default]' in each method name
     df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=default]')[0]))
 
-    # We keep only the columns target/test + the scorer column
+    # We keep only the columns domain/test + the scorer column
     filtered_columns = [
         col for col in df.columns
         if (
-            'target' in col[0].lower()
+            domain in col[0].lower()
             and 'test' in col[1].lower()
         )
     ]
@@ -56,7 +57,7 @@ def clean_benchopt_df(df):
     best_unsupervised = df[df['scorer'] != 'supervised']
     best_unsupervised = keep_only_best_scorer_per_estimator(
         best_unsupervised,
-        specific_col = ('target_accuracy', 'test', 'mean'),
+        specific_col = (domain + '_accuracy', 'test', 'mean'),
     )
 
     # Remove NO_DA methods from the best_unsupervised df
@@ -86,8 +87,8 @@ def clean_benchopt_df(df):
         for col in df.columns
     ]
 
-    # Remove 'target' in col names since here its implied
-    df.columns = [col.replace('target_', '') for col in df.columns]
+    # Remove the domain in col names since here its implied
+    df.columns = [col.replace(domain + '_', '') for col in df.columns]
 
     # Move dataset name and estimator from index
     df['dataset'] = [index_tuple[0] for index_tuple in df.index]
@@ -145,6 +146,14 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
+        "--domain",
+        type=str,
+        choices=['target', 'source'],
+        help="Specify whether to output the results of the 'target' or 'source' domains.",
+        default='target',
+    )
+
+    parser.add_argument(
         "--output",
         type=str,
         help="Path to the output directory",
@@ -157,8 +166,9 @@ if __name__ == "__main__":
     # Load the data from the specified directory
     df = process_files_in_directory(args.directory)
 
+    print(f"Using {args.domain} domain to generate csv file")
     # Step 2: Clean the dataframe
-    df = clean_benchopt_df(df)
+    df = clean_benchopt_df(df, args.domain)
 
     # Step 3: Export to CSV
     output_directory = args.output
