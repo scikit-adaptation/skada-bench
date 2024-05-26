@@ -1,24 +1,27 @@
 20NewsGroups:
-  Best: LR
+  Best: XGB
   BestSVC: SVC
 AmazonReview:
-  Best: LR
-  BestSVC: SVC
+  Best: LR_C200.0
+  BestSVC: SVC_C100.0_Gamma1.0
 BCI:
-  Best: LR
-  BestSVC: SVC
+  Best: LR_C0.2
+  BestSVC: SVC_C100.0_Gamma0.1
 Mushrooms:
   Best: LR
   BestSVC: SVC
 Office31:
-  Best: LR
+  Best: LR_C0.2
   BestSVC: SVC
 OfficeHomeResnet:
-  Best: LR
-  BestSVC: SVC
+  Best: SVC_C10.0_Gamma0.001
+  BestSVC: SVC_C10.0_Gamma0.001
 Phishing:
-  Best: LR
-  BestSVC: SVC
+  Best: XGB_subsample0.8_colsample0.65_maxdepth20
+  BestSVC: SVC_C10.0_Gamma0.1
+mnist_usps:
+  Best: SVC_C10.0_Gamma0.01
+  BestSVC: SVC_C10.0_Gamma0.01
 mnist_usps[n_samples_source=10000,n_samples_target=10000]:
   Best: LR
   BestSVC: SVC
