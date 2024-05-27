@@ -21,7 +21,7 @@ class Solver(DASolver):
         'otmappingadapter__metric': ['sqeuclidean', 'cosine', 'cityblock'],
         'otmappingadapter__norm': ['median'],
         'otmappingadapter__max_iter': [1_000_000],
-        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):

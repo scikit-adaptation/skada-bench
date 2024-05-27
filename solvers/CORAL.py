@@ -19,7 +19,7 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
         'coraladapter__reg': ["auto"],
-        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):

@@ -19,7 +19,7 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
         'gaussianreweightadapter__reg': ["auto", 1e-5, 0.01, 0.5],
-        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):

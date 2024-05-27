@@ -21,7 +21,7 @@ class Solver(DASolver):
         'kmmreweightadapter__tol': [1e-6],
         'kmmreweightadapter__max_iter': [1000],
         'kmmreweightadapter__smooth_weights': [False],
-        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):
