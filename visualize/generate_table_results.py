@@ -1374,6 +1374,7 @@ def plot_accuracy_vs_shifts(df, folder, plot_file_name):
     x = np.arange(len(shifts))  # the label locations
     width = 0.05  # the width of the bars
     multiplier = 0
+    offset = 0
 
     for estimator in means.index:
         color_map_key = None
@@ -1536,6 +1537,7 @@ def plot_relative_performances_per_estimator(
     x = np.arange(len(shifts))  # the label locations
     width = 0.05  # the width of the bars
     multiplier = 0
+    offset = 0
 
     for estimator in df.index:
         color_map_key = None
