@@ -22,7 +22,7 @@ class Solver(DASolver):
         'mmdtarsreweightadapter__reg': [1e-6],
         'mmdtarsreweightadapter__tol': [1e-6],
         'mmdtarsreweightadapter__max_iter': [1000],
-        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):

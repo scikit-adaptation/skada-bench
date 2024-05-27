@@ -22,7 +22,7 @@ class Solver(DASolver):
     'densityreweightadapter__weight_estimator__bandwidth': [
         0.01, 0.1, 1., 10., 100., "scott", "silverman"
     ],
-    'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+    'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):
