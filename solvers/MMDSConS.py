@@ -23,7 +23,7 @@ class Solver(DASolver):
         'mmdlsconsmappingadapter__reg_m': [1e-10, 1e-8],
         'mmdlsconsmappingadapter__tol': [1e-5],
         'mmdlsconsmappingadapter__max_iter': [100],
-        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):
