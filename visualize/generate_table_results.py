@@ -715,8 +715,8 @@ def generate_all_tables(
 
     exlude_solvers = [solver.lower() for solver in exlude_solvers]
 
-    # We remove '[param_grid=default]' in each method name
-    df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=default]')[0]))
+    # We remove '[param_grid=...]' from the dataset name
+    df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=')[0]))
 
     # We keep only the rows with the dataset in the index
     filtered_df = df[
@@ -1374,6 +1374,7 @@ def plot_accuracy_vs_shifts(df, folder, plot_file_name):
     x = np.arange(len(shifts))  # the label locations
     width = 0.05  # the width of the bars
     multiplier = 0
+    offset = 0
 
     for estimator in means.index:
         color_map_key = None
@@ -1536,6 +1537,7 @@ def plot_relative_performances_per_estimator(
     x = np.arange(len(shifts))  # the label locations
     width = 0.05  # the width of the bars
     multiplier = 0
+    offset = 0
 
     for estimator in df.index:
         color_map_key = None

@@ -37,8 +37,8 @@ from generate_table_results import (
 )
 
 def clean_benchopt_df(df, domain):
-    # We remove '[param_grid=default]' in each method name
-    df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=default]')[0]))
+    # We remove '[param_grid=...]' from the dataset name
+    df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=')[0]))
 
     # We keep only the columns domain/test + the scorer column
     filtered_columns = [
