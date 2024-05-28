@@ -35,6 +35,7 @@ import pandas as pd
 import numpy as np
 import re
 import matplotlib.pyplot as plt
+import json
 
 SCORER_DICT = {
     'supervised_scorer': 'SS',
@@ -227,8 +228,11 @@ def generate_df(file_path):
         if col.startswith('objective_') and col not in exclude_columns
     ]
 
-    # Compute mean and standard deviation for each metric
-    grouped_df = grouped_df[metrics_columns].agg(['mean', 'std'])
+    # Compute mean and standard deviation for each metric    
+    def identity(x):
+        return json.dumps(x.tolist())
+
+    grouped_df = grouped_df[metrics_columns].agg([np.mean, np.std, identity])
 
     # Rename columns --> Remove 'objective_'
     new_column_names = []
