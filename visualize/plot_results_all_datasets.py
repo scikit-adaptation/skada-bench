@@ -80,7 +80,7 @@ df["accn"] = (df["accuracy-mean"] - df["accuracy-mean_source"]) / (
 )
 
 df["stdn"] = df["accuracy-std"] / np.abs(
-    (df["accuracy-std_target"] - df["accuracy-std_source"])
+    (df["accuracy-mean_target"] - df["accuracy-mean_source"])
 )
 
 # remove rows where the source is better than the target
@@ -110,7 +110,7 @@ std_source = df_mean.query(
 )[
     "stdn"
 ].values
-
+# %%
 # remove estimators
 df_mean = df_mean.query("estimator != 'Train Tgt'")
 df_mean = df_mean.query("estimator != 'Train Src'")
@@ -163,7 +163,7 @@ lat_tab = df_tab.to_latex(
     multicolumn_format="c",
     multirow=True,
     # remove [t] in multirow
-    column_format="|l|l" + "|c" * 6 + "|",
+    column_format="|l|l" + "|r" * 6 + "|",
     # round value
     # float_format="%.2f",
     #  put the name of multirow in vertical
@@ -171,10 +171,92 @@ lat_tab = df_tab.to_latex(
 lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
 lat_tab = lat_tab.replace("toprule", "hline")
 lat_tab = lat_tab.replace("midrule", "hline")
-lat_tab = lat_tab.replace("cline{1-6}", "hline\hline")
+lat_tab = lat_tab.replace("cline{1-8}", "hline\hline")
 lat_tab = lat_tab.replace("\multirow[t]", "\multirow")
-lat_tab = lat_tab.replace("\\hline\n\\bottomrule", "")
+lat_tab = lat_tab.replace("bottomrule", "hline")
 lat_tab = lat_tab.replace("mnist_usps", "MNIST/USPS")
 
 # %%
 print(lat_tab)
+
+# %%
+df_mean = (
+    df.groupby(["dataset", "type", "scorer", "estimator"])["accuracy-mean", "accuracy-std"]
+    .mean()
+    .reset_index()
+)
+std_source = df_mean.query(
+    "estimator == 'Train Src' & scorer == 'best_scorer'"
+)[
+    "accuracy-std"
+].values
+
+# remove estimators
+# df_mean = df_mean.query("estimator != 'Train Tgt'")
+# df_mean = df_mean.query("estimator != 'Train Src'")
+df_mean = df_mean.query("scorer == 'best_scorer'")
+
+# %%
+# create the table
+df_tab = df_mean.pivot(
+    index="dataset", columns=["type", "estimator"], values="accuracy-mean"
+)
+df_tab = df_tab.round(2)
+
+df_tab = df_tab.reindex(
+    columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
+)
+df_tab = df_tab.T.rename(
+    index={
+        "NO DA": r"\rotatebox[origin=c]{90}{NA}",
+        "Reweighting": r"\rotatebox[origin=c]{90}{Reweighting}",
+        "Mapping": r"\rotatebox[origin=c]{90}{Mapping}",
+        "Subspace": r"\rotatebox[origin=c]{90}{Subspace}",
+        "Other": r"\rotatebox[origin=c]{90}{Other}",
+    }
+)
+# %%
+# add the colorcell
+for i, col in enumerate(df_tab.columns):
+    max_value = df_tab[col].index[1]
+    color_threshold = df_tab[col].index[0]
+    min_value = df_tab[col].min()
+    std_value = std_source[i]
+    for idx in df_tab.index[2:]:
+        # get the value
+        if df_tab.loc[idx, col] == "nan" or np.isnan(df_tab.loc[idx, col]):
+            continue
+        value = df_tab.loc[idx, col]
+        # get the color
+        color = shade_of_color(
+            value,
+            std=std_value,
+            min_value=min_value,
+            max_value=max_value,
+            color_threshold=color_threshold,
+        )
+        df_tab.loc[idx, col] = color
+
+# convert to latex
+lat_tab = df_tab.to_latex(
+    escape=False,
+    multicolumn_format="c",
+    multirow=True,
+    # remove [t] in multirow
+    column_format="|l|l" + "|r" * 6 + "|",
+    # round value
+    # float_format="%.2f",
+    #  put the name of multirow in vertical
+)
+lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
+lat_tab = lat_tab.replace("toprule", "hline")
+lat_tab = lat_tab.replace("midrule", "hline")
+lat_tab = lat_tab.replace("cline{1-8}", "hline\hline")
+lat_tab = lat_tab.replace("\multirow[t]", "\multirow")
+lat_tab = lat_tab.replace("bottomrule", "hline")
+lat_tab = lat_tab.replace("mnist_usps", "MNIST/USPS")
+
+# %%
+print(lat_tab)
+
+# %%
