@@ -28,3 +28,15 @@ mnist_usps[n_samples_source=10000,n_samples_target=10000]:
 mnist_usps[n_samples_source=3000,n_samples_target=3000]:
   Best: LR
   BestSVC: SVC
+Simulated[shift=covariate_shift]:
+  Best: LR
+  BestSVC: SVC
+Simulated[shift=target_shift]:
+  Best: LR
+  BestSVC: SVC
+Simulated[shift=concept_drift]:
+  Best: LR
+  BestSVC: SVC
+Simulated[shift=subspace]:
+  Best: LR
+  BestSVC: SVC
