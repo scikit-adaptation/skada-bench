@@ -1,9 +1,325 @@
 dataset:
 - mnist_usps[n_samples_source=3000,n_samples_target=3000]
 solver:
+- class_regularizer_ot_mapping:
+    param_grid:
+    - - classregularizerotmappingadapter__max_inner_iter:
+        - 1000
+        classregularizerotmappingadapter__max_iter:
+        - 10
+        classregularizerotmappingadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        classregularizerotmappingadapter__norm:
+        - lpl1
+        classregularizerotmappingadapter__reg_cl:
+        - 0.1
+        classregularizerotmappingadapter__reg_e:
+        - 0.1
+        classregularizerotmappingadapter__tol:
+        - 1.0e-06
+        finalestimator__estimator_name:
+        - LR
+      - classregularizerotmappingadapter__max_inner_iter:
+        - 1000
+        classregularizerotmappingadapter__max_iter:
+        - 10
+        classregularizerotmappingadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        classregularizerotmappingadapter__norm:
+        - lpl1
+        classregularizerotmappingadapter__reg_cl:
+        - 0.5
+        classregularizerotmappingadapter__reg_e:
+        - 0.5
+        classregularizerotmappingadapter__tol:
+        - 1.0e-06
+        finalestimator__estimator_name:
+        - LR
+      - classregularizerotmappingadapter__max_inner_iter:
+        - 1000
+        classregularizerotmappingadapter__max_iter:
+        - 10
+        classregularizerotmappingadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        classregularizerotmappingadapter__norm:
+        - lpl1
+        classregularizerotmappingadapter__reg_cl:
+        - 1.0
+        classregularizerotmappingadapter__reg_e:
+        - 1.0
+        classregularizerotmappingadapter__tol:
+        - 1.0e-06
+        finalestimator__estimator_name:
+        - LR
+- CORAL:
+    param_grid:
+    - coraladapter__reg:
+      - auto
+      finalestimator__estimator_name:
+      - LR
+- DASVM:
+    param_grid:
+    - dasvmclassifier__base_estimator__estimator_name:
+      - SVC
+      dasvmclassifier__max_iter:
+      - 200
+- density_reweight:
+    param_grid:
+    - densityreweightadapter__weight_estimator__bandwidth:
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      - 100.0
+      - scott
+      - silverman
+      finalestimator__estimator_name:
+      - LR
+- discriminator_reweight:
+    param_grid:
+    - discriminatorreweightadapter__domain_classifier__estimator_name:
+      - LR
+      - SVC
+      - KNN
+      - XGB
+      finalestimator__estimator_name:
+      - LR
+- entropic_ot_mapping:
+    param_grid:
+    - entropicotmappingadapter__max_iter:
+      - 1000
+      entropicotmappingadapter__metric:
+      - sqeuclidean
+      - cosine
+      - cityblock
+      entropicotmappingadapter__norm:
+      - median
+      entropicotmappingadapter__reg_e:
+      - 0.1
+      - 0.5
+      - 1.0
+      entropicotmappingadapter__tol:
+      - 1.0e-06
+      finalestimator__estimator_name:
+      - LR
+- gaussian_reweight:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      gaussianreweightadapter__reg:
+      - auto
+      - 1.0e-05
+      - 0.01
+      - 0.5
+- JDOT_SVC:
+    param_grid:
+    - jdotclassifier__alpha:
+      - 0.1
+      - 0.3
+      - 0.5
+      - 0.7
+      - 0.9
+      jdotclassifier__base_estimator__estimator_name:
+      - SVC
+      jdotclassifier__n_iter_max:
+      - 100
+      jdotclassifier__thr_weights:
+      - 1.0e-07
+      jdotclassifier__tol:
+      - 1.0e-06
+- KLIEP:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      kliepreweightadapter__cv:
+      - 5
+      kliepreweightadapter__gamma:
+      - 0.0001
+      - 0.001
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      - 100.0
+      - 1000.0
+      - auto
+      - scale
+      kliepreweightadapter__max_iter:
+      - 1000
+      kliepreweightadapter__n_centers:
+      - 100
+      kliepreweightadapter__random_state:
+      - 0
+      kliepreweightadapter__tol:
+      - 1.0e-06
+- KMM:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      kmmreweightadapter__B:
+      - 1000.0
+      kmmreweightadapter__gamma:
+      - 0.0001
+      - 0.001
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      - 100.0
+      - 1000.0
+      - null
+      kmmreweightadapter__max_iter:
+      - 1000
+      kmmreweightadapter__smooth_weights:
+      - false
+      kmmreweightadapter__tol:
+      - 1.0e-06
+- linear_ot_mapping:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      linearotmappingadapter__bias:
+      - true
+      - false
+      linearotmappingadapter__reg:
+      - 1.0e-08
+      - 1.0e-06
+      - 0.1
+      - 1
+      - 10
+- MMDSConS:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      mmdlsconsmappingadapter__gamma:
+      - 0.1
+      - 1
+      - 10
+      mmdlsconsmappingadapter__max_iter:
+      - 100
+      mmdlsconsmappingadapter__reg_k:
+      - 1.0e-10
+      - 1.0e-08
+      mmdlsconsmappingadapter__reg_m:
+      - 1.0e-10
+      - 1.0e-08
+      mmdlsconsmappingadapter__tol:
+      - 1.0e-05
+- nearest_neighbor_reweight:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      nearestneighborreweightadapter__laplace_smoothing:
+      - true
+      - false
+      nearestneighborreweightadapter__n_neighbors:
+      - 1
+- NO_DA_SOURCE_ONLY:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+- NO_DA_SOURCE_ONLY_BASE_ESTIM:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+- NO_DA_TARGET_ONLY:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+- OTLabelProp:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      otlabelpropadapter__metric:
+      - sqeuclidean
+      - cosine
+      - cityblock
+      otlabelpropadapter__reg:
+      - null
+      - 0.1
+      - 1.0
+- ot_mapping:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      otmappingadapter__max_iter:
+      - 1000000
+      otmappingadapter__metric:
+      - sqeuclidean
+      - cosine
+      - cityblock
+      otmappingadapter__norm:
+      - median
+- PCA:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      pca__n_components:
+      - 1
+      - 2
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100
+- subspace_alignment:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      subspacealignmentadapter__n_components:
+      - 1
+      - 2
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100
+- TarS:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      mmdtarsreweightadapter__gamma:
+      - 0.0001
+      - 0.001
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      - 100.0
+      - 1000.0
+      - null
+      mmdtarsreweightadapter__max_iter:
+      - 1000
+      mmdtarsreweightadapter__reg:
+      - 1.0e-06
+      mmdtarsreweightadapter__tol:
+      - 1.0e-06
+- transfer_component_analysis:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR
+      transfercomponentanalysisadapter__kernel:
+      - rbf
+      transfercomponentanalysisadapter__mu:
+      - 10
+      - 100
+      transfercomponentanalysisadapter__n_components:
+      - 1
+      - 2
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100
 - transfer_subspace_learning:
     param_grid:
-      finalestimator__estimator_name:
+    - finalestimator__estimator_name:
       - LR
       transfersubspacelearningadapter__base_method:
       - flda
@@ -27,319 +343,3 @@ solver:
       - 0.0001
       transfersubspacelearningadapter__tol:
       - 0.0001
-- KMM:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      kmmreweightadapter__B:
-      - 1000.0
-      kmmreweightadapter__gamma:
-      - 0.0001
-      - 0.001
-      - 0.01
-      - 0.1
-      - 1.0
-      - 10.0
-      - 100.0
-      - 1000.0
-      - null
-      kmmreweightadapter__max_iter:
-      - 1000
-      kmmreweightadapter__smooth_weights:
-      - false
-      kmmreweightadapter__tol:
-      - 1.0e-06
-- TarS:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      mmdtarsreweightadapter__gamma:
-      - 0.0001
-      - 0.001
-      - 0.01
-      - 0.1
-      - 1.0
-      - 10.0
-      - 100.0
-      - 1000.0
-      - null
-      mmdtarsreweightadapter__max_iter:
-      - 1000
-      mmdtarsreweightadapter__reg:
-      - 1.0e-06
-      mmdtarsreweightadapter__tol:
-      - 1.0e-06
-- NO_DA_TARGET_ONLY:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-- NO_DA_SOURCE_ONLY:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-- linear_ot_mapping:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      linearotmappingadapter__bias:
-      - true
-      - false
-      linearotmappingadapter__reg:
-      - 1.0e-08
-      - 1.0e-06
-      - 0.1
-      - 1
-      - 10
-- subspace_alignment:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      subspacealignmentadapter__n_components:
-      - 1
-      - 2
-      - 5
-      - 10
-      - 20
-      - 50
-      - 100
-- gaussian_reweight:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      gaussianreweightadapter__reg:
-      - auto
-      - 1.0e-05
-      - 0.01
-      - 0.5
-- MMDSConS:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      mmdlsconsmappingadapter__gamma:
-      - 0.1
-      - 1
-      - 10
-      mmdlsconsmappingadapter__max_iter:
-      - 100
-      mmdlsconsmappingadapter__reg_k:
-      - 1.0e-10
-      - 1.0e-08
-      mmdlsconsmappingadapter__reg_m:
-      - 1.0e-10
-      - 1.0e-08
-      mmdlsconsmappingadapter__tol:
-      - 1.0e-05
-- entropic_ot_mapping:
-    param_grid:
-      entropicotmappingadapter__max_iter:
-      - 1000
-      entropicotmappingadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      entropicotmappingadapter__norm:
-      - median
-      entropicotmappingadapter__reg_e:
-      - 0.1
-      - 0.5
-      - 1.0
-      entropicotmappingadapter__tol:
-      - 1.0e-06
-      finalestimator__estimator_name:
-      - LR
-- transfer_component_analysis:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      transfercomponentanalysisadapter__kernel:
-      - rbf
-      transfercomponentanalysisadapter__mu:
-      - 10
-      - 100
-      transfercomponentanalysisadapter__n_components:
-      - 1
-      - 2
-      - 5
-      - 10
-      - 20
-      - 50
-      - 100
-- DASVM:
-    param_grid:
-      dasvmclassifier__base_estimator__estimator_name:
-      - SVC
-      dasvmclassifier__max_iter:
-      - 200
-- CORAL:
-    param_grid:
-      coraladapter__reg:
-      - auto
-      finalestimator__estimator_name:
-      - LR
-- KLIEP:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      kliepreweightadapter__cv:
-      - 5
-      kliepreweightadapter__gamma:
-      - 0.0001
-      - 0.001
-      - 0.01
-      - 0.1
-      - 1.0
-      - 10.0
-      - 100.0
-      - 1000.0
-      - auto
-      - scale
-      kliepreweightadapter__max_iter:
-      - 1000
-      kliepreweightadapter__n_centers:
-      - 100
-      kliepreweightadapter__random_state:
-      - 0
-      kliepreweightadapter__tol:
-      - 1.0e-06
-- PCA:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      pca__n_components:
-      - 1
-      - 2
-      - 5
-      - 10
-      - 20
-      - 50
-      - 100
-- ot_mapping:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      otmappingadapter__max_iter:
-      - 1000000
-      otmappingadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      otmappingadapter__norm:
-      - median
-- nearest_neighbor_reweight:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      nearestneighborreweightadapter__laplace_smoothing:
-      - true
-      - false
-      nearestneighborreweightadapter__n_neighbors:
-      - 1
-- OTLabelProp:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-      otlabelpropadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      otlabelpropadapter__reg:
-      - null
-      - 0.1
-      - 1.0
-- density_reweight:
-    param_grid:
-      densityreweightadapter__weight_estimator__bandwidth:
-      - 0.01
-      - 0.1
-      - 1.0
-      - 10.0
-      - 100.0
-      - scott
-      - silverman
-      finalestimator__estimator_name:
-      - LR
-- JDOT_SVC:
-    param_grid:
-      jdotclassifier__alpha:
-      - 0.1
-      - 0.3
-      - 0.5
-      - 0.7
-      - 0.9
-      jdotclassifier__base_estimator__estimator_name:
-      - SVC
-      jdotclassifier__n_iter_max:
-      - 100
-      jdotclassifier__thr_weights:
-      - 1.0e-07
-      jdotclassifier__tol:
-      - 1.0e-06
-- NO_DA_SOURCE_ONLY_BASE_ESTIM:
-    param_grid:
-      finalestimator__estimator_name:
-      - LR
-- class_regularizer_ot_mapping:
-    param_grid:
-    - classregularizerotmappingadapter__max_inner_iter:
-      - 1000
-      classregularizerotmappingadapter__max_iter:
-      - 10
-      classregularizerotmappingadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      classregularizerotmappingadapter__norm:
-      - lpl1
-      classregularizerotmappingadapter__reg_cl:
-      - 0.1
-      classregularizerotmappingadapter__reg_e:
-      - 0.1
-      classregularizerotmappingadapter__tol:
-      - 1.0e-06
-      finalestimator__estimator_name:
-      - LR
-    - classregularizerotmappingadapter__max_inner_iter:
-      - 1000
-      classregularizerotmappingadapter__max_iter:
-      - 10
-      classregularizerotmappingadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      classregularizerotmappingadapter__norm:
-      - lpl1
-      classregularizerotmappingadapter__reg_cl:
-      - 0.5
-      classregularizerotmappingadapter__reg_e:
-      - 0.5
-      classregularizerotmappingadapter__tol:
-      - 1.0e-06
-      finalestimator__estimator_name:
-      - LR
-    - classregularizerotmappingadapter__max_inner_iter:
-      - 1000
-      classregularizerotmappingadapter__max_iter:
-      - 10
-      classregularizerotmappingadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      classregularizerotmappingadapter__norm:
-      - lpl1
-      classregularizerotmappingadapter__reg_cl:
-      - 1.0
-      classregularizerotmappingadapter__reg_e:
-      - 1.0
-      classregularizerotmappingadapter__tol:
-      - 1.0e-06
-      finalestimator__estimator_name:
-      - LR
-- discriminator_reweight:
-    param_grid:
-      discriminatorreweightadapter__domain_classifier__estimator_name:
-      - LR
-      - SVC
-      - KNN
-      - XGB
-      finalestimator__estimator_name:
-      - LR

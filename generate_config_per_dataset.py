@@ -52,7 +52,7 @@ for dataset in dataset_list:
             else:
                 param_grid['finalestimator__estimator_name'] = [best]
             
-        DD["solver"].append({foo.Solver.name: {"param_grid": param_grid}})
+        DD["solver"].append({foo.Solver.name: {"param_grid": [param_grid]}})
 
     with open('config/datasets/%s.yml'%dataset, 'w+') as ff:
         yaml.dump(DD, ff, default_flow_style=False)
