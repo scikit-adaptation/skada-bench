@@ -83,7 +83,16 @@ def _preprocess_review(reviews):
     """
     Preprocess text in reviews list
     """
-    stop = set(stopwords.words("english"))
+
+    # Download stopwords if not already downloaded
+    try:
+        stop = set(stopwords.words("english"))
+    except LookupError:
+        import nltk
+
+        nltk.download("stopwords")
+        stop = set(stopwords.words("english"))
+
     snow = SnowballStemmer("english")
 
     preprocessed_reviews = []
