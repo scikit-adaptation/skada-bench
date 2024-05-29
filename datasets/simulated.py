@@ -29,8 +29,8 @@ class Dataset(BaseDataset):
 
         # Generate pseudorandom data using `numpy`.
         if self.shift == "subspace":
-            m = 1
-            noise = 0.2
+            m = 3
+            noise = 0.4
         else:
             m = 1
             noise = 0.8
