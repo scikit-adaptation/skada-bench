@@ -14,6 +14,10 @@ dataset_list = [
     "OfficeHomeResnet",
     "Phishing",
     "20NewsGroups",
+    "Simulated[shift=covariate_shift]",
+    "Simulated[shift=target_shift]",
+    "Simulated[shift=concept_drift]",
+    "Simulated[shift=subspace]",
 ]
 
 param_dict["dataset"] = dataset_list
