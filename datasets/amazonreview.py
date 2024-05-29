@@ -22,17 +22,17 @@ class Dataset(BaseDataset):
     parameters = {
         "source_target": [
             ("books", "dvd"),
-            ("books", "elec"),
+            ("books", "electronics"),
             ("books", "kitchen"),
             ("dvd", "books"),
-            ("dvd", "elec"),
+            ("dvd", "electronics"),
             ("dvd", "kitchen"),
-            ("elec", "books"),
-            ("elec", "dvd"),
-            ("elec", "kitchen"),
+            ("electronics", "books"),
+            ("electronics", "dvd"),
+            ("electronics", "kitchen"),
             ("kitchen", "books"),
             ("kitchen", "dvd"),
-            ("kitchen", "elec"),
+            ("kitchen", "electronics"),
         ],
         "preprocessing": [
             "sentence_transformers"
