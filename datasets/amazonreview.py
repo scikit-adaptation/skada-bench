@@ -1,6 +1,7 @@
 from benchopt import BaseDataset, safe_import_context
 
 with safe_import_context() as import_ctx:
+    import urllib.request
     from pathlib import Path
     import pickle
     from skada.utils import source_target_merge
@@ -36,7 +37,7 @@ class Dataset(BaseDataset):
     }
 
     path_preprocessed_data = "data/amazon_review_preprocessed.pkl"
-    url_preprocessed_data = "https://figshare.com/ndownloader/files/XXXXX"
+    url_preprocessed_data = "https://figshare.com/ndownloader/files/46642522?private_link=5b1a88c729389a8dbcd0"
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
