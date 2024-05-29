@@ -10,6 +10,8 @@ import gzip
 import tarfile
 import shutil
 from pathlib import Path
+import pickle
+
 import numpy as np
 from sentence_transformers import SentenceTransformer
 from sklearn.decomposition import PCA
@@ -120,7 +122,31 @@ if __name__ == "__main__":
     data_raw = dict()
     for domain in DOMAINS:
         X, y = get_reviews(domain, PATH_RAW)
-        y = merge_labels(y)
         data_raw[domain] = {"X": X, "y": y}
     for k, v in data_raw.items():
         print(f"{k}: {len(v['X'])} reviews, {len(v['y'])} labels")
+
+    # Sentence Transformers
+    print("Encoding text data using Sentence Transformers and merging labels...")
+    model = SentenceTransformer(MODEL_NAME, device=DEVICE)
+    preprocessed_data = dict()
+    for k in data_raw.keys():
+        print(f"Processing {k}...")
+        preprocessed_data[k] = dict()
+        preprocessed_data[k]["X"] = model.encode(
+            data_raw[k]['X'], batch_size=BATCH_SIZE, show_progress_bar=True
+        )
+        preprocessed_data[k]["y"] = merge_labels(data_raw[k]["y"])
+
+    # Apply PCA to reduce the dimensionality of the embeddings
+    print("Applying PCA...")
+    X_total = np.concatenate([v['X'] for v in preprocessed_data.values()])
+    pca = PCA(n_components=N_COMPONENTS).fit(X_total)
+    for k in data_raw.keys():
+        preprocessed_data[k]['X'] = pca.transform(preprocessed_data[k]['X'])
+
+    # Save the preprocessed data
+    print("Saving preprocessed data...")
+    PATH.mkdir(exist_ok=True)
+    with open(PATH / "amazon_review_preprocessed.pkl", "wb") as f:
+        pickle.dump(preprocessed_data, f)
