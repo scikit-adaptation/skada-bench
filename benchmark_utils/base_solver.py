@@ -90,6 +90,9 @@ class FinalEstimator(BaseEstimator):
     def predict_proba(self, X, **predict_params):
         return self.estimator_.predict_proba(X, **predict_params)
 
+    def decision_function(self, X, **predict_params):
+        return self.estimator_.decision_function(X, **predict_params)
+
 
 class DASolver(BaseSolver):
     sampling_strategy = "run_once"
