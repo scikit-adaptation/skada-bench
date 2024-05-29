@@ -5,7 +5,6 @@
 - The pickle file is stored in the datasets folder.
 """
 
-import os
 import urllib
 import gzip
 import tarfile
@@ -23,9 +22,9 @@ def load_amazon(source, target, path=None):
     Load sentiment analysis dataset giving source and target domain names
     """
     if path is None:
-        path = os.path.dirname(__file__)
+        path = Path(__file__).parent
     try:
-        file = open(os.path.join(path, "kitchen.txt"))
+        file = open(path / "kitchen.txt")
     except:
         print("Downloading sentiment analysis data files...")
         download_amazon(path)
@@ -110,9 +109,7 @@ def _get_reviews(domain, path):
     """
     Return preprocessed reviews and labels
     """
-    reviews, labels = _get_reviews_and_labels_from_txt(
-        os.path.join(path, domain + ".txt")
-    )
+    reviews, labels = _get_reviews_and_labels_from_txt(path / f"{domain}.txt")
     reviews = _preprocess_review(reviews)
     return reviews, labels
 
@@ -138,46 +135,40 @@ def _get_Xy(source, target, path):
 
 
 def download_amazon(path):
-    assert os.path.isdir(path)
+    path = Path(path)
+    path.mkdir(parents=True, exist_ok=True)
 
     urllib.request.urlretrieve(
         "https://www.cs.jhu.edu/~mdredze/datasets/sentiment/domain_sentiment_data.tar.gz",
-        os.path.join(path, "domain_sentiment_data.tar.gz"),
+        path / "domain_sentiment_data.tar.gz",
     )
     urllib.request.urlretrieve(
         "https://www.cs.jhu.edu/~mdredze/datasets/sentiment/book.unlabeled.gz",
-        os.path.join(path, "book.unlabeled.gz"),
+        path / "book.unlabeled.gz",
     )
-    tar = tarfile.open(os.path.join(path, "domain_sentiment_data.tar.gz"), "r:gz")
-    tar.extractall(os.path.join(path, "domain_sentiment_data"))
+    tar = tarfile.open(path / "domain_sentiment_data.tar.gz", "r:gz")
+    tar.extractall(path / "domain_sentiment_data")
     tar.close()
-    with gzip.open(os.path.join(path, "book.unlabeled.gz"), "rb") as f_in:
-        with open(os.path.join(path, "books.txt"), "wb") as f_out:
+    with gzip.open(path / "book.unlabeled.gz", "rb") as f_in:
+        with open(path / "books.txt", "wb") as f_out:
             shutil.copyfileobj(f_in, f_out)
 
     shutil.move(
-        os.path.join(
-            path, "domain_sentiment_data/sorted_data_acl/dvd/unlabeled.review"
-        ),
-        os.path.join(path, "dvd.txt"),
+        path / "domain_sentiment_data/sorted_data_acl/dvd/unlabeled.review",
+        path / "dvd.txt",
     )
     shutil.move(
-        os.path.join(
-            path, "domain_sentiment_data/sorted_data_acl/electronics/unlabeled.review"
-        ),
-        os.path.join(path, "electronics.txt"),
+        path / "domain_sentiment_data/sorted_data_acl/electronics/unlabeled.review",
+        path / "electronics.txt",
     )
     shutil.move(
-        os.path.join(
-            path,
-            "domain_sentiment_data/sorted_data_acl/kitchen_&_housewares/unlabeled.review",
-        ),
-        os.path.join(path, "kitchen.txt"),
+        path / "domain_sentiment_data/sorted_data_acl/kitchen_&_housewares/unlabeled.review",
+        path / "kitchen.txt",
     )
 
-    os.remove(os.path.join(path, "book.unlabeled.gz"))
-    os.remove(os.path.join(path, "domain_sentiment_data.tar.gz"))
-    shutil.rmtree(os.path.join(path, "domain_sentiment_data"))
+    (path / "book.unlabeled.gz").unlink()
+    (path / "domain_sentiment_data.tar.gz").unlink()
+    shutil.rmtree(path / "domain_sentiment_data")
 
 
 if __name__ == "__main__":
