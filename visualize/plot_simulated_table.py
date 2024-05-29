@@ -127,7 +127,7 @@ def create_latex_table(df, std, normalized=False):
         # remove [t] in multirow
         column_format="|l|l" + "|c" * 4 + "|",
         # round value
-        float_format="%.2f",
+        # float_format="%.2f",
         #  put the name of multirow in vertical
     )
     lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
@@ -141,11 +141,22 @@ def create_latex_table(df, std, normalized=False):
 
 
 # %%
-df = pd.read_csv("simulated_readable_csv.csv")
+df_lr = pd.read_csv("readable_csv/readable_csv_lr.csv")
+df_lr["base_estimator"] = "LR"
+
+df_svc = pd.read_csv("readable_csv/readable_csv_svc.csv")
+df_svc["base_estimator"] = "SVC"
+
+df_xgb = pd.read_csv("readable_csv/readable_csv_xgb.csv")
+df_xgb["base_estimator"] = "XGB"
+
+df = pd.concat([df_lr, df_svc, df_xgb], axis=0)
 # %%
 # get the source and target df
-df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
-df_source = df.query(
+base_estimator = "LR"
+df_filtered = df.query(f'base_estimator == "{base_estimator}"')
+df_target = df_filtered.query('estimator == "Train Tgt" & scorer == "supervised"')
+df_source = df_filtered.query(
     'estimator == "Train Src" & scorer != "supervised" & scorer != "best_scorer"'
 )
 idx_source_best_scorer = df_source.groupby(["shift"])["accuracy-mean"].idxmax()
@@ -164,13 +175,8 @@ df_source_target_tab = df_source_target.pivot(
 )
 
 # %%
-df_other_ = df.query('estimator != "Train Tgt" and estimator != "Train Src"')
-df_other = df_other_.query('scorer != "best_scorer" and scorer != "supervised"')
-# %%
-# get the indices of  the line where we have the best scorer per estimator and shift
-idx_best_scorer = df_other.groupby(["estimator", "shift"])["accuracy-mean"].idxmax()
-df_best_scorer = df_other.loc[idx_best_scorer]
-
+df_other_ = df_filtered.query('estimator != "Train Tgt" and estimator != "Train Src"')
+df_best_scorer = df_other_.query('scorer == "best_scorer"')
 # %%
 
 std_values = df_source["accuracy-std"].values
@@ -180,7 +186,8 @@ std_values = std_values[
 
 # %%
 # plot the tab with the accuracy-mean
-df_tab = df_best_scorer.pivot(
+df_best_scorer = df_best_scorer.groupby(["shift", "type", "estimator"]).mean().reset_index()
+df_tab = df_best_scorer[["shift", "type", "estimator", "accuracy-mean"]].pivot(
     index="shift", columns=["type", "estimator"], values="accuracy-mean"
 )
 
