@@ -11,6 +11,8 @@ import tarfile
 import shutil
 from pathlib import Path
 import numpy as np
+from sentence_transformers import SentenceTransformer
+from sklearn.decomposition import PCA
 
 
 def download_amazon(path):
@@ -79,22 +81,46 @@ def get_reviews(domain, path):
             capture_label = True
         if "<review_text>" in line:
             capture_review = True
-    return reviews, labels
+    return reviews, np.array(labels)
+
+
+def merge_labels(labels):
+    """
+    Merge the labels in the following way:
+    1, 2 -> 0
+    4, 5 -> 1
+    """
+    # Check if the labels are in [1, 2, 4, 5]
+    assert np.all(np.isin(labels, [1, 2, 4, 5]))
+    labels[labels == 1] = 0
+    labels[labels == 2] = 0
+    labels[labels == 4] = 1
+    labels[labels == 5] = 1
+    return labels
 
 
 if __name__ == "__main__":
     PATH = Path("data")
+    PATH_RAW = PATH / "amazon_review_raw"
     DOMAINS = ["books", "dvd", "electronics", "kitchen"]
+
+    N_COMPONENTS = 50
+    MODEL_NAME = "BAAI/bge-large-en-v1.5"
+    BATCH_SIZE = 512
+    # MODEL_NAME = "BAAI/bge-small-en-v1.5"
+    # BATCH_SIZE = 1024
+    DEVICE = "cuda"
 
     # Download data
     print("Downloading data...")
-    download_amazon(PATH / "amazon_review_raw")
+    download_amazon(PATH_RAW)
 
     # Get (X, y) for each domain
     print("Getting (X, y) for each domain...")
     data_raw = dict()
     for domain in DOMAINS:
-        X, y = get_reviews(domain, PATH / "amazon_review_raw")
+        X, y = get_reviews(domain, PATH_RAW)
+        y = merge_labels(y)
         data_raw[domain] = {"X": X, "y": y}
     for k, v in data_raw.items():
         print(f"{k}: {len(v['X'])} reviews, {len(v['y'])} labels")
