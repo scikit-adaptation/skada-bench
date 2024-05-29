@@ -89,7 +89,7 @@ def clean_benchopt_df(df, domain, dataset_params):
     best_scores_df['scorer'] = "best_scorer"
 
     # Add the best scores to the original df
-    #df = pd.concat([df, best_scores_df])
+    df = pd.concat([df, best_scores_df])
     
 
     # Rename the columns by concatenating the tuples with a hyphen, except 'scorer'
