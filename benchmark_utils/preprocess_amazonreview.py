@@ -114,33 +114,13 @@ def _preprocess_review(reviews):
     return preprocessed_reviews
 
 
-def _get_reviews(domain, path):
+def get_reviews(domain, path):
     """
     Return preprocessed reviews and labels
     """
     reviews, labels = _get_reviews_and_labels_from_txt(path / f"{domain}.txt")
     reviews = _preprocess_review(reviews)
     return reviews, labels
-
-
-def _get_Xy(source, target, path):
-    """
-    Concatenate preprocessed source and target reviews,
-    return X, y and src and tgt indexes.
-    """
-    reviews_s, labels_s = _get_reviews(source, path)
-    reviews_t, labels_t = _get_reviews(target, path)
-
-    src_index = range(len(reviews_s))
-    tgt_index = range(len(reviews_s), len(reviews_s) + len(reviews_t))
-
-    reviews = reviews_s + reviews_t
-    labels = labels_s + labels_t
-
-    X = np.array(reviews)
-    y = np.array(labels)
-
-    return X, y, src_index, tgt_index
 
 
 def download_amazon(path):
@@ -182,4 +162,12 @@ def download_amazon(path):
 
 if __name__ == "__main__":
     PATH = Path("data/amazon_review")
+    DOMAINS = ["books", "dvd", "electronics", "kitchen"]
+
+    # Download data
     download_amazon(PATH)
+
+    # Get (X, y) for each domain
+    for domain in DOMAINS:
+        X, y = get_reviews(domain, PATH)
+
