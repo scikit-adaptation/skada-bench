@@ -1,13 +1,9 @@
 from benchopt import BaseDataset, safe_import_context
 
 with safe_import_context() as import_ctx:
-    import scipy
-    import numpy as np
     from pathlib import Path
     import pickle
-    from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
-    from skada.datasets import fetch_amazon_review_all
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
