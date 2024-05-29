@@ -122,7 +122,7 @@ if __name__ == "__main__":
     data_raw = dict()
     for domain in DOMAINS:
         X, y = get_reviews(domain, PATH_RAW)
-        data_raw[domain] = {"X": X, "y": y}
+        data_raw[domain] = {'X': X, 'y': y}
     for k, v in data_raw.items():
         print(f"{k}: {len(v['X'])} reviews, {len(v['y'])} labels")
 
@@ -133,10 +133,10 @@ if __name__ == "__main__":
     for k in data_raw.keys():
         print(f"Processing {k}...")
         preprocessed_data[k] = dict()
-        preprocessed_data[k]["X"] = model.encode(
+        preprocessed_data[k]['X'] = model.encode(
             data_raw[k]['X'], batch_size=BATCH_SIZE, show_progress_bar=True
         )
-        preprocessed_data[k]["y"] = merge_labels(data_raw[k]["y"])
+        preprocessed_data[k]['y'] = merge_labels(data_raw[k]['y'])
 
     # Apply PCA to reduce the dimensionality of the embeddings
     print("Applying PCA...")
@@ -147,6 +147,9 @@ if __name__ == "__main__":
 
     # Save the preprocessed data
     print("Saving preprocessed data...")
+    # Change X key to sentence_transformers
+    for k in preprocessed_data.keys():
+        preprocessed_data[k]['sentence_transformers'] = preprocessed_data[k].pop('X')
     PATH.mkdir(exist_ok=True)
     with open(PATH / "amazon_review_preprocessed.pkl", "wb") as f:
         pickle.dump(preprocessed_data, f)
