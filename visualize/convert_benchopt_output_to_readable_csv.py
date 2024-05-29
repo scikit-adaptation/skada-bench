@@ -36,9 +36,20 @@ from generate_table_results import (
     ESTIMATOR_DICT,
 )
 
-def clean_benchopt_df(df, domain):
+def clean_benchopt_df(df, domain, dataset_params):
     # We remove '[param_grid=...]' from the dataset name
     df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=')[0]))
+
+    dataset_params = [param.lower() for param in dataset_params]
+
+    # We keep only the rows with the dataset_params in the index
+    for dataset_param in dataset_params:
+        df = df[
+            [
+                dataset_param in index_tuple[0].lower()
+                for index_tuple in df.index
+            ]
+        ]
 
     # We keep only the columns domain/test + the scorer column
     filtered_columns = [
@@ -55,10 +66,12 @@ def clean_benchopt_df(df, domain):
     # Get df for the best unsupervised scorer
     # First we remove the "supervised" scorer
     best_unsupervised = df[df['scorer'] != 'supervised']
+
     best_unsupervised = keep_only_best_scorer_per_estimator(
         best_unsupervised,
         specific_col = (domain + '_accuracy', 'test', 'mean'),
     )
+    
 
     # Remove NO_DA methods from the best_unsupervised df
     no_da_methods = [solver for solver in DA_TECHNIQUES['NO DA']]
@@ -76,7 +89,7 @@ def clean_benchopt_df(df, domain):
     best_scores_df['scorer'] = "best_scorer"
 
     # Add the best scores to the original df
-    df = pd.concat([df, best_scores_df])
+    #df = pd.concat([df, best_scores_df])
     
 
     # Rename the columns by concatenating the tuples with a hyphen, except 'scorer'
@@ -129,6 +142,7 @@ def clean_benchopt_df(df, domain):
         ['dataset', 'shift', 'estimator', 'scorer', 'type'] +
         [col for col in df.columns if col not in ['dataset', 'shift', 'estimator', 'scorer', 'type']]
     ]
+
     return df
 
 
@@ -160,6 +174,13 @@ if __name__ == "__main__":
         default='./cleaned_outputs'
     )
 
+    parser.add_argument(
+        "--dataset_params",
+        nargs="+",
+        help="Dataset parameters to select the results",
+        default=[]
+    )
+
     args = parser.parse_args()
 
     # Step 1: Load the Data
@@ -168,7 +189,7 @@ if __name__ == "__main__":
 
     print(f"Using {args.domain} domain to generate csv file")
     # Step 2: Clean the dataframe
-    df = clean_benchopt_df(df, args.domain)
+    df = clean_benchopt_df(df, args.domain, args.dataset_params)
 
     # Step 3: Export to CSV
     output_directory = args.output
