@@ -106,9 +106,6 @@ def _preprocess_review(reviews):
         sentence = re.sub("[^A-Za-z]+", " ", sentence)
         sentence = re.sub(r'[?|!|\'|"|#]', r" ", sentence)
         sentence = re.sub(r"[.|,|)|(|\|/]", r" ", sentence)
-        sentence = "  ".join(
-            snow.stem(e.lower()) for e in sentence.split() if e.lower() not in stop
-        )
         preprocessed_reviews.append(sentence.strip())
 
     return preprocessed_reviews
