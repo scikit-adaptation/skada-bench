@@ -62,6 +62,10 @@ def shade_of_color(
 files = glob.glob("./readable_csv/*readable.csv")
 df = pd.concat([pd.read_csv(file) for file in files])
 
+df_simulated = pd.read_csv("./readable_csv/simulated_readable_csv.csv")
+df_simulated["dataset"] = df_simulated["shift"]
+
+df = pd.concat([df, df_simulated])
 # %%
 df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
 df_source = df.query('estimator == "Train Src" & scorer == "best_scorer"')
@@ -132,6 +136,7 @@ df_tab = df_tab.T.rename(
     }
 )
 
+# add the column rank
 
 # add the colorcell
 for i, col in enumerate(df_tab.columns):
@@ -252,8 +257,18 @@ for i, col in enumerate(df_tab.columns):
             color_threshold=color_threshold,
         )
         df_tab.loc[idx, col] = color
+    df_tab.loc[df_tab.index[1], col] = "\\cellcolor{good_color!%d}{%s}" % (
+        90,
+        df_tab.loc[df_tab.index[1], col],
+    )
+
+
 df_tab = df_tab.reindex(
     columns=[
+        "covariate_shift",
+        "target_shift",
+        "concept_drift",
+        "subspace",
         "Office31",
         # "OfficeHome",
         "mnist_usps",
@@ -266,6 +281,10 @@ df_tab = df_tab.reindex(
 )
 df_tab = df_tab.rename(
     columns={
+        "covariate_shift": "\mcrot{1}{l}{45}{Cov. shift}",
+        "target_shift": "\mcrot{1}{l}{45}{Tar. shift}",
+        "concept_drift": "\mcrot{1}{l}{45}{Cond. shift}",
+        "subspace": "\mcrot{1}{l}{45}{Sub. shift}",
         "Office31": "\mcrot{1}{l}{45}{Office31}",
         "mnist_usps": "\mcrot{1}{l}{45}{MNIST/USPS}",
         "20NewsGroups": "\mcrot{1}{l}{45}{20NewsGroups}",
@@ -281,7 +300,7 @@ lat_tab = df_tab.to_latex(
     multicolumn_format="c",
     multirow=True,
     # remove [t] in multirow
-    column_format="|l|l" + "|r" * 7 + "|",
+    column_format="|l|l||rrrr||rr|rr|rr|r|",
     # round value
     # float_format="%.2f",
     #  put the name of multirow in vertical
@@ -289,7 +308,7 @@ lat_tab = df_tab.to_latex(
 lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
 lat_tab = lat_tab.replace("toprule", "hline")
 lat_tab = lat_tab.replace("midrule", "hline")
-lat_tab = lat_tab.replace("cline{1-9}", "hline\hline")
+lat_tab = lat_tab.replace("cline{1-13}", "hline\hline")
 lat_tab = lat_tab.replace("\multirow[t]", "\multirow")
 lat_tab = lat_tab.replace("bottomrule", "hline")
 lat_tab = lat_tab.replace("mnist_usps", "MNIST/USPS")
