@@ -31,6 +31,9 @@ class Dataset(BaseDataset):
         if self.shift == "subspace":
             m = 3
             noise = 0.4
+        elif self.shift == "covariate_shift":
+            m = 1
+            noise = 0.6
         else:
             m = 1
             noise = 0.8
@@ -40,6 +43,7 @@ class Dataset(BaseDataset):
             shift=self.shift,
             noise=noise,
             label=self.label,
+            center_cov_shift=(-0.4, 3),
             random_state=self.random_state,
         )
 
