@@ -2,6 +2,7 @@ from benchopt import BaseDataset, safe_import_context
 with safe_import_context() as import_ctx:
     import scipy
     import numpy as np
+    from sklearn.decomposition import PCA
     from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
     from skada.datasets import fetch_office_home_all
@@ -31,6 +32,7 @@ class Dataset(BaseDataset):
             ('realworld', 'clipart'),
             ('realworld', 'product'),
         ],
+        'n_components': [50]
     }
 
     def get_data(self):
@@ -43,11 +45,19 @@ class Dataset(BaseDataset):
             data_home=tmp_folder
         )
 
+        # Fit PCA on all domains
+        domains = dataset.domain_names_.keys()
+        X_total = np.concatenate([dataset.get_domain(d)[0] for d in domains])
+        pca = PCA(n_components=self.n_components).fit(X_total)
+
+        # Get source and target data and apply PCA
         source = self.source_target[0]
         target = self.source_target[1]
 
         X_source, y_source = dataset.get_domain(source)
         X_target, y_target = dataset.get_domain(target)
+        X_source = pca.transform(X_source)
+        X_target = pca.transform(X_target)
 
         # XGBoost only supports labels in [0, num_classes-1]
         le = LabelEncoder()
