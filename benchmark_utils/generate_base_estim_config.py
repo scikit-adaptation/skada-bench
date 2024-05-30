@@ -1,26 +1,33 @@
+import os
 import yaml
+from os import walk
+import importlib.util
+import sys
 from base_solver import BASE_ESTIMATOR_DICT
 
-param_list = [{"finalestimator__estimator_name": [k]} for k in BASE_ESTIMATOR_DICT]
-param_dict = {"solver": {"NO_DA_SOURCE_ONLY_BASE_ESTIM": {"param_grid": param_list}}}
+PATH = os.path.dirname(os.path.dirname(__file__))
 
-dataset_list = [
-    "AmazonReview",
-    "BCI",
-    "Mushrooms",
-    "mnist_usps[n_samples_source=10000,n_samples_target=10000]",
-    "mnist_usps[n_samples_source=3000,n_samples_target=3000]",
-    "Office31",
-    "OfficeHomeResnet",
-    "Phishing",
-    "20NewsGroups",
-    "Simulated[shift=covariate_shift]",
-    "Simulated[shift=target_shift]",
-    "Simulated[shift=concept_drift]",
-    "Simulated[shift=subspace]",
-]
+if __name__ == "__main__":
 
-param_dict["dataset"] = dataset_list
+    sys.path.append(PATH)
 
-with open('config/find_best_base_estimators_per_dataset.yml', 'w+') as ff:
-    yaml.dump(param_dict, ff)
+    param_list = [{"finalestimator__estimator_name": [k]} for k in BASE_ESTIMATOR_DICT]
+    param_dict = {"solver": {"NO_DA_SOURCE_ONLY_BASE_ESTIM": {"param_grid": param_list}}}
+
+    dataset_list = []
+
+    filenames_dataset = next(walk(os.path.join(PATH, "datasets")), (None, None, []))[2]
+
+    for name in filenames_dataset:
+        spec = importlib.util.spec_from_file_location(name, os.path.join(PATH, "datasets", name))
+        foo = importlib.util.module_from_spec(spec)
+        sys.modules[name] = foo
+        spec.loader.exec_module(foo)
+        dataset_list.append(foo.Dataset.name)
+
+    print(dataset_list)
+    
+    param_dict["dataset"] = dataset_list
+
+    with open(os.path.join(PATH, 'config', 'find_best_base_estimators_per_dataset.yml'), 'w+') as ff:
+        yaml.dump(param_dict, ff)

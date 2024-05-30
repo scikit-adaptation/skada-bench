@@ -1,5 +1,5 @@
 dataset:
-- mnist_usps[n_samples_source=3000,n_samples_target=3000]
+- mnist_usps
 solver:
 - class_regularizer_ot_mapping:
     param_grid:
@@ -20,7 +20,7 @@ solver:
         classregularizerotmappingadapter__tol:
         - 1.0e-06
         finalestimator__estimator_name:
-        - LR
+        - SVC_C10.0_Gamma0.01
       - classregularizerotmappingadapter__max_inner_iter:
         - 1000
         classregularizerotmappingadapter__max_iter:
@@ -38,7 +38,7 @@ solver:
         classregularizerotmappingadapter__tol:
         - 1.0e-06
         finalestimator__estimator_name:
-        - LR
+        - SVC_C10.0_Gamma0.01
       - classregularizerotmappingadapter__max_inner_iter:
         - 1000
         classregularizerotmappingadapter__max_iter:
@@ -56,17 +56,17 @@ solver:
         classregularizerotmappingadapter__tol:
         - 1.0e-06
         finalestimator__estimator_name:
-        - LR
+        - SVC_C10.0_Gamma0.01
 - CORAL:
     param_grid:
     - coraladapter__reg:
       - auto
       finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
 - DASVM:
     param_grid:
     - dasvmclassifier__base_estimator__estimator_name:
-      - SVC
+      - SVC_C10.0_Gamma0.01
       dasvmclassifier__max_iter:
       - 200
 - density_reweight:
@@ -80,7 +80,7 @@ solver:
       - scott
       - silverman
       finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
 - discriminator_reweight:
     param_grid:
     - discriminatorreweightadapter__domain_classifier__estimator_name:
@@ -89,7 +89,7 @@ solver:
       - KNN
       - XGB
       finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
 - entropic_ot_mapping:
     param_grid:
     - entropicotmappingadapter__max_iter:
@@ -107,11 +107,11 @@ solver:
       entropicotmappingadapter__tol:
       - 1.0e-06
       finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
 - gaussian_reweight:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       gaussianreweightadapter__reg:
       - auto
       - 1.0e-05
@@ -126,7 +126,7 @@ solver:
       - 0.7
       - 0.9
       jdotclassifier__base_estimator__estimator_name:
-      - SVC
+      - SVC_C10.0_Gamma0.01
       jdotclassifier__n_iter_max:
       - 100
       jdotclassifier__thr_weights:
@@ -136,7 +136,7 @@ solver:
 - KLIEP:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       kliepreweightadapter__cv:
       - 5
       kliepreweightadapter__gamma:
@@ -161,7 +161,7 @@ solver:
 - KMM:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       kmmreweightadapter__B:
       - 1000.0
       kmmreweightadapter__gamma:
@@ -183,7 +183,7 @@ solver:
 - linear_ot_mapping:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       linearotmappingadapter__bias:
       - true
       - false
@@ -196,7 +196,7 @@ solver:
 - MMDSConS:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       mmdlsconsmappingadapter__gamma:
       - 0.1
       - 1
@@ -214,7 +214,7 @@ solver:
 - nearest_neighbor_reweight:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       nearestneighborreweightadapter__laplace_smoothing:
       - true
       - false
@@ -223,19 +223,19 @@ solver:
 - NO_DA_SOURCE_ONLY:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
 - NO_DA_SOURCE_ONLY_BASE_ESTIM:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
 - NO_DA_TARGET_ONLY:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
 - OTLabelProp:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       otlabelpropadapter__metric:
       - sqeuclidean
       - cosine
@@ -247,7 +247,7 @@ solver:
 - ot_mapping:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       otmappingadapter__max_iter:
       - 1000000
       otmappingadapter__metric:
@@ -259,7 +259,7 @@ solver:
 - PCA:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       pca__n_components:
       - 1
       - 2
@@ -271,7 +271,7 @@ solver:
 - subspace_alignment:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       subspacealignmentadapter__n_components:
       - 1
       - 2
@@ -283,7 +283,7 @@ solver:
 - TarS:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       mmdtarsreweightadapter__gamma:
       - 0.0001
       - 0.001
@@ -303,7 +303,7 @@ solver:
 - transfer_component_analysis:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       transfercomponentanalysisadapter__kernel:
       - rbf
       transfercomponentanalysisadapter__mu:
@@ -320,7 +320,7 @@ solver:
 - transfer_subspace_learning:
     param_grid:
     - finalestimator__estimator_name:
-      - LR
+      - SVC_C10.0_Gamma0.01
       transfersubspacelearningadapter__base_method:
       - flda
       transfersubspacelearningadapter__length_scale:
