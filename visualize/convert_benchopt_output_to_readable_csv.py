@@ -18,6 +18,7 @@ Arguments:
     --domain:    Specify whether to output the results of the 'target' or 'source' domains.
     --output:    Path to the directory where the cleaned CSV file will be saved.
                  Default is './cleaned_outputs'.
+    --file_name: Name of the output file
 
 Example:
     python clean_benchopt_output_to_readable_format.py --directory ../outputs --domain target --output ./cleaned_outputs
@@ -183,6 +184,13 @@ if __name__ == "__main__":
         default=[]
     )
 
+    parser.add_argument(
+        "--file_name",
+        nargs=str,
+        help="Name of the output file",
+        default="results"
+    )
+
     args = parser.parse_args()
 
     # Step 1: Load the Data
@@ -198,4 +206,4 @@ if __name__ == "__main__":
 
     os.makedirs(output_directory, exist_ok=True)
 
-    df.to_csv(output_directory + '/results_base_estim_experiments.csv', index=False)
+    df.to_csv(output_directory + '/%s.csv'args.file_name, index=False)
