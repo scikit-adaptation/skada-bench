@@ -38,6 +38,8 @@ from generate_table_results import (
 
 def clean_benchopt_df(df, domain, dataset_params):
     # We remove '[param_grid=...]' from the dataset name
+
+    df['params'] = df.index.map(lambda x: (x[1].split('[param_grid=')[1][:-1]))
     df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=')[0]))
 
     dataset_params = [param.lower() for param in dataset_params]
@@ -61,12 +63,12 @@ def clean_benchopt_df(df, domain, dataset_params):
     ]
 
     filtered_columns.append('scorer')
+    filtered_columns.append('params')
     df = df.loc[:, filtered_columns]
 
     # Get df for the best unsupervised scorer
     # First we remove the "supervised" scorer
     best_unsupervised = df[df['scorer'] != 'supervised']
-
     best_unsupervised = keep_only_best_scorer_per_estimator(
         best_unsupervised,
         specific_col = (domain + '_accuracy', 'test', 'mean'),
@@ -94,14 +96,14 @@ def clean_benchopt_df(df, domain, dataset_params):
 
     # Rename the columns by concatenating the tuples with a hyphen, except 'scorer'
     df.columns = [
-        '-'.join([col[0], col[2]])
+        '-'.join([col[0], col[1], col[2]])
         if isinstance(col, tuple) and len(col) > 2
         else col
         for col in df.columns
     ]
 
     # Remove the domain in col names since here its implied
-    df.columns = [col.replace(domain + '_', '') for col in df.columns]
+    #df.columns = [col.replace(domain + '_', '') for col in df.columns]
 
     # Move dataset name and estimator from index
     df['dataset'] = [index_tuple[0] for index_tuple in df.index]
