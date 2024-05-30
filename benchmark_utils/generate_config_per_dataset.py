@@ -3,7 +3,7 @@ import importlib.util
 import sys
 import yaml
 
-filenames = next(walk("./solvers/"), (None, None, []))[2]
+filenames = next(walk("../solvers/"), (None, None, []))[2]
 
 dataset_list = [
     "AmazonReview",
@@ -17,7 +17,7 @@ dataset_list = [
     "20NewsGroups",
 ]
 
-with open("./config/best_base_estimators.yml") as stream:
+with open("../config/best_base_estimators.yml") as stream:
     best_base_estimators = yaml.safe_load(stream)
 
 for dataset in dataset_list:
@@ -54,5 +54,5 @@ for dataset in dataset_list:
             
         DD["solver"].append({foo.Solver.name: {"param_grid": [param_grid]}})
 
-    with open('config/datasets/%s.yml'%dataset, 'w+') as ff:
+    with open('../config/datasets/%s.yml'%dataset, 'w+') as ff:
         yaml.dump(DD, ff, default_flow_style=False)

@@ -1,5 +1,5 @@
 import yaml
-from benchmark_utils.base_solver import BASE_ESTIMATOR_DICT
+from base_solver import BASE_ESTIMATOR_DICT
 
 param_list = [{"finalestimator__estimator_name": [k]} for k in BASE_ESTIMATOR_DICT]
 param_dict = {"solver": {"NO_DA_SOURCE_ONLY_BASE_ESTIM": {"param_grid": param_list}}}

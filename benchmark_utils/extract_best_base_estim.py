@@ -1,10 +1,10 @@
 import pandas as pd
 import yaml
 
-with open("./config/best_base_estimators.yml") as stream:
+with open("../config/best_base_estimators.yml") as stream:
     best_base_estimators = yaml.safe_load(stream)
 
-df = pd.read_csv("./results/results_base_estim_experiments.csv")
+df = pd.read_csv("../results/results_base_estim_experiments.csv")
 
 def rename_estimator(x):
     return x.split("['")[-1].split("']")[0]
@@ -38,5 +38,5 @@ for dataset in df.dataset.unique():
 
     best_base_estimators[dataset] = dict(Best=best_estim, BestSVC=best_estim_svc)
 
-with open("./config/best_base_estimators.yml", 'w+') as ff:
+with open("../config/best_base_estimators.yml", 'w+') as ff:
     yaml.dump(best_base_estimators, ff, default_flow_style=False)

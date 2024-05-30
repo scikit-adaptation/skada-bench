@@ -8,6 +8,10 @@ dataset:
 - OfficeHomeResnet
 - Phishing
 - 20NewsGroups
+- Simulated[shift=covariate_shift]
+- Simulated[shift=target_shift]
+- Simulated[shift=concept_drift]
+- Simulated[shift=subspace]
 solver:
   NO_DA_SOURCE_ONLY_BASE_ESTIM:
     param_grid:
