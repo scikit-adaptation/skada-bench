@@ -1,31 +1,15 @@
 import pandas as pd
 import yaml
 import os
-import argparse
 
 PATH = os.path.dirname(os.path.dirname(__file__))
 CONFIG_FILE = os.path.join(PATH, "config", "best_base_estimators.yml")
-DEFAULT_RESULT_FILE = os.path.join(PATH, "results_base_estimators", "results_base_estim_experiments.csv")
+RESULT_FILE = os.path.join(PATH, "results_base_estimators", "results_base_estim_experiments.csv")
 
 SCORE_COL = "source_accuracy-test-mean"
 
 
 if __name__ == "__main__":
-
-    parser = argparse.ArgumentParser(
-        description="Extract best base estimators"
-    )
-
-    parser.add_argument(
-        "--input",
-        nargs=str,
-        help="Path to the CSV with results",
-        default=DEFAULT_RESULT_FILE
-    )
-
-    args = parser.parse_args()
-
-    RESULT_FILE = args.input
 
     with open(CONFIG_FILE) as stream:
         best_base_estimators = yaml.safe_load(stream)
@@ -43,6 +27,7 @@ if __name__ == "__main__":
 
     df["params"] = df["params"].apply(rename_params)
     df = df.loc[df["scorer"] == "supervised"]
+    df = df.loc[df["estimator"] == "NO_DA_SOURCE_ONLY_BASE_ESTIM"]
     
     # Find best Estim
     for dataset in df.dataset.unique():

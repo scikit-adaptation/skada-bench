@@ -186,7 +186,7 @@ if __name__ == "__main__":
 
     parser.add_argument(
         "--file_name",
-        nargs=str,
+        type=str,
         help="Name of the output file",
         default="results"
     )
@@ -206,4 +206,4 @@ if __name__ == "__main__":
 
     os.makedirs(output_directory, exist_ok=True)
 
-    df.to_csv(output_directory + '/%s.csv'args.file_name, index=False)
+    df.to_csv(output_directory + '/%s.csv'%args.file_name, index=False)
