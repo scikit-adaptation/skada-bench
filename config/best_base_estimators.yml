@@ -1,17 +1,17 @@
 20NewsGroups:
-  Best: XGB
-  BestSVC: SVC
+  Best: SVC_C10.0_Gamma10.0
+  BestSVC: SVC_C10.0_Gamma10.0
 AmazonReview:
-  Best: LR_C200.0
-  BestSVC: SVC_C100.0_Gamma1.0
+  Best: SVC
+  BestSVC: SVC
 BCI:
-  Best: LR_C0.2
-  BestSVC: SVC_C100.0_Gamma0.1
+  Best: LR_C2.0
+  BestSVC: SVC_C10.0_Gamma0.1
 Mushrooms:
   Best: LR
   BestSVC: SVC
 Office31:
-  Best: LR_C0.2
+  Best: LR_C0.1
   BestSVC: SVC
 OfficeHomeResnet:
   Best: SVC_C10.0_Gamma0.001

@@ -1,13 +1,13 @@
 dataset:
-- AmazonReview
-- BCI
-- mnist_usps
 - Mushrooms
+- Phishing
 - Office31
 - OfficeHomeResnet
-- Phishing
 - Simulated
+- BCI
+- AmazonReview
 - 20NewsGroups
+- mnist_usps
 solver:
   NO_DA_SOURCE_ONLY_BASE_ESTIM:
     param_grid:
