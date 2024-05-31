@@ -137,46 +137,53 @@ class Objective(BaseObjective):
                         roc_args = {'multi_class': 'ovo', 'labels': np.unique(
                             np.concatenate((self.y_train, self.y_test)))}
 
-                        all_metrics.update({
-                            f'{criterion}_train_source_{metric_name}':
-                                metric(
-                                    y_train_source,
-                                    y_pred_train_source_proba,
-                                    **roc_args
-                                ),
-                            f'{criterion}_train_target_{metric_name}':
-                                metric(
-                                    y_train_target,
-                                    y_pred_train_target_proba,
-                                    **roc_args
-                                ),
-                            f'{criterion}_test_source_{metric_name}':
-                                metric(y_test_source,
-                                       y_pred_test_source_proba,
-                                       **roc_args
-                                       ),
-                            f'{criterion}_test_target_{metric_name}':
-                                metric(y_test_target,
-                                       y_pred_test_target_proba,
-                                       **roc_args
-                                       ),
-                        })
+                        try:
+                            all_metrics.update({
+                                f'{criterion}_train_source_{metric_name}':
+                                    metric(
+                                        y_train_source,
+                                        y_pred_train_source_proba,
+                                        **roc_args
+                                    ),
+                                f'{criterion}_train_target_{metric_name}':
+                                    metric(
+                                        y_train_target,
+                                        y_pred_train_target_proba,
+                                        **roc_args
+                                    ),
+                                f'{criterion}_test_source_{metric_name}':
+                                    metric(y_test_source,
+                                        y_pred_test_source_proba,
+                                        **roc_args
+                                        ),
+                                f'{criterion}_test_target_{metric_name}':
+                                    metric(y_test_target,
+                                        y_pred_test_target_proba,
+                                        **roc_args
+                                        ),
+                            })
+                        except Exception as e:
+                            print(e)
+
                         continue
 
                 f1_args = {}
                 if metric_name == 'f1_score':
                     f1_args = {'average': 'weighted'}
 
-                all_metrics.update({
-                    f'{criterion}_train_source_{metric_name}':
-                        metric(y_train_source, y_pred_train_source, **f1_args),
-                    f'{criterion}_train_target_{metric_name}':
-                        metric(y_train_target, y_pred_train_target, **f1_args),
-                    f'{criterion}_test_source_{metric_name}':
-                        metric(y_test_source, y_pred_test_source, **f1_args),
-                    f'{criterion}_test_target_{metric_name}':
-                        metric(y_test_target, y_pred_test_target, **f1_args)
-                })
+                try:
+                    all_metrics.update({
+                        f'{criterion}_train_source_{metric_name}':
+                            metric(y_train_source, y_pred_train_source, **f1_args),
+                        f'{criterion}_train_target_{metric_name}':
+                            metric(y_train_target, y_pred_train_target, **f1_args),
+                        f'{criterion}_test_source_{metric_name}':
+                            metric(y_test_source, y_pred_test_source, **f1_args),
+                        f'{criterion}_test_target_{metric_name}':
+                            metric(y_test_target, y_pred_test_target, **f1_args)
+                    })
+                except Exception as e:
+                    print(e)
 
         return dict(
             cv_results=cv_results,
