@@ -1,6 +1,173 @@
 dataset:
 - mnist_usps
 solver:
+- KLIEP:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      kliepreweightadapter__cv:
+      - 5
+      kliepreweightadapter__gamma:
+      - 0.0001
+      - 0.001
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      - 100.0
+      - 1000.0
+      - auto
+      - scale
+      kliepreweightadapter__max_iter:
+      - 1000
+      kliepreweightadapter__n_centers:
+      - 100
+      kliepreweightadapter__random_state:
+      - 0
+      kliepreweightadapter__tol:
+      - 1.0e-06
+- KMM:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      kmmreweightadapter__B:
+      - 1000.0
+      kmmreweightadapter__gamma:
+      - 0.0001
+      - 0.001
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      - 100.0
+      - 1000.0
+      - null
+      kmmreweightadapter__max_iter:
+      - 1000
+      kmmreweightadapter__smooth_weights:
+      - false
+      kmmreweightadapter__tol:
+      - 1.0e-06
+- MMDSConS:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      mmdlsconsmappingadapter__gamma:
+      - 0.1
+      - 1
+      - 10
+      mmdlsconsmappingadapter__max_iter:
+      - 100
+      mmdlsconsmappingadapter__reg_k:
+      - 1.0e-10
+      - 1.0e-08
+      mmdlsconsmappingadapter__reg_m:
+      - 1.0e-10
+      - 1.0e-08
+      mmdlsconsmappingadapter__tol:
+      - 1.0e-05
+- nearest_neighbor_reweight:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      nearestneighborreweightadapter__laplace_smoothing:
+      - true
+      - false
+      nearestneighborreweightadapter__n_neighbors:
+      - 1
+- ot_mapping:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      otmappingadapter__max_iter:
+      - 1000000
+      otmappingadapter__metric:
+      - sqeuclidean
+      - cosine
+      - cityblock
+      otmappingadapter__norm:
+      - median
+- PCA:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      pca__n_components:
+      - 1
+      - 2
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100
+- subspace_alignment:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      subspacealignmentadapter__n_components:
+      - 1
+      - 2
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100
+- transfer_component_analysis:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      transfercomponentanalysisadapter__kernel:
+      - rbf
+      transfercomponentanalysisadapter__mu:
+      - 10
+      - 100
+      transfercomponentanalysisadapter__n_components:
+      - 1
+      - 2
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100
+- NO_DA_SOURCE_ONLY_BASE_ESTIM:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+- NO_DA_TARGET_ONLY:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+- OTLabelProp:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      otlabelpropadapter__metric:
+      - sqeuclidean
+      - cosine
+      - cityblock
+      otlabelpropadapter__reg:
+      - null
+      - 0.1
+      - 1.0
+- TarS:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      mmdtarsreweightadapter__gamma:
+      - 0.0001
+      - 0.001
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      - 100.0
+      - 1000.0
+      - null
+      mmdtarsreweightadapter__max_iter:
+      - 1000
+      mmdtarsreweightadapter__reg:
+      - 1.0e-06
+      mmdtarsreweightadapter__tol:
+      - 1.0e-06
 - class_regularizer_ot_mapping:
     param_grid:
     - - classregularizerotmappingadapter__max_inner_iter:
@@ -57,18 +224,6 @@ solver:
         - 1.0e-06
         finalestimator__estimator_name:
         - SVC_C10.0_Gamma0.01
-- CORAL:
-    param_grid:
-    - coraladapter__reg:
-      - auto
-      finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-- DASVM:
-    param_grid:
-    - dasvmclassifier__base_estimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      dasvmclassifier__max_iter:
-      - 200
 - density_reweight:
     param_grid:
     - densityreweightadapter__weight_estimator__bandwidth:
@@ -90,6 +245,28 @@ solver:
       - XGB
       finalestimator__estimator_name:
       - SVC_C10.0_Gamma0.01
+- DASVM:
+    param_grid:
+    - dasvmclassifier__base_estimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      dasvmclassifier__max_iter:
+      - 200
+- JDOT_SVC:
+    param_grid:
+    - jdotclassifier__alpha:
+      - 0.1
+      - 0.3
+      - 0.5
+      - 0.7
+      - 0.9
+      jdotclassifier__base_estimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      jdotclassifier__n_iter_max:
+      - 100
+      jdotclassifier__thr_weights:
+      - 1.0e-07
+      jdotclassifier__tol:
+      - 1.0e-06
 - entropic_ot_mapping:
     param_grid:
     - entropicotmappingadapter__max_iter:
@@ -117,69 +294,6 @@ solver:
       - 1.0e-05
       - 0.01
       - 0.5
-- JDOT_SVC:
-    param_grid:
-    - jdotclassifier__alpha:
-      - 0.1
-      - 0.3
-      - 0.5
-      - 0.7
-      - 0.9
-      jdotclassifier__base_estimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      jdotclassifier__n_iter_max:
-      - 100
-      jdotclassifier__thr_weights:
-      - 1.0e-07
-      jdotclassifier__tol:
-      - 1.0e-06
-- KLIEP:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      kliepreweightadapter__cv:
-      - 5
-      kliepreweightadapter__gamma:
-      - 0.0001
-      - 0.001
-      - 0.01
-      - 0.1
-      - 1.0
-      - 10.0
-      - 100.0
-      - 1000.0
-      - auto
-      - scale
-      kliepreweightadapter__max_iter:
-      - 1000
-      kliepreweightadapter__n_centers:
-      - 100
-      kliepreweightadapter__random_state:
-      - 0
-      kliepreweightadapter__tol:
-      - 1.0e-06
-- KMM:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      kmmreweightadapter__B:
-      - 1000.0
-      kmmreweightadapter__gamma:
-      - 0.0001
-      - 0.001
-      - 0.01
-      - 0.1
-      - 1.0
-      - 10.0
-      - 100.0
-      - 1000.0
-      - null
-      kmmreweightadapter__max_iter:
-      - 1000
-      kmmreweightadapter__smooth_weights:
-      - false
-      kmmreweightadapter__tol:
-      - 1.0e-06
 - linear_ot_mapping:
     param_grid:
     - finalestimator__estimator_name:
@@ -193,130 +307,6 @@ solver:
       - 0.1
       - 1
       - 10
-- MMDSConS:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      mmdlsconsmappingadapter__gamma:
-      - 0.1
-      - 1
-      - 10
-      mmdlsconsmappingadapter__max_iter:
-      - 100
-      mmdlsconsmappingadapter__reg_k:
-      - 1.0e-10
-      - 1.0e-08
-      mmdlsconsmappingadapter__reg_m:
-      - 1.0e-10
-      - 1.0e-08
-      mmdlsconsmappingadapter__tol:
-      - 1.0e-05
-- nearest_neighbor_reweight:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      nearestneighborreweightadapter__laplace_smoothing:
-      - true
-      - false
-      nearestneighborreweightadapter__n_neighbors:
-      - 1
-- NO_DA_SOURCE_ONLY:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-- NO_DA_SOURCE_ONLY_BASE_ESTIM:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-- NO_DA_TARGET_ONLY:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-- OTLabelProp:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      otlabelpropadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      otlabelpropadapter__reg:
-      - null
-      - 0.1
-      - 1.0
-- ot_mapping:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      otmappingadapter__max_iter:
-      - 1000000
-      otmappingadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      otmappingadapter__norm:
-      - median
-- PCA:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      pca__n_components:
-      - 1
-      - 2
-      - 5
-      - 10
-      - 20
-      - 50
-      - 100
-- subspace_alignment:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      subspacealignmentadapter__n_components:
-      - 1
-      - 2
-      - 5
-      - 10
-      - 20
-      - 50
-      - 100
-- TarS:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      mmdtarsreweightadapter__gamma:
-      - 0.0001
-      - 0.001
-      - 0.01
-      - 0.1
-      - 1.0
-      - 10.0
-      - 100.0
-      - 1000.0
-      - null
-      mmdtarsreweightadapter__max_iter:
-      - 1000
-      mmdtarsreweightadapter__reg:
-      - 1.0e-06
-      mmdtarsreweightadapter__tol:
-      - 1.0e-06
-- transfer_component_analysis:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      transfercomponentanalysisadapter__kernel:
-      - rbf
-      transfercomponentanalysisadapter__mu:
-      - 10
-      - 100
-      transfercomponentanalysisadapter__n_components:
-      - 1
-      - 2
-      - 5
-      - 10
-      - 20
-      - 50
-      - 100
 - transfer_subspace_learning:
     param_grid:
     - finalestimator__estimator_name:
@@ -343,3 +333,13 @@ solver:
       - 0.0001
       transfersubspacelearningadapter__tol:
       - 0.0001
+- CORAL:
+    param_grid:
+    - coraladapter__reg:
+      - auto
+      finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+- NO_DA_SOURCE_ONLY:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
