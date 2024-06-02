@@ -86,18 +86,17 @@ def get_reviews(domain, path):
     return reviews, np.array(labels)
 
 
-def merge_labels(labels):
+def preprocess_labels(labels):
     """
-    Merge the labels in the following way:
-    1, 2 -> 0
-    4, 5 -> 1
+    Preprocess the labels to be in {0, 1, 2, 3}.
     """
     # Check if the labels are in [1, 2, 4, 5]
     assert np.all(np.isin(labels, [1, 2, 4, 5]))
+    # Use Label 
     labels[labels == 1] = 0
-    labels[labels == 2] = 0
-    labels[labels == 4] = 1
-    labels[labels == 5] = 1
+    labels[labels == 2] = 1
+    labels[labels == 4] = 2
+    labels[labels == 5] = 3
     return labels
 
 
@@ -136,7 +135,7 @@ if __name__ == "__main__":
         preprocessed_data[k]['X'] = model.encode(
             data_raw[k]['X'], batch_size=BATCH_SIZE, show_progress_bar=True
         )
-        preprocessed_data[k]['y'] = merge_labels(data_raw[k]['y'])
+        preprocessed_data[k]['y'] = preprocess_labels(data_raw[k]['y'])
 
     # Apply PCA to reduce the dimensionality of the embeddings
     print("Applying PCA...")
