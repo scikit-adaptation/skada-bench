@@ -40,7 +40,7 @@ class Dataset(BaseDataset):
     }
 
     path_preprocessed_data = "data/amazon_review_preprocessed.pkl"
-    url_preprocessed_data = "https://figshare.com/ndownloader/files/46642522?private_link=5b1a88c729389a8dbcd0"
+    url_preprocessed_data = "https://figshare.com/ndownloader/files/46763626?private_link=2a46003c38fd015cdbde"
 
     def _get_dataset(self, dataset_name, n_samples=None):
         rng = np.random.RandomState(self.random_state)
