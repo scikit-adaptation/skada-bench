@@ -25,7 +25,7 @@ class Dataset(BaseDataset):
             ('amazon', 'dslr'),
             ('amazon', 'webcam')
         ],
-        'n_components': [50]
+        'n_components': [100]
     }
 
     def get_data(self):
