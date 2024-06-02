@@ -32,7 +32,7 @@ class Dataset(BaseDataset):
             ('realworld', 'clipart'),
             ('realworld', 'product'),
         ],
-        'n_components': [50]
+        'n_components': [100]
     }
 
     def get_data(self):
