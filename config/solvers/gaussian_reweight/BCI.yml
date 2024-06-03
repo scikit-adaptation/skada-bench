@@ -6,4 +6,4 @@ solver:
     - finalestimator__estimator_name:
       - LR_C2.0
       gaussianreweightadapter__reg:
-      - 1.0e-06
+      - auto

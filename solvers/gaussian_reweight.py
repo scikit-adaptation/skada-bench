@@ -18,7 +18,7 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'gaussianreweightadapter__reg': [1e-6],
+        'gaussianreweightadapter__reg': ["auto"],
         'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 

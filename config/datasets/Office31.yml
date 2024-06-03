@@ -110,12 +110,15 @@ solver:
       - 20
       - 50
       - 100
-- gaussian_reweight:
+- CORAL:
     param_grid:
-    - finalestimator__estimator_name:
+    - coraladapter__assume_centered:
+      - false
+      - true
+      coraladapter__reg:
+      - auto
+      finalestimator__estimator_name:
       - LR_C0.01
-      gaussianreweightadapter__reg:
-      - 1.0e-06
 - NO_DA_SOURCE_ONLY_BASE_ESTIM:
     param_grid:
     - finalestimator__estimator_name:
@@ -233,15 +236,12 @@ solver:
       - XGB
       finalestimator__estimator_name:
       - LR_C0.01
-- CORAL:
+- gaussian_reweight:
     param_grid:
-    - coraladapter__assume_centered:
-      - false
-      - true
-      coraladapter__reg:
-      - 1.0e-06
-      finalestimator__estimator_name:
+    - finalestimator__estimator_name:
       - LR_C0.01
+      gaussianreweightadapter__reg:
+      - auto
 - DASVM:
     param_grid:
     - dasvmclassifier__base_estimator__estimator_name:

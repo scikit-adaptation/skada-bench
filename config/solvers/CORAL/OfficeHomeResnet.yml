@@ -7,6 +7,6 @@ solver:
       - false
       - true
       coraladapter__reg:
-      - 1.0e-06
+      - auto
       finalestimator__estimator_name:
       - SVC_C10.0_Gamma0.001

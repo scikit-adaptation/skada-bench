@@ -6,4 +6,4 @@ solver:
     - finalestimator__estimator_name:
       - XGB_subsample0.8_colsample0.65_maxdepth20
       gaussianreweightadapter__reg:
-      - 1.0e-06
+      - auto
