@@ -39,7 +39,7 @@ from generate_table_results import (
 
 def clean_benchopt_df(df, domain, dataset_params):
     # We remove '[param_grid=...]' from the dataset name
-
+    import pdb; pdb.set_trace()
     df['params'] = df.index.map(lambda x: (x[1].split('[param_grid=')[1][:-1]))
     df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=')[0]))
 
@@ -65,6 +65,7 @@ def clean_benchopt_df(df, domain, dataset_params):
 
     filtered_columns.append('scorer')
     filtered_columns.append('params')
+    filtered_columns.append('cv_score')
     df = df.loc[:, filtered_columns]
 
     # Get df for the best unsupervised scorer
