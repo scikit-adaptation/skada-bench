@@ -13,16 +13,15 @@ if __name__ == "__main__":
     datasets_path = PATH / "datasets"
     config_path = PATH / "config"
 
-    # find .py files in solvers directory but not hidden files
-    filenames = [f for f in solvers_path.iterdir() if f.is_file() and f.suffix == ".py" and not f.name.startswith(".")]
+    filenames = [f for f in solvers_path.iterdir() if f.is_file() and not f.name.startswith('.') and f.suffix == '.py']
 
     dataset_list = []
 
-    # find .py files in solvers directory but not hidden files
-    filenames_dataset = [f.name for f in datasets_path.iterdir() if f.is_file() and f.suffix == ".py" and not f.name.startswith(".")]
+    filenames_dataset = [f for f in datasets_path.iterdir() if f.is_file() and not f.name.startswith('.') and f.suffix == '.py']
 
-    for name in filenames_dataset:
-        spec = importlib.util.spec_from_file_location(name, datasets_path / name)
+    for filepath in filenames_dataset:
+        name = filepath.stem  # Remove the .py suffix
+        spec = importlib.util.spec_from_file_location(name, filepath)
         foo = importlib.util.module_from_spec(spec)
         sys.modules[name] = foo
         spec.loader.exec_module(foo)
@@ -40,9 +39,10 @@ if __name__ == "__main__":
         DD["dataset"] = [dataset]
         DD["solver"] = []
 
-        for i, name in enumerate(filenames):
-            print(name, i)
-            spec = importlib.util.spec_from_file_location(name, solvers_path / name)
+        for filepath in filenames:
+            name = filepath.stem  # Remove the .py suffix
+            print(name)
+            spec = importlib.util.spec_from_file_location(name, filepath)
             foo = importlib.util.module_from_spec(spec)
             sys.modules[name] = foo
             spec.loader.exec_module(foo)
