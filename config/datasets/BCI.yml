@@ -335,7 +335,10 @@ solver:
       - 0.0001
 - CORAL:
     param_grid:
-    - coraladapter__reg:
+    - coraladapter__assume_centered:
+      - false
+      - true
+      coraladapter__reg:
       - auto
       finalestimator__estimator_name:
       - LR_C2.0

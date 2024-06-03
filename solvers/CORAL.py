@@ -19,6 +19,7 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
         'coraladapter__reg': ["auto"],
+        'coraladapter__assume_centered': [False, True],
         'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
