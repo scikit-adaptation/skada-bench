@@ -1,0 +1,12 @@
+dataset:
+- AmazonReview
+solver:
+- nearest_neighbor_reweight:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C1000.0_Gamma0.001
+      nearestneighborreweightadapter__laplace_smoothing:
+      - true
+      - false
+      nearestneighborreweightadapter__n_neighbors:
+      - 1

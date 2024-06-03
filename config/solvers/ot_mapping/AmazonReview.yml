@@ -1,0 +1,15 @@
+dataset:
+- AmazonReview
+solver:
+- ot_mapping:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C1000.0_Gamma0.001
+      otmappingadapter__max_iter:
+      - 1000000
+      otmappingadapter__metric:
+      - sqeuclidean
+      - cosine
+      - cityblock
+      otmappingadapter__norm:
+      - median

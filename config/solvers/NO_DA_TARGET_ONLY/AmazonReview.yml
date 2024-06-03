@@ -1,0 +1,7 @@
+dataset:
+- AmazonReview
+solver:
+- NO_DA_TARGET_ONLY:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C1000.0_Gamma0.001

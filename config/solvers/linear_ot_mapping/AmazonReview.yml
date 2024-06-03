@@ -1,0 +1,16 @@
+dataset:
+- AmazonReview
+solver:
+- linear_ot_mapping:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C1000.0_Gamma0.001
+      linearotmappingadapter__bias:
+      - true
+      - false
+      linearotmappingadapter__reg:
+      - 1.0e-08
+      - 1.0e-06
+      - 0.1
+      - 1
+      - 10

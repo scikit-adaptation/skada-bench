@@ -1,0 +1,15 @@
+dataset:
+- BCI
+solver:
+- OTLabelProp:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR_C2.0
+      otlabelpropadapter__metric:
+      - sqeuclidean
+      - cosine
+      - cityblock
+      otlabelpropadapter__reg:
+      - null
+      - 0.1
+      - 1.0

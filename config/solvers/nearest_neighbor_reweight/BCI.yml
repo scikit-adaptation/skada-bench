@@ -1,0 +1,12 @@
+dataset:
+- BCI
+solver:
+- nearest_neighbor_reweight:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR_C2.0
+      nearestneighborreweightadapter__laplace_smoothing:
+      - true
+      - false
+      nearestneighborreweightadapter__n_neighbors:
+      - 1
