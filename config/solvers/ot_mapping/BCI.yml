@@ -1,0 +1,15 @@
+dataset:
+- BCI
+solver:
+- ot_mapping:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR_C2.0
+      otmappingadapter__max_iter:
+      - 1000000
+      otmappingadapter__metric:
+      - sqeuclidean
+      - cosine
+      - cityblock
+      otmappingadapter__norm:
+      - median

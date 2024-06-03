@@ -1,0 +1,7 @@
+dataset:
+- Phishing
+solver:
+- NO_DA_SOURCE_ONLY_BASE_ESTIM:
+    param_grid:
+    - finalestimator__estimator_name:
+      - XGB_subsample0.8_colsample0.65_maxdepth20

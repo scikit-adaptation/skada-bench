@@ -1,0 +1,7 @@
+dataset:
+- Office31
+solver:
+- NO_DA_TARGET_ONLY:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR_C0.01

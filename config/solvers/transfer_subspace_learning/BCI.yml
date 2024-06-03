@@ -1,0 +1,29 @@
+dataset:
+- BCI
+solver:
+- transfer_subspace_learning:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR_C2.0
+      transfersubspacelearningadapter__base_method:
+      - flda
+      transfersubspacelearningadapter__length_scale:
+      - 2
+      transfersubspacelearningadapter__max_iter:
+      - 300
+      transfersubspacelearningadapter__mu:
+      - 0.1
+      - 1
+      - 10
+      transfersubspacelearningadapter__n_components:
+      - 1
+      - 2
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100
+      transfersubspacelearningadapter__reg:
+      - 0.0001
+      transfersubspacelearningadapter__tol:
+      - 0.0001
