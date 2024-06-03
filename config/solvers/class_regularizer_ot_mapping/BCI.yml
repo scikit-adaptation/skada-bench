@@ -1,0 +1,59 @@
+dataset:
+- BCI
+solver:
+- class_regularizer_ot_mapping:
+    param_grid:
+    - - classregularizerotmappingadapter__max_inner_iter:
+        - 1000
+        classregularizerotmappingadapter__max_iter:
+        - 10
+        classregularizerotmappingadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        classregularizerotmappingadapter__norm:
+        - lpl1
+        classregularizerotmappingadapter__reg_cl:
+        - 0.1
+        classregularizerotmappingadapter__reg_e:
+        - 0.1
+        classregularizerotmappingadapter__tol:
+        - 1.0e-06
+        finalestimator__estimator_name:
+        - LR_C2.0
+      - classregularizerotmappingadapter__max_inner_iter:
+        - 1000
+        classregularizerotmappingadapter__max_iter:
+        - 10
+        classregularizerotmappingadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        classregularizerotmappingadapter__norm:
+        - lpl1
+        classregularizerotmappingadapter__reg_cl:
+        - 0.5
+        classregularizerotmappingadapter__reg_e:
+        - 0.5
+        classregularizerotmappingadapter__tol:
+        - 1.0e-06
+        finalestimator__estimator_name:
+        - LR_C2.0
+      - classregularizerotmappingadapter__max_inner_iter:
+        - 1000
+        classregularizerotmappingadapter__max_iter:
+        - 10
+        classregularizerotmappingadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        classregularizerotmappingadapter__norm:
+        - lpl1
+        classregularizerotmappingadapter__reg_cl:
+        - 1.0
+        classregularizerotmappingadapter__reg_e:
+        - 1.0
+        classregularizerotmappingadapter__tol:
+        - 1.0e-06
+        finalestimator__estimator_name:
+        - LR_C2.0

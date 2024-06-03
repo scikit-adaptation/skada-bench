@@ -1,0 +1,12 @@
+dataset:
+- mnist_usps
+solver:
+- nearest_neighbor_reweight:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      nearestneighborreweightadapter__laplace_smoothing:
+      - true
+      - false
+      nearestneighborreweightadapter__n_neighbors:
+      - 1

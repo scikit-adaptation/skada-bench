@@ -1,0 +1,12 @@
+dataset:
+- AmazonReview
+solver:
+- discriminator_reweight:
+    param_grid:
+    - discriminatorreweightadapter__domain_classifier__estimator_name:
+      - LR
+      - SVC
+      - KNN
+      - XGB
+      finalestimator__estimator_name:
+      - SVC_C1000.0_Gamma0.001

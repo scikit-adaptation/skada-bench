@@ -1,0 +1,12 @@
+dataset:
+- Phishing
+solver:
+- discriminator_reweight:
+    param_grid:
+    - discriminatorreweightadapter__domain_classifier__estimator_name:
+      - LR
+      - SVC
+      - KNN
+      - XGB
+      finalestimator__estimator_name:
+      - XGB_subsample0.8_colsample0.65_maxdepth20

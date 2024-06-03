@@ -1,0 +1,15 @@
+dataset:
+- 20NewsGroups
+solver:
+- PCA:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma10.0
+      pca__n_components:
+      - 1
+      - 2
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100

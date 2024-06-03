@@ -1,0 +1,12 @@
+dataset:
+- Simulated
+solver:
+- CORAL:
+    param_grid:
+    - coraladapter__assume_centered:
+      - false
+      - true
+      coraladapter__reg:
+      - auto
+      finalestimator__estimator_name:
+      - SVC

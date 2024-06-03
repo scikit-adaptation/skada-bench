@@ -1,0 +1,12 @@
+dataset:
+- 20NewsGroups
+solver:
+- CORAL:
+    param_grid:
+    - coraladapter__assume_centered:
+      - false
+      - true
+      coraladapter__reg:
+      - auto
+      finalestimator__estimator_name:
+      - SVC_C10.0_Gamma10.0
