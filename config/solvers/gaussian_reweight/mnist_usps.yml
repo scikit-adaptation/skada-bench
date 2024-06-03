@@ -6,7 +6,4 @@ solver:
     - finalestimator__estimator_name:
       - SVC_C10.0_Gamma0.01
       gaussianreweightadapter__reg:
-      - auto
-      - 1.0e-05
-      - 0.01
-      - 0.5
+      - 1.0e-06

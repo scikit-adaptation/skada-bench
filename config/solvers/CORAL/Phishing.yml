@@ -7,6 +7,6 @@ solver:
       - false
       - true
       coraladapter__reg:
-      - auto
+      - 1.0e-06
       finalestimator__estimator_name:
       - XGB_subsample0.8_colsample0.65_maxdepth20

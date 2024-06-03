@@ -7,6 +7,6 @@ solver:
       - false
       - true
       coraladapter__reg:
-      - auto
+      - 1.0e-06
       finalestimator__estimator_name:
       - LR_C0.01

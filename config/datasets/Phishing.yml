@@ -48,24 +48,6 @@ solver:
       - false
       kmmreweightadapter__tol:
       - 1.0e-06
-- MMDSConS:
-    param_grid:
-    - finalestimator__estimator_name:
-      - XGB_subsample0.8_colsample0.65_maxdepth20
-      mmdlsconsmappingadapter__gamma:
-      - 0.1
-      - 1
-      - 10
-      mmdlsconsmappingadapter__max_iter:
-      - 100
-      mmdlsconsmappingadapter__reg_k:
-      - 1.0e-10
-      - 1.0e-08
-      mmdlsconsmappingadapter__reg_m:
-      - 1.0e-10
-      - 1.0e-08
-      mmdlsconsmappingadapter__tol:
-      - 1.0e-05
 - nearest_neighbor_reweight:
     param_grid:
     - finalestimator__estimator_name:
@@ -128,6 +110,12 @@ solver:
       - 20
       - 50
       - 100
+- gaussian_reweight:
+    param_grid:
+    - finalestimator__estimator_name:
+      - XGB_subsample0.8_colsample0.65_maxdepth20
+      gaussianreweightadapter__reg:
+      - 1.0e-06
 - NO_DA_SOURCE_ONLY_BASE_ESTIM:
     param_grid:
     - finalestimator__estimator_name:
@@ -245,6 +233,15 @@ solver:
       - XGB
       finalestimator__estimator_name:
       - XGB_subsample0.8_colsample0.65_maxdepth20
+- CORAL:
+    param_grid:
+    - coraladapter__assume_centered:
+      - false
+      - true
+      coraladapter__reg:
+      - 1.0e-06
+      finalestimator__estimator_name:
+      - XGB_subsample0.8_colsample0.65_maxdepth20
 - DASVM:
     param_grid:
     - dasvmclassifier__base_estimator__estimator_name:
@@ -285,15 +282,6 @@ solver:
       - 1.0e-06
       finalestimator__estimator_name:
       - XGB_subsample0.8_colsample0.65_maxdepth20
-- gaussian_reweight:
-    param_grid:
-    - finalestimator__estimator_name:
-      - XGB_subsample0.8_colsample0.65_maxdepth20
-      gaussianreweightadapter__reg:
-      - auto
-      - 1.0e-05
-      - 0.01
-      - 0.5
 - linear_ot_mapping:
     param_grid:
     - finalestimator__estimator_name:
@@ -333,15 +321,24 @@ solver:
       - 0.0001
       transfersubspacelearningadapter__tol:
       - 0.0001
-- CORAL:
+- MMDSConS:
     param_grid:
-    - coraladapter__assume_centered:
-      - false
-      - true
-      coraladapter__reg:
-      - auto
-      finalestimator__estimator_name:
+    - finalestimator__estimator_name:
       - XGB_subsample0.8_colsample0.65_maxdepth20
+      mmdlsconsmappingadapter__gamma:
+      - 0.01
+      - 0.1
+      - 1
+      - 10
+      - 100
+      mmdlsconsmappingadapter__max_iter:
+      - 20
+      mmdlsconsmappingadapter__reg_k:
+      - 1.0e-08
+      mmdlsconsmappingadapter__reg_m:
+      - 1.0e-08
+      mmdlsconsmappingadapter__tol:
+      - 1.0e-05
 - NO_DA_SOURCE_ONLY:
     param_grid:
     - finalestimator__estimator_name:
