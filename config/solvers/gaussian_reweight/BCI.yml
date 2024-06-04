@@ -7,6 +7,3 @@ solver:
       - LR_C2.0
       gaussianreweightadapter__reg:
       - auto
-      - 1.0e-05
-      - 0.01
-      - 0.5
