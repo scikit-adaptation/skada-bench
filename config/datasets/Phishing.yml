@@ -162,7 +162,7 @@ solver:
 - class_regularizer_ot_mapping:
     param_grid:
     - - classregularizerotmappingadapter__max_inner_iter:
-        - 1000
+        - 50
         classregularizerotmappingadapter__max_iter:
         - 10
         classregularizerotmappingadapter__metric:
@@ -180,7 +180,7 @@ solver:
         finalestimator__estimator_name:
         - XGB_subsample0.8_colsample0.65_maxdepth20
       - classregularizerotmappingadapter__max_inner_iter:
-        - 1000
+        - 50
         classregularizerotmappingadapter__max_iter:
         - 10
         classregularizerotmappingadapter__metric:
@@ -198,7 +198,7 @@ solver:
         finalestimator__estimator_name:
         - XGB_subsample0.8_colsample0.65_maxdepth20
       - classregularizerotmappingadapter__max_inner_iter:
-        - 1000
+        - 50
         classregularizerotmappingadapter__max_iter:
         - 10
         classregularizerotmappingadapter__metric:
