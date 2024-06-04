@@ -1,20 +1,6 @@
 dataset:
 - Phishing
 solver:
-- OTLabelProp:
-    param_grid:
-    - finalestimator__estimator_name:
-      - XGB_subsample0.8_colsample0.65_maxdepth20
-      otlabelpropadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      otlabelpropadapter__n_iter_max:
-      - 100
-      otlabelpropadapter__reg:
-      - null
-      - 0.1
-      - 1.0
 - KLIEP:
     param_grid:
     - finalestimator__estimator_name:
@@ -341,3 +327,26 @@ solver:
     param_grid:
     - finalestimator__estimator_name:
       - XGB_subsample0.8_colsample0.65_maxdepth20
+- OTLabelProp:
+    param_grid:
+    - - finalestimator__estimator_name:
+        - XGB_subsample0.8_colsample0.65_maxdepth20
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 10000
+        otlabelpropadapter__reg:
+        - null
+      - finalestimator__estimator_name:
+        - XGB_subsample0.8_colsample0.65_maxdepth20
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 100
+        otlabelpropadapter__reg:
+        - 0.1
+        - 1
