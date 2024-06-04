@@ -247,7 +247,7 @@ solver:
     - dasvmclassifier__base_estimator__estimator_name:
       - SVC_C10.0_Gamma10.0
       dasvmclassifier__max_iter:
-      - 200
+      - 30
 - JDOT_SVC:
     param_grid:
     - jdotclassifier__alpha:
