@@ -2,6 +2,13 @@ import os
 import argparse
 
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+from generate_table_results import (
+    DA_TECHNIQUES,
+    ESTIMATOR_DICT,
+)
 
 
 def process_files_in_directory(directory):
@@ -35,6 +42,62 @@ def process_files_in_directory(directory):
         print(f"Hours: {hours}, Minutes: {minutes}, Seconds: {remaining_seconds:.2f}")
 
 
+
+        ### Plotting part ###
+        num_idx = all_df['idx_rep'].max()+1
+
+        all_df['solver_name'] = all_df['solver_name'].map(lambda x: (x.split('[param_grid=')[0]))
+
+        # Add Type column
+        # Create a reverse lookup dictionary
+        reverse_lookup = {solver: technique for technique, solvers in DA_TECHNIQUES.items() for solver in solvers}
+        all_df['Type'] = all_df['solver_name'].map(reverse_lookup)
+
+
+        # Set to 'Unknown' for the rest
+        all_df['Type'].fillna('Unknown', inplace=True)
+
+        all_df = all_df[all_df['Type'] != 'Unknown']
+
+
+        all_df['Estimator'] = all_df['solver_name'].map(lambda x: ESTIMATOR_DICT.get(x, x))
+
+        all_df = all_df[['Estimator', 'Type', 'time']]
+
+        # Times num_idx because, theres num_idx splits
+        groupby_df = all_df.groupby(['Estimator', 'Type']).mean() * num_idx
+        groupby_df = groupby_df.reset_index()
+
+        order = groupby_df.sort_values('time')
+
+        g = sns.barplot(
+            x = 'Estimator',
+            y = 'time',
+            hue = 'Type',
+            data = order,
+            palette = 'colorblind',
+            dodge=False,
+        )
+
+        g.set_yscale("log")
+
+        g.set_xticklabels(
+            g.get_xticklabels(), 
+            rotation=45, 
+            horizontalalignment='right'
+        )
+
+        fig = plt.gcf()
+        fig.set_size_inches(8, 6)
+
+        plt.tight_layout()
+
+        plt.ylabel("Computational time (in sec)")
+
+        fig.savefig('estimator_VS_time.png', dpi=100)
+
+
+
 def convert_seconds(seconds):
     hours = int(seconds // 3600)
     minutes = int((seconds % 3600) // 60)
@@ -45,7 +108,7 @@ def convert_seconds(seconds):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Compute comptutational time \\"
+        description="Compute computational time \\"
                     "for an experiment"
     )
 
