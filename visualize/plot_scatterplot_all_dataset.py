@@ -17,24 +17,24 @@ df = pd.concat([pd.read_csv(file) for file in files])
 df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
 df_source = df.query('estimator == "Train Src" & scorer == "best_scorer"')
 df = df.merge(
-    df_target[["shift", "accuracy-mean", "accuracy-std"]],
+    df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
     on="shift",
     suffixes=("", "_target"),
 )
 df = df.merge(
-    df_source[["shift", "accuracy-mean", "accuracy-std"]],
+    df_source[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
     on="shift",
     suffixes=("", "_source"),
 )
-df["accn"] = (df["accuracy-mean"] - df["accuracy-mean_source"]) / (
-    df["accuracy-mean_target"] - df["accuracy-mean_source"]
+df["accn"] = (df["target_accuracy-test-mean"] - df["target_accuracy-test-mean_source"]) / (
+    df["target_accuracy-test-mean_target"] - df["target_accuracy-test-mean_source"]
 )
 
-df["stdn"] = df["accuracy-std"] / np.abs(
-    (df["accuracy-mean_target"] - df["accuracy-mean_source"])
+df["stdn"] = df["target_accuracy-test-std"] / np.abs(
+    (df["target_accuracy-test-mean_target"] - df["target_accuracy-test-mean_source"])
 )
 # remove rows where the source is better than the target
-df = df[df["accuracy-mean_source"] < df["accuracy-mean_target"]].reset_index()
+df = df[df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]].reset_index()
 
 # filtering
 df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
@@ -42,7 +42,7 @@ df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 # %%
 
 df_mean = (
-    df.groupby(["dataset", "type", "scorer", "estimator"])["accuracy-mean",]
+    df.groupby(["dataset", "type", "scorer", "estimator"])["target_accuracy-test-mean",]
     .mean()
     .reset_index()
 )
@@ -53,7 +53,7 @@ df_mean = df_mean.query("estimator != 'Train Src'")
 
 df_supervised = df_mean.query('scorer == "supervised"')
 df_tot = df_mean.merge(
-    df_supervised[["estimator", "dataset", "accuracy-mean",]],
+    df_supervised[["estimator", "dataset", "target_accuracy-test-mean",]],
     on=["estimator", "dataset"],
     suffixes=("", "_supervised"),
 )
@@ -76,31 +76,33 @@ for i, scorer in enumerate(scorers):
     if i < 4:
         sns.scatterplot(
             data=df_scorer,
-            x="accuracy-mean_supervised",
-            y="accuracy-mean",
+            x="target_accuracy-test-mean_supervised",
+            y="target_accuracy-test-mean",
             hue="Method type",
-            style="Dataset",
+            # style="Dataset",
             ax=axes[i],
             legend=False,
-            alpha=0.7,
-            s=70,
+            alpha=0.6,
+            s=50,
             edgecolor="gray",
+            palette="colorblind",
         )
     else:
         sns.scatterplot(
             data=df_scorer,
-            x="accuracy-mean_supervised",
-            y="accuracy-mean",
+            x="target_accuracy-test-mean_supervised",
+            y="target_accuracy-test-mean",
             hue="Method type",
-            style="Dataset",
+            # style="Dataset",
             ax=axes[i],
-            alpha=0.7,
-            s=70,
+            alpha=0.6,
+            s=50,
             # change line color
+            palette="colorblind",
             edgecolor="gray",
         )
         # change legend position,
-        axes[i].legend(loc="upper left", bbox_to_anchor=(1.1, 1.2), fontsize=8)
+        axes[i].legend(loc="upper left", bbox_to_anchor=(1.1, 1.), fontsize=8)
     # get lims of the plot
     lims = [
         np.min([axes[i].get_xlim(), axes[i].get_ylim()]),
@@ -139,25 +141,27 @@ for i, scorer in enumerate(scorers):
         if i < 4 or j != 2:
             sns.scatterplot(
                 data=df_scorer_type,
-                x="accuracy-mean_supervised",
-                y="accuracy-mean",
+                x="target_accuracy-test-mean_supervised",
+                y="target_accuracy-test-mean",
                 # hue="type",
                 hue="dataset",
                 ax=axes[j, i],
                 legend=False,
                 alpha=0.7,
+                palette="colorblind",
                 s=80,
                 edgecolor="gray",
             )
         else:
             sns.scatterplot(
                 data=df_scorer_type,
-                x="accuracy-mean_supervised",
-                y="accuracy-mean",
+                x="target_accuracy-test-mean_supervised",
+                y="target_accuracy-test-mean",
                 # hue="type",
                 hue="dataset",
                 ax=axes[j, i],
                 alpha=0.7,
+                palette="colorblind",
                 s=80,
                 # change line color
                 edgecolor="gray",
