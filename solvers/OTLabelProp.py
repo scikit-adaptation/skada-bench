@@ -20,6 +20,7 @@ class Solver(DASolver):
     default_param_grid = {
         'otlabelpropadapter__metric': ['sqeuclidean', 'cosine', 'cityblock'],
         'otlabelpropadapter__reg': [None, 0.1, 1.],
+        'otlabelpropadapter__n_iter_max': [100],
         'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
