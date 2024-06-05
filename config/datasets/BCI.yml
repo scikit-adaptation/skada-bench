@@ -127,18 +127,6 @@ solver:
     param_grid:
     - finalestimator__estimator_name:
       - LR_C2.0
-- OTLabelProp:
-    param_grid:
-    - finalestimator__estimator_name:
-      - LR_C2.0
-      otlabelpropadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      otlabelpropadapter__reg:
-      - null
-      - 0.1
-      - 1.0
 - TarS:
     param_grid:
     - finalestimator__estimator_name:
@@ -343,3 +331,26 @@ solver:
     param_grid:
     - finalestimator__estimator_name:
       - LR_C2.0
+- OTLabelProp:
+    param_grid:
+    - - finalestimator__estimator_name:
+        - LR_C2.0
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 10000
+        otlabelpropadapter__reg:
+        - null
+      - finalestimator__estimator_name:
+        - LR_C2.0
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 100
+        otlabelpropadapter__reg:
+        - 0.1
+        - 1

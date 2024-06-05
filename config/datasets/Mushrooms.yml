@@ -127,18 +127,6 @@ solver:
     param_grid:
     - finalestimator__estimator_name:
       - LR
-- OTLabelProp:
-    param_grid:
-    - finalestimator__estimator_name:
-      - LR
-      otlabelpropadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      otlabelpropadapter__reg:
-      - null
-      - 0.1
-      - 1.0
 - TarS:
     param_grid:
     - finalestimator__estimator_name:
@@ -251,15 +239,11 @@ solver:
 - JDOT_SVC:
     param_grid:
     - jdotclassifier__alpha:
-      - 0.1
-      - 0.3
       - 0.5
-      - 0.7
-      - 0.9
       jdotclassifier__base_estimator__estimator_name:
       - SVC
       jdotclassifier__n_iter_max:
-      - 100
+      - 3
       jdotclassifier__thr_weights:
       - 1.0e-07
       jdotclassifier__tol:
@@ -304,19 +288,13 @@ solver:
       transfersubspacelearningadapter__length_scale:
       - 2
       transfersubspacelearningadapter__max_iter:
-      - 300
+      - 4
       transfersubspacelearningadapter__mu:
-      - 0.1
       - 1
-      - 10
       transfersubspacelearningadapter__n_components:
-      - 1
-      - 2
       - 5
       - 10
       - 20
-      - 50
-      - 100
       transfersubspacelearningadapter__reg:
       - 0.0001
       transfersubspacelearningadapter__tol:
@@ -343,3 +321,26 @@ solver:
     param_grid:
     - finalestimator__estimator_name:
       - LR
+- OTLabelProp:
+    param_grid:
+    - - finalestimator__estimator_name:
+        - LR
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 10000
+        otlabelpropadapter__reg:
+        - null
+      - finalestimator__estimator_name:
+        - LR
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 100
+        otlabelpropadapter__reg:
+        - 0.1
+        - 1
