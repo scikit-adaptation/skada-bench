@@ -103,13 +103,9 @@ solver:
       - 10
       - 100
       transfercomponentanalysisadapter__n_components:
-      - 1
-      - 2
       - 5
       - 10
       - 20
-      - 50
-      - 100
 - CORAL:
     param_grid:
     - coraladapter__assume_centered:
@@ -127,18 +123,6 @@ solver:
     param_grid:
     - finalestimator__estimator_name:
       - XGB_subsample0.8_colsample0.65_maxdepth20
-- OTLabelProp:
-    param_grid:
-    - finalestimator__estimator_name:
-      - XGB_subsample0.8_colsample0.65_maxdepth20
-      otlabelpropadapter__metric:
-      - sqeuclidean
-      - cosine
-      - cityblock
-      otlabelpropadapter__reg:
-      - null
-      - 0.1
-      - 1.0
 - TarS:
     param_grid:
     - finalestimator__estimator_name:
@@ -162,7 +146,7 @@ solver:
 - class_regularizer_ot_mapping:
     param_grid:
     - - classregularizerotmappingadapter__max_inner_iter:
-        - 1000
+        - 50
         classregularizerotmappingadapter__max_iter:
         - 10
         classregularizerotmappingadapter__metric:
@@ -180,7 +164,7 @@ solver:
         finalestimator__estimator_name:
         - XGB_subsample0.8_colsample0.65_maxdepth20
       - classregularizerotmappingadapter__max_inner_iter:
-        - 1000
+        - 50
         classregularizerotmappingadapter__max_iter:
         - 10
         classregularizerotmappingadapter__metric:
@@ -198,7 +182,7 @@ solver:
         finalestimator__estimator_name:
         - XGB_subsample0.8_colsample0.65_maxdepth20
       - classregularizerotmappingadapter__max_inner_iter:
-        - 1000
+        - 50
         classregularizerotmappingadapter__max_iter:
         - 10
         classregularizerotmappingadapter__metric:
@@ -251,15 +235,11 @@ solver:
 - JDOT_SVC:
     param_grid:
     - jdotclassifier__alpha:
-      - 0.1
-      - 0.3
       - 0.5
-      - 0.7
-      - 0.9
       jdotclassifier__base_estimator__estimator_name:
       - SVC_C100.0_Gamma0.1
       jdotclassifier__n_iter_max:
-      - 100
+      - 3
       jdotclassifier__thr_weights:
       - 1.0e-07
       jdotclassifier__tol:
@@ -304,19 +284,13 @@ solver:
       transfersubspacelearningadapter__length_scale:
       - 2
       transfersubspacelearningadapter__max_iter:
-      - 300
+      - 4
       transfersubspacelearningadapter__mu:
-      - 0.1
       - 1
-      - 10
       transfersubspacelearningadapter__n_components:
-      - 1
-      - 2
       - 5
       - 10
       - 20
-      - 50
-      - 100
       transfersubspacelearningadapter__reg:
       - 0.0001
       transfersubspacelearningadapter__tol:
@@ -343,3 +317,26 @@ solver:
     param_grid:
     - finalestimator__estimator_name:
       - XGB_subsample0.8_colsample0.65_maxdepth20
+- OTLabelProp:
+    param_grid:
+    - - finalestimator__estimator_name:
+        - XGB_subsample0.8_colsample0.65_maxdepth20
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 10000
+        otlabelpropadapter__reg:
+        - null
+      - finalestimator__estimator_name:
+        - XGB_subsample0.8_colsample0.65_maxdepth20
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 100
+        otlabelpropadapter__reg:
+        - 0.1
+        - 1
