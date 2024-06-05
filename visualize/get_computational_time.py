@@ -41,11 +41,7 @@ def process_files_in_directory(directory):
         print('Computational time:')
         print(f"Hours: {hours}, Minutes: {minutes}, Seconds: {remaining_seconds:.2f}")
 
-
-
         ### Plotting part ###
-        num_idx = all_df['idx_rep'].max()+1
-
         all_df['solver_name'] = all_df['solver_name'].map(lambda x: (x.split('[param_grid=')[0]))
 
         # Add Type column
@@ -65,10 +61,16 @@ def process_files_in_directory(directory):
         all_df = all_df[['Estimator', 'Type', 'time']]
 
         # Times num_idx because, theres num_idx splits
-        groupby_df = all_df.groupby(['Estimator', 'Type']).mean() * num_idx
+        groupby_df = all_df.groupby(['Estimator', 'Type']).mean()
         groupby_df = groupby_df.reset_index()
 
-        order = groupby_df.sort_values('time')
+        order = groupby_df.groupby('Type', group_keys=False).apply(lambda x: x.sort_values(by='time'))
+        order = order.set_index('Type').loc[
+            ['NO DA', 'Reweighting', 'Mapping', 'Subspace', 'Other']
+        ].reset_index()
+
+
+        plt.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray', zorder=-1)
 
         g = sns.barplot(
             x = 'Estimator',
@@ -88,12 +90,12 @@ def process_files_in_directory(directory):
         )
 
         fig = plt.gcf()
-        fig.set_size_inches(8, 6)
+        fig.set_size_inches(8, 4)
 
         plt.tight_layout()
-
-        plt.ylabel("Computational time (in sec)")
-
+        plt.legend(loc='upper left')
+        plt.ylabel("Mean computational time (in sec)")
+        
         fig.savefig('estimator_VS_time.png', dpi=100)
 
 
