@@ -95,8 +95,9 @@ def process_files_in_directory(directory):
         plt.tight_layout()
         plt.legend(loc='upper left')
         plt.ylabel("Mean computational time (in sec)")
+        plt.xlabel("")
         
-        fig.savefig('estimator_VS_time.png', dpi=100)
+        fig.savefig('estimator_VS_time_barplot.png', dpi=100)
 
 
 
