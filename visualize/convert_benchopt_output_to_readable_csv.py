@@ -63,8 +63,13 @@ def clean_benchopt_df(df, domain, dataset_params):
     ]
 
     filtered_columns.append('scorer')
-    filtered_columns.append('params')
-    filtered_columns.append('cv_score')
+
+    if 'params' in df.columns:
+        filtered_columns.append('params')
+    
+    if 'cv_score' in df.columns:
+        filtered_columns.append('cv_score')
+
     df = df.loc[:, filtered_columns]
 
     # Get df for the best unsupervised scorer
