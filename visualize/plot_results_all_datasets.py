@@ -127,6 +127,7 @@ df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(lambda x: json.loads(x))
 
 df["nb_splits"] = df["target_accuracy-test-identity"].apply(lambda x: len(x))
+
 # %%
 df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
 df_source = df.query(
@@ -293,7 +294,7 @@ df_mean = (
 )
 
 df_source_mean = df_mean.query(
-    "estimator == 'Train Src' & scorer == 'circular_validation'"
+    "estimator == 'Train Src' & scorer == 'best_scorer'"
 )
 df_target_mean = df_mean.query("estimator == 'Train Tgt' & scorer == 'supervised'")
 
@@ -302,7 +303,7 @@ df_target_mean = df_mean.query("estimator == 'Train Tgt' & scorer == 'supervised
 # df_mean = df_mean.query("estimator != 'Train Tgt'")
 # df_mean = df_mean.query("estimator != 'Train Src'")
 
-scorer = "unsupervised"
+scorer = "supervised"
 if scorer == "supervised":
 
     df_tot = df_mean.query("scorer == 'supervised'")
@@ -364,6 +365,34 @@ df_tab = df_tot.pivot(
 
 df_tab = df_tab.reindex(
     columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
+)
+
+df_tab = df_tab.reindex(
+    columns=[
+        "Train Src",
+        "Train Tgt",
+        "Dens. RW",
+        "Disc. RW",
+        "Gauss. RW",
+        "KLIEP",
+        "KMM",
+        "NN RW",
+        "MMDTarS",
+        "CORAL",
+        "MapOT",
+        "EntOT",
+        "ClassRegOT",
+        "LinOT",
+        "MMD-LS",
+        "JPCA",
+        "SA",
+        "TCA",
+        "TSL",
+        "JDOT",
+        "OTLabelProp",
+        "DASVM",
+    ],
+    level=1,
 )
 
 df_tab = df_tab.T.rename(
@@ -452,10 +481,10 @@ else:
     )
 df_tab = df_tab.rename(
     columns={
-        "covariate_shift": "\mcrot{1}{l}{45}{Cov. shift}",
-        "target_shift": "\mcrot{1}{l}{45}{Tar. shift}",
-        "concept_drift": "\mcrot{1}{l}{45}{Cond. shift}",
-        "subspace": "\mcrot{1}{l}{45}{Sub. shift}",
+        "covariate_shift": "\mcrot{1}{l}{45}{\\underline{Cov. shift}}",
+        "target_shift": "\mcrot{1}{l}{45}{\\underline{Tar. shift}}",
+        "concept_drift": "\mcrot{1}{l}{45}{\\underline{Cond. shift}}",
+        "subspace": "\mcrot{1}{l}{45}{\\underline{Sub. shift}}",
         "Office31": "\mcrot{1}{l}{45}{Office31}",
         "OfficeHomeResnet": "\mcrot{1}{l}{45}{OfficeHome}",
         # "mnist_usps_10k": "\mcrot{1}{l}{45}{MNIST/USPS(10k)}",
@@ -499,6 +528,7 @@ lat_tab = lat_tab.replace("circular_validation", "CircV")
 lat_tab = lat_tab.replace("prediction_entropy", "PE")
 lat_tab = lat_tab.replace("importance_weighted", "IW")
 lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
+lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
 
 # %%
 print(lat_tab)
