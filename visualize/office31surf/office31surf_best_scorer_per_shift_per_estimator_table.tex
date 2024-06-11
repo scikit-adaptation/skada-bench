@@ -1,0 +1,29 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|c|c|c|c|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{amz$\rightarrow$cal}} & \mcrot{1}{|c|}{60}{\textbf{amz$\rightarrow$dsl}} & \mcrot{1}{|c|}{60}{\textbf{amz$\rightarrow$web}} & \mcrot{1}{|c|}{60}{\textbf{cal$\rightarrow$amz}} & \mcrot{1}{|c|}{60}{\textbf{cal$\rightarrow$dsl}} & \mcrot{1}{|c|}{60}{\textbf{cal$\rightarrow$web}} & \mcrot{1}{|c|}{60}{\textbf{dsl$\rightarrow$amz}} & \mcrot{1}{|c|}{60}{\textbf{dsl$\rightarrow$cal}} & \mcrot{1}{|c|}{60}{\textbf{dsl$\rightarrow$web}} & \mcrot{1}{|c|}{60}{\textbf{web$\rightarrow$amz}} & \mcrot{1}{|c|}{60}{\textbf{web$\rightarrow$cal}} & \mcrot{1}{|c|}{60}{\textbf{web$\rightarrow$dsl}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & CircV & SND & CircV & DV, PE & IWG & CircV, IWG & DV, PE & DV, PE & DV, PE & SND & SND & CircV \\
+ & Train Tgt & DV, PE & SND & IWG & DV, PE, SND & DV, PE & DV, PE & DV, PE, SND & DV, PE & DV, PE & DV, PE, SND & SND & DV, PE, SND \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & CircV, DV, IWG, PE, SND & PE & CircV & None & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & PE & SND & CircV, PE & PE & CircV, DV, IWG, PE, SND & CircV, PE \\
+ & KLIEP & IWG & CircV, IWG & PE & DV & IWG & CircV & DV & CircV & PE & PE & PE & CircV, DV, SND \\
+ & Disc. RW & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & KMM & DV, IWG & CircV & SND & SND & CircV & DV & SND & SND & IWG & CircV & PE & PE \\
+ & MMDTarS & PE & PE & PE & PE & PE & SND & CircV, SND & PE & CircV & DV, IWG & SND & CircV, SND \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV, PE & CircV & CircV, PE & CircV, PE & CircV, PE & CircV, PE & CircV & CircV & PE & IWG & CircV, IWG & PE \\
+ & MMD-LS & CircV & PE & CircV & CircV, PE & PE & CircV & DV, IWG & CircV & PE & CircV, SND & CircV & PE \\
+ & LinOT & DV & PE & IWG & CircV & PE & PE & IWG & IWG & CircV, PE & PE & CircV & CircV \\
+ & EntOT & CircV, PE & CircV & CircV & PE & IWG & IWG & CircV & IWG & CircV & CircV, IWG, PE & IWG & CircV \\
+ & MapOT & PE & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & ClassRegOT & CircV & CircV & IWG & CircV & PE & PE & CircV, PE & CircV & IWG, PE & CircV, PE & CircV, PE & PE \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & DV & SND & PE & SND & IWG & SND & IWG & SND & PE, SND & DV & PE & CircV \\
+ & SA & DV & DV, IWG & CircV & DV & IWG & IWG, SND & SND & IWG & CircV, DV, IWG, PE, SND & IWG & DV & IWG, SND \\
+ & JPCA & IWG & IWG & IWG & CircV & DV & SND & IWG & IWG & DV & CircV & CircV & IWG \\
+\hline
+\end{tabular}
+\caption{Best scorer per dataset table}
+\end{table}

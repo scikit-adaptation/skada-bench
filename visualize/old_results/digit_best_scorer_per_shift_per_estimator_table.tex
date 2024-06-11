@@ -1,0 +1,87 @@
+\begin{tabular}{ll}
+\hline
+                                                       & best\_scorer                                                              \\
+\hline
+ ("('MNIST', 'SVHN')", 'CORAL')                        & circular\_val, soft\_neigh\_dens                                            \\
+ ("('MNIST', 'SVHN')", 'JDOT\_XGB')                     & deep\_emb\_val                                                             \\
+ ("('MNIST', 'SVHN')", 'KMM')                          & deep\_emb\_val                                                             \\
+ ("('MNIST', 'SVHN')", 'NO\_DA\_SOURCE\_ONLY')            & importance\_wg                                                            \\
+ ("('MNIST', 'SVHN')", 'NO\_DA\_TARGET\_ONLY')            & circular\_val                                                             \\
+ ("('MNIST', 'SVHN')", 'PCA')                          & deep\_emb\_val                                                             \\
+ ("('MNIST', 'SVHN')", 'class\_regularizer\_ot\_mapping') & soft\_neigh\_dens                                                          \\
+ ("('MNIST', 'SVHN')", 'discriminator\_reweight')       & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('MNIST', 'SVHN')", 'entropic\_ot\_mapping')          & importance\_wg                                                            \\
+ ("('MNIST', 'SVHN')", 'gaussian\_reweight')            & pred\_entropy                                                             \\
+ ("('MNIST', 'SVHN')", 'linear\_ot\_mapping')            & circular\_val                                                             \\
+ ("('MNIST', 'SVHN')", 'ot\_mapping')                   & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('MNIST', 'SVHN')", 'subspace\_alignment')           & importance\_wg                                                            \\
+ ("('MNIST', 'SVHN')", 'transfer\_component\_analysis')  & deep\_emb\_val                                                             \\
+ ("('MNIST', 'USPS')", 'CORAL')                        & pred\_entropy                                                             \\
+ ("('MNIST', 'USPS')", 'JDOT\_XGB')                     & soft\_neigh\_dens                                                          \\
+ ("('MNIST', 'USPS')", 'KMM')                          & circular\_val, importance\_wg                                              \\
+ ("('MNIST', 'USPS')", 'NO\_DA\_SOURCE\_ONLY')            & deep\_emb\_val, pred\_entropy                                               \\
+ ("('MNIST', 'USPS')", 'NO\_DA\_TARGET\_ONLY')            & deep\_emb\_val, pred\_entropy, soft\_neigh\_dens                              \\
+ ("('MNIST', 'USPS')", 'PCA')                          & soft\_neigh\_dens                                                          \\
+ ("('MNIST', 'USPS')", 'class\_regularizer\_ot\_mapping') & circular\_val                                                             \\
+ ("('MNIST', 'USPS')", 'discriminator\_reweight')       & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('MNIST', 'USPS')", 'entropic\_ot\_mapping')          & circular\_val                                                             \\
+ ("('MNIST', 'USPS')", 'linear\_ot\_mapping')            & circular\_val                                                             \\
+ ("('MNIST', 'USPS')", 'ot\_mapping')                   & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('MNIST', 'USPS')", 'subspace\_alignment')           & importance\_wg                                                            \\
+ ("('MNIST', 'USPS')", 'transfer\_component\_analysis')  & pred\_entropy                                                             \\
+ ("('SVHN', 'MNIST')", 'CORAL')                        & importance\_wg                                                            \\
+ ("('SVHN', 'MNIST')", 'JDOT\_XGB')                     & deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens               \\
+ ("('SVHN', 'MNIST')", 'KMM')                          & deep\_emb\_val                                                             \\
+ ("('SVHN', 'MNIST')", 'NO\_DA\_SOURCE\_ONLY')            & importance\_wg                                                            \\
+ ("('SVHN', 'MNIST')", 'NO\_DA\_TARGET\_ONLY')            & importance\_wg                                                            \\
+ ("('SVHN', 'MNIST')", 'PCA')                          & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('SVHN', 'MNIST')", 'class\_regularizer\_ot\_mapping') & soft\_neigh\_dens                                                          \\
+ ("('SVHN', 'MNIST')", 'discriminator\_reweight')       & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('SVHN', 'MNIST')", 'entropic\_ot\_mapping')          & circular\_val                                                             \\
+ ("('SVHN', 'MNIST')", 'gaussian\_reweight')            & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('SVHN', 'MNIST')", 'linear\_ot\_mapping')            & importance\_wg                                                            \\
+ ("('SVHN', 'MNIST')", 'ot\_mapping')                   & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('SVHN', 'MNIST')", 'subspace\_alignment')           & importance\_wg, soft\_neigh\_dens                                           \\
+ ("('SVHN', 'MNIST')", 'transfer\_component\_analysis')  & importance\_wg                                                            \\
+ ("('SVHN', 'USPS')", 'CORAL')                         & pred\_entropy                                                             \\
+ ("('SVHN', 'USPS')", 'JDOT\_XGB')                      & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('SVHN', 'USPS')", 'KMM')                           & deep\_emb\_val                                                             \\
+ ("('SVHN', 'USPS')", 'NO\_DA\_SOURCE\_ONLY')             & importance\_wg                                                            \\
+ ("('SVHN', 'USPS')", 'NO\_DA\_TARGET\_ONLY')             & deep\_emb\_val, pred\_entropy, soft\_neigh\_dens                              \\
+ ("('SVHN', 'USPS')", 'PCA')                           & deep\_emb\_val                                                             \\
+ ("('SVHN', 'USPS')", 'class\_regularizer\_ot\_mapping')  & pred\_entropy                                                             \\
+ ("('SVHN', 'USPS')", 'discriminator\_reweight')        & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('SVHN', 'USPS')", 'entropic\_ot\_mapping')           & importance\_wg                                                            \\
+ ("('SVHN', 'USPS')", 'gaussian\_reweight')             & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('SVHN', 'USPS')", 'linear\_ot\_mapping')             & importance\_wg                                                            \\
+ ("('SVHN', 'USPS')", 'ot\_mapping')                    & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('SVHN', 'USPS')", 'subspace\_alignment')            & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('SVHN', 'USPS')", 'transfer\_component\_analysis')   & pred\_entropy                                                             \\
+ ("('USPS', 'MNIST')", 'CORAL')                        & circular\_val                                                             \\
+ ("('USPS', 'MNIST')", 'JDOT\_XGB')                     & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('USPS', 'MNIST')", 'KMM')                          & circular\_val, deep\_emb\_val                                               \\
+ ("('USPS', 'MNIST')", 'NO\_DA\_SOURCE\_ONLY')            & importance\_wg                                                            \\
+ ("('USPS', 'MNIST')", 'NO\_DA\_TARGET\_ONLY')            & importance\_wg                                                            \\
+ ("('USPS', 'MNIST')", 'PCA')                          & importance\_wg                                                            \\
+ ("('USPS', 'MNIST')", 'class\_regularizer\_ot\_mapping') & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy                  \\
+ ("('USPS', 'MNIST')", 'discriminator\_reweight')       & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('USPS', 'MNIST')", 'entropic\_ot\_mapping')          & circular\_val                                                             \\
+ ("('USPS', 'MNIST')", 'linear\_ot\_mapping')            & circular\_val                                                             \\
+ ("('USPS', 'MNIST')", 'ot\_mapping')                   & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('USPS', 'MNIST')", 'subspace\_alignment')           & importance\_wg                                                            \\
+ ("('USPS', 'MNIST')", 'transfer\_component\_analysis')  & deep\_emb\_val                                                             \\
+ ("('USPS', 'SVHN')", 'CORAL')                         & circular\_val, soft\_neigh\_dens                                            \\
+ ("('USPS', 'SVHN')", 'JDOT\_XGB')                      & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('USPS', 'SVHN')", 'KMM')                           & importance\_wg, soft\_neigh\_dens                                           \\
+ ("('USPS', 'SVHN')", 'NO\_DA\_SOURCE\_ONLY')             & pred\_entropy, soft\_neigh\_dens                                            \\
+ ("('USPS', 'SVHN')", 'NO\_DA\_TARGET\_ONLY')             & circular\_val                                                             \\
+ ("('USPS', 'SVHN')", 'PCA')                           & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('USPS', 'SVHN')", 'class\_regularizer\_ot\_mapping')  & importance\_wg                                                            \\
+ ("('USPS', 'SVHN')", 'discriminator\_reweight')        & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('USPS', 'SVHN')", 'entropic\_ot\_mapping')           & pred\_entropy                                                             \\
+ ("('USPS', 'SVHN')", 'linear\_ot\_mapping')             & importance\_wg                                                            \\
+ ("('USPS', 'SVHN')", 'ot\_mapping')                    & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ("('USPS', 'SVHN')", 'subspace\_alignment')            & importance\_wg                                                            \\
+ ("('USPS', 'SVHN')", 'transfer\_component\_analysis')   & deep\_emb\_val                                                             \\
+\hline
+\end{tabular}

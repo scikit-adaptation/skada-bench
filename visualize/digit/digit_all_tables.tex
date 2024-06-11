@@ -1,0 +1,129 @@
+\section{digit}
+\subsection{Best unsupervised scorer}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{MNIST$\rightarrow$SVHN}} & \mcrot{1}{|c|}{60}{\textbf{MNIST$\rightarrow$USPS}} & \mcrot{1}{|c|}{60}{\textbf{SVHN$\rightarrow$MNIST}} & \mcrot{1}{|c|}{60}{\textbf{SVHN$\rightarrow$USPS}} & \mcrot{1}{|c|}{60}{\textbf{USPS$\rightarrow$MNIST}} & \mcrot{1}{|c|}{60}{\textbf{USPS$\rightarrow$SVHN}} & \mcrot{1}{|c|}{60}{\textbf{Mean}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & 0.12 ± 0.01 & 0.60 ± 0.07 & 0.14 ± 0.03 & 0.18 ± 0.03 & 0.55 ± 0.03 & 0.11 ± 0.02 & 0.28 ± 0.23 \\
+ & Train Tgt & \textbf{\cellcolor{green!90}{0.32 ± 0.04}} & \textbf{\cellcolor{green!90}{0.94 ± 0.01}} & \textbf{\cellcolor{green!90}{0.88 ± 0.02}} & \textbf{\cellcolor{green!90}{0.95 ± 0.01}} & \textbf{\cellcolor{green!90}{0.89 ± 0.02}} & \textbf{\cellcolor{green!90}{0.32 ± 0.03}} & \textbf{\cellcolor{green!90}{0.72 ± 0.31}} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & \cellcolor{green!34}{0.18 ± 0.00} & \cellcolor{red!85}{0.14 ± 0.00} & \cellcolor{red!63}{0.10 ± 0.00} & \cellcolor{red!49}{0.14 ± 0.00} & \cellcolor{red!90}{0.10 ± 0.00} & \cellcolor{red!90}{0.08 ± 0.00} & \cellcolor{red!85}{0.12 ± 0.04} \\
+ & KLIEP & 0.11 ± 0.01 & 0.58 ± 0.03 & \cellcolor{green!16}{0.20 ± 0.06} & 0.16 ± 0.06 & 0.53 ± 0.03 & 0.13 ± 0.00 & 0.28 ± 0.21 \\
+ & Disc. RW & 0.11 ± 0.02 & \cellcolor{red!76}{0.19 ± 0.03} & \cellcolor{red!90}{0.08 ± 0.04} & \cellcolor{red!60}{0.13 ± 0.05} & \cellcolor{red!20}{0.49 ± 0.04} & 0.13 ± 0.01 & \cellcolor{red!52}{0.19 ± 0.15} \\
+ & KMM & 0.11 ± 0.02 & \cellcolor{red!26}{0.50 ± 0.05} & 0.14 ± 0.01 & \cellcolor{red!49}{0.14 ± 0.01} & \cellcolor{red!17}{0.51 ± 0.02} & 0.11 ± 0.01 & \cellcolor{red!24}{0.25 ± 0.20} \\
+ & MMDTarS & \cellcolor{red!90}{0.10 ± 0.02} & 0.56 ± 0.04 & 0.14 ± 0.02 & 0.18 ± 0.03 & 0.52 ± 0.04 & \cellcolor{green!21}{0.14 ± 0.01} & \cellcolor{red!14}{0.27 ± 0.21} \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & 0.13 ± 0.02 & \cellcolor{red!29}{0.48 ± 0.05} & 0.17 ± 0.04 & 0.20 ± 0.06 & \cellcolor{red!77}{0.17 ± 0.04} & 0.10 ± 0.03 & \cellcolor{red!42}{0.21 ± 0.14} \\
+ & MMD-LS & \cellcolor{red!90}{0.10 ± 0.02} & 0.58 ± 0.05 & 0.12 ± 0.05 & 0.20 ± 0.07 & \cellcolor{red!20}{0.49 ± 0.02} & \cellcolor{green!21}{0.14 ± 0.02} & \cellcolor{red!14}{0.27 ± 0.21} \\
+ & LinOT & \cellcolor{green!18}{0.14 ± 0.02} & \cellcolor{red!24}{0.51 ± 0.06} & \cellcolor{green!16}{0.20 ± 0.02} & \cellcolor{green!16}{0.24 ± 0.03} & \cellcolor{red!33}{0.42 ± 0.06} & \cellcolor{green!21}{0.14 ± 0.02} & \cellcolor{red!14}{0.27 ± 0.15} \\
+ & EntOT & \cellcolor{green!18}{0.14 ± 0.01} & \cellcolor{green!28}{0.68 ± 0.03} & 0.16 ± 0.04 & \cellcolor{green!19}{0.27 ± 0.07} & \cellcolor{red!24}{0.47 ± 0.03} & \cellcolor{green!25}{0.15 ± 0.02} & \cellcolor{green!15}{0.31 ± 0.22} \\
+ & MapOT & \cellcolor{green!26}{0.16 ± 0.02} & 0.63 ± 0.01 & \cellcolor{green!15}{0.19 ± 0.02} & \cellcolor{green!15}{0.23 ± 0.04} & 0.55 ± 0.04 & \cellcolor{green!29}{0.16 ± 0.03} & \cellcolor{green!17}{0.32 ± 0.21} \\
+ & ClassRegOT & \cellcolor{green!34}{0.18 ± 0.00} & 0.66 ± 0.03 & 0.14 ± 0.02 & \cellcolor{green!14}{0.22 ± 0.02} & \cellcolor{red!24}{0.47 ± 0.02} & 0.11 ± 0.02 & \cellcolor{green!13}{0.30 ± 0.22} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & 0.12 ± 0.02 & \cellcolor{red!90}{0.11 ± 0.04} & \cellcolor{red!63}{0.10 ± 0.02} & \cellcolor{red!90}{0.10 ± 0.02} & \cellcolor{red!88}{0.11 ± 0.02} & 0.12 ± 0.01 & \cellcolor{red!90}{0.11 ± 0.01} \\
+ & SA & 0.13 ± 0.02 & \cellcolor{red!62}{0.28 ± 0.02} & 0.12 ± 0.03 & \cellcolor{red!80}{0.11 ± 0.05} & \cellcolor{red!57}{0.28 ± 0.02} & 0.12 ± 0.01 & \cellcolor{red!61}{0.17 ± 0.08} \\
+ & JPCA & 0.11 ± 0.02 & \cellcolor{red!26}{0.50 ± 0.04} & 0.13 ± 0.04 & 0.19 ± 0.02 & 0.54 ± 0.05 & \cellcolor{green!21}{0.14 ± 0.01} & \cellcolor{red!14}{0.27 ± 0.20} \\
+\hline
+\end{tabular}
+\caption{Best realistic scorer table. Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}
+
+\subsection{Delta between supervised and best scorer}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{MNIST$\rightarrow$SVHN}} & \mcrot{1}{|c|}{60}{\textbf{MNIST$\rightarrow$USPS}} & \mcrot{1}{|c|}{60}{\textbf{SVHN$\rightarrow$MNIST}} & \mcrot{1}{|c|}{60}{\textbf{SVHN$\rightarrow$USPS}} & \mcrot{1}{|c|}{60}{\textbf{USPS$\rightarrow$MNIST}} & \mcrot{1}{|c|}{60}{\textbf{USPS$\rightarrow$SVHN}} & \mcrot{1}{|c|}{60}{\textbf{Mean}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+ & Train Tgt & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+ & KLIEP & \cellcolor{green!50}{+0.01} & \textbf{\cellcolor{green!90}{+0.02}} & \cellcolor{green!36}{+0.01} & \cellcolor{red!90}{-0.04} & \textbf{\cellcolor{green!90}{+0.01}} & +0.0 & +0.0 \\
+ & Disc. RW & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+ & KMM & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & \cellcolor{green!50}{+0.01} & +0.0 \\
+ & MMDTarS & \cellcolor{green!50}{+0.01} & +0.0 & \textbf{\cellcolor{green!90}{+0.03}} & +0.0 & +0.0 & +0.0 & +0.0 \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & +0.0 & +0.0 & \cellcolor{green!63}{+0.02} & \cellcolor{green!30}{+0.01} & +0.0 & +0.0 & \textbf{\cellcolor{green!90}{+0.01}} \\
+ & MMD-LS & \cellcolor{green!50}{+0.01} & +0.0 & \cellcolor{red!90}{-0.03} & \textbf{\cellcolor{green!90}{+0.04}} & +0.0 & \cellcolor{red!90}{-0.01} & +0.0 \\
+ & LinOT & \cellcolor{green!50}{+0.01} & \cellcolor{green!50}{+0.01} & +0.0 & +0.0 & \cellcolor{red!50}{-0.01} & +0.0 & +0.0 \\
+ & EntOT & +0.0 & \cellcolor{green!50}{+0.01} & \cellcolor{green!63}{+0.02} & \cellcolor{green!30}{+0.01} & +0.0 & \cellcolor{green!50}{+0.01} & \cellcolor{green!90}{+0.01} \\
+ & MapOT & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+ & ClassRegOT & +0.0 & +0.0 & \cellcolor{green!36}{+0.01} & +0.0 & +0.0 & \cellcolor{green!50}{+0.01} & \cellcolor{green!90}{+0.01} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & \textbf{\cellcolor{green!90}{+0.02}} & \cellcolor{green!90}{+0.02} & \cellcolor{green!36}{+0.01} & \cellcolor{green!30}{+0.01} & +0.0 & \textbf{\cellcolor{green!90}{+0.02}} & \cellcolor{green!90}{+0.01} \\
+ & SA & +0.0 & \cellcolor{red!90}{-0.02} & \cellcolor{green!36}{+0.01} & \cellcolor{green!70}{+0.03} & \cellcolor{red!90}{-0.02} & \cellcolor{green!50}{+0.01} & +0.0 \\
+ & JPCA & +0.0 & \cellcolor{red!90}{-0.02} & \cellcolor{red!63}{-0.02} & \cellcolor{green!50}{+0.02} & +0.0 & \cellcolor{green!50}{+0.01} & +0.0 \\
+\hline
+\end{tabular}
+\caption{Performance loss between supervised and best scorer table (the delta is computed as best scorer accuracy - supervised accuracy). Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}
+
+\subsection{Best scorer per estimator}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{best\_scorer}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & IWG \\
+ & Train Tgt & CircV \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & PE \\
+ & KLIEP & CircV \\
+ & Disc. RW & CircV, DV, IWG, PE, SND \\
+ & KMM & IWG \\
+ & MMDTarS & SND \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & PE \\
+ & MMD-LS & CircV \\
+ & LinOT & CircV \\
+ & EntOT & CircV \\
+ & MapOT & CircV, DV, IWG, PE, SND \\
+ & ClassRegOT & PE \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & CircV \\
+ & SA & CircV \\
+ & JPCA & IWG \\
+\hline
+\end{tabular}
+\caption{Best scorer per estimator table}
+\end{table}
+
+\subsection{Best scorer per dataset}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{MNIST$\rightarrow$SVHN}} & \mcrot{1}{|c|}{60}{\textbf{MNIST$\rightarrow$USPS}} & \mcrot{1}{|c|}{60}{\textbf{SVHN$\rightarrow$MNIST}} & \mcrot{1}{|c|}{60}{\textbf{SVHN$\rightarrow$USPS}} & \mcrot{1}{|c|}{60}{\textbf{USPS$\rightarrow$MNIST}} & \mcrot{1}{|c|}{60}{\textbf{USPS$\rightarrow$SVHN}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & IWG & IWG & IWG & IWG & IWG & SND \\
+ & Train Tgt & CircV, IWG & DV, PE, SND & IWG & DV, IWG, PE, SND & IWG & CircV \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & PE & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & KLIEP & IWG & CircV & IWG & CircV & CircV & CircV \\
+ & Disc. RW & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & KMM & DV, IWG, PE, SND & CircV & IWG & SND & IWG & PE \\
+ & MMDTarS & PE & CircV & DV, IWG & CircV & SND & SND \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV, SND & PE & PE & PE & CircV & PE \\
+ & MMD-LS & CircV, SND & CircV, PE & SND & CircV & CircV & DV, IWG \\
+ & LinOT & CircV & CircV & IWG & PE & CircV & CircV \\
+ & EntOT & CircV & PE & CircV & IWG & CircV & CircV \\
+ & MapOT & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & ClassRegOT & SND & IWG & PE & PE & CircV, DV, IWG, PE & IWG, PE \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & PE & CircV & CircV & CircV & DV & CircV \\
+ & SA & CircV & CircV & IWG, PE & DV & CircV & PE \\
+ & JPCA & CircV & CircV & PE & IWG & CircV & IWG \\
+\hline
+\end{tabular}
+\caption{Best scorer per dataset table}
+\end{table}
+

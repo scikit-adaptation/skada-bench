@@ -1,0 +1,35 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{amz$\rightarrow$dsl}} & \mcrot{1}{|c|}{60}{\textbf{amz$\rightarrow$web}} & \mcrot{1}{|c|}{60}{\textbf{dsl$\rightarrow$amz}} & \mcrot{1}{|c|}{60}{\textbf{dsl$\rightarrow$web}} & \mcrot{1}{|c|}{60}{\textbf{web$\rightarrow$amz}} & \mcrot{1}{|c|}{60}{\textbf{web$\rightarrow$dsl}} & \mcrot{1}{|c|}{60}{\textbf{Mean}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & 0.55 ± 0.04 & 0.51 ± 0.04 & 0.50 ± 0.03 & 0.92 ± 0.01 & 0.49 ± 0.01 & 0.97 ± 0.01 & 0.66 ± 0.22 \\
+ & Train Tgt & \textbf{\cellcolor{green!90}{0.95 ± 0.03}} & \textbf{\cellcolor{green!90}{0.96 ± 0.01}} & \textbf{\cellcolor{green!90}{0.78 ± 0.01}} & \textbf{\cellcolor{green!90}{0.97 ± 0.01}} & \textbf{\cellcolor{green!90}{0.78 ± 0.01}} & 0.96 ± 0.03 & \textbf{\cellcolor{green!90}{0.90 ± 0.09}} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & None & None & \cellcolor{red!88}{0.05 ± 0.02} & \cellcolor{red!90}{0.04 ± 0.00} & \cellcolor{red!90}{0.04 ± 0.01} & \cellcolor{red!90}{0.02 ± 0.00} & \cellcolor{red!90}{0.04 ± 0.01} \\
+ & KLIEP & 0.55 ± 0.04 & 0.51 ± 0.04 & 0.50 ± 0.03 & 0.92 ± 0.02 & 0.49 ± 0.01 & \textbf{0.97 ± 0.01} & 0.66 ± 0.22 \\
+ & Disc. RW & 0.57 ± 0.05 & 0.51 ± 0.02 & 0.49 ± 0.02 & 0.92 ± 0.01 & 0.48 ± 0.02 & 0.97 ± 0.00 & 0.66 ± 0.23 \\
+ & KMM & 0.56 ± 0.05 & 0.53 ± 0.04 & 0.51 ± 0.03 & 0.92 ± 0.02 & 0.49 ± 0.01 & 0.96 ± 0.01 & 0.66 ± 0.22 \\
+ & MMDTarS & 0.55 ± 0.04 & 0.51 ± 0.04 & 0.50 ± 0.03 & 0.92 ± 0.01 & 0.49 ± 0.01 & 0.97 ± 0.01 & 0.66 ± 0.22 \\
+ & Dens. RW & 0.55 ± 0.04 & 0.51 ± 0.04 & 0.50 ± 0.03 & 0.92 ± 0.01 & 0.49 ± 0.01 & 0.97 ± 0.01 & 0.66 ± 0.22 \\
+ & NN RW & 0.56 ± 0.04 & 0.51 ± 0.04 & 0.50 ± 0.03 & 0.92 ± 0.02 & 0.48 ± 0.01 & 0.97 ± 0.01 & 0.66 ± 0.23 \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & \cellcolor{red!20}{0.48 ± 0.03} & \cellcolor{red!20}{0.45 ± 0.02} & \cellcolor{red!20}{0.44 ± 0.01} & \cellcolor{red!15}{0.86 ± 0.05} & \cellcolor{red!25}{0.40 ± 0.01} & \cellcolor{red!17}{0.88 ± 0.03} & \cellcolor{red!20}{0.58 ± 0.22} \\
+ & MMD-LS & 0.55 ± 0.04 & 0.51 ± 0.04 & 0.50 ± 0.03 & 0.92 ± 0.01 & 0.49 ± 0.01 & 0.97 ± 0.01 & 0.66 ± 0.22 \\
+ & LinOT & 0.53 ± 0.04 & 0.55 ± 0.05 & 0.49 ± 0.02 & 0.92 ± 0.03 & 0.50 ± 0.02 & 0.96 ± 0.02 & 0.66 ± 0.22 \\
+ & EntOT & \cellcolor{red!17}{0.50 ± 0.03} & 0.54 ± 0.04 & 0.48 ± 0.02 & \cellcolor{red!15}{0.86 ± 0.03} & \cellcolor{red!17}{0.45 ± 0.02} & \cellcolor{red!14}{0.92 ± 0.02} & \cellcolor{red!15}{0.62 ± 0.21} \\
+ & MapOT & \cellcolor{red!24}{0.46 ± 0.05} & \cellcolor{red!18}{0.46 ± 0.02} & \cellcolor{red!18}{0.45 ± 0.01} & \cellcolor{red!19}{0.82 ± 0.03} & \cellcolor{red!22}{0.42 ± 0.01} & \cellcolor{red!20}{0.84 ± 0.03} & \cellcolor{red!21}{0.57 ± 0.20} \\
+ & ClassRegOT & \cellcolor{green!25}{0.63 ± 0.06} & \cellcolor{green!27}{0.61 ± 0.03} & 0.50 ± 0.03 & \cellcolor{red!20}{0.81 ± 0.02} & 0.49 ± 0.02 & \cellcolor{red!23}{0.81 ± 0.03} & \cellcolor{red!12}{0.64 ± 0.14} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & \cellcolor{red!90}{0.04 ± 0.02} & \cellcolor{red!90}{0.04 ± 0.03} & \cellcolor{red!90}{0.04 ± 0.00} & \cellcolor{red!90}{0.04 ± 0.00} & \cellcolor{red!90}{0.04 ± 0.01} & \cellcolor{red!88}{0.04 ± 0.00} & \cellcolor{red!90}{0.04 ± 0.00} \\
+ & SA & 0.52 ± 0.06 & \cellcolor{red!18}{0.46 ± 0.03} & 0.49 ± 0.02 & \cellcolor{red!12}{0.89 ± 0.02} & 0.49 ± 0.02 & \cellcolor{red!13}{0.93 ± 0.02} & \cellcolor{red!13}{0.63 ± 0.22} \\
+ & TSL & None & None & None & \cellcolor{red!83}{0.11 ± 0.02} & None & \cellcolor{red!83}{0.10 ± 0.04} & \cellcolor{red!80}{0.11 ± 0.01} \\
+ & JPCA & 0.53 ± 0.04 & 0.50 ± 0.04 & 0.49 ± 0.02 & \cellcolor{red!11}{0.90 ± 0.02} & \cellcolor{red!13}{0.47 ± 0.01} & \cellcolor{red!11}{0.95 ± 0.01} & \cellcolor{red!12}{0.64 ± 0.22} \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & JDOT & \cellcolor{green!21}{0.61 ± 0.05} & \cellcolor{green!36}{0.66 ± 0.03} & None & \cellcolor{red!28}{0.72 ± 0.03} & None & \cellcolor{red!28}{0.75 ± 0.03} & \cellcolor{green!19}{0.69 ± 0.06} \\
+ & OTLabelProp & 0.55 ± 0.04 & 0.53 ± 0.08 & \cellcolor{red!22}{0.43 ± 0.04} & \cellcolor{red!13}{0.88 ± 0.02} & \cellcolor{red!22}{0.42 ± 0.01} & \cellcolor{red!14}{0.92 ± 0.02} & \cellcolor{red!15}{0.62 ± 0.22} \\
+\hline
+\end{tabular}
+\caption{Best realistic scorer table. Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}

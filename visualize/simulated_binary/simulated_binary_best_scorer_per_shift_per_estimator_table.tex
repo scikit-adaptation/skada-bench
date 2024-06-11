@@ -1,0 +1,36 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Subspace}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & Train Tgt & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & PE & CircV & SND & IWG, SND \\
+ & KLIEP & SND & SND & PE & DV \\
+ & Disc. RW & PE & IWG & PE & SND \\
+ & KMM & SND & CircV & PE & SND \\
+ & MMDTarS & IWG & SND & PE & CircV \\
+ & Dens. RW & PE & DV & PE & SND \\
+ & NN RW & DV & SND & DV & IWG \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & MMD-LS & PE & SND & PE & SND \\
+ & LinOT & PE & PE, SND & DV & CircV \\
+ & EntOT & IWG & PE & CircV & SND \\
+ & MapOT & SND & SND & IWG, PE & CircV \\
+ & ClassRegOT & DV & IWG & CircV & PE \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & DV & CircV & CircV & IWG \\
+ & SA & CircV, DV, IWG, PE & SND & CircV, DV, IWG, PE & PE \\
+ & TSL & CircV, IWG, PE & CircV, DV, IWG, PE & CircV, DV, IWG, PE & SND \\
+ & JPCA & CircV, IWG, PE & CircV, DV, IWG, PE & CircV, DV, IWG, PE & CircV, DV, IWG \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & JDOT & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & DASVM & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & OTLabelProp & PE & IWG & CircV & IWG \\
+\hline
+\end{tabular}
+\caption{Best scorer per dataset table}
+\end{table}

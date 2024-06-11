@@ -1,0 +1,36 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Subspace}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & 0.88 ± 0.03 & 0.85 ± 0.04 & 0.66 ± 0.02 & 0.19 ± 0.03 \\
+ & Train Tgt & \textbf{\cellcolor{green!90}{0.92 ± 0.02}} & \textbf{\cellcolor{green!90}{0.93 ± 0.02}} & \cellcolor{green!90}{0.82 ± 0.03} & \textbf{\cellcolor{green!90}{0.98 ± 0.01}} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & 0.89 ± 0.03 & 0.86 ± 0.04 & 0.65 ± 0.02 & 0.21 ± 0.04 \\
+ & KLIEP & 0.89 ± 0.03 & 0.87 ± 0.04 & 0.66 ± 0.02 & 0.19 ± 0.03 \\
+ & Disc. RW & 0.86 ± 0.03 & 0.83 ± 0.04 & \cellcolor{green!39}{0.72 ± 0.03} & 0.21 ± 0.04 \\
+ & KMM & 0.89 ± 0.03 & 0.87 ± 0.04 & 0.67 ± 0.03 & 0.18 ± 0.06 \\
+ & MMDTarS & 0.88 ± 0.03 & \cellcolor{green!90}{0.93 ± 0.02} & 0.66 ± 0.02 & \cellcolor{green!14}{0.23 ± 0.04} \\
+ & Dens. RW & 0.89 ± 0.03 & 0.86 ± 0.04 & 0.66 ± 0.02 & 0.18 ± 0.06 \\
+ & NN RW & 0.89 ± 0.03 & 0.86 ± 0.04 & 0.67 ± 0.03 & \cellcolor{red!45}{0.15 ± 0.04} \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & \cellcolor{red!51}{0.66 ± 0.04} & 0.84 ± 0.04 & 0.66 ± 0.03 & 0.19 ± 0.03 \\
+ & MMD-LS & \cellcolor{red!53}{0.65 ± 0.08} & \cellcolor{red!22}{0.79 ± 0.05} & \cellcolor{green!85}{0.81 ± 0.03} & \cellcolor{green!69}{0.78 ± 0.24} \\
+ & LinOT & 0.89 ± 0.03 & 0.81 ± 0.04 & \cellcolor{green!75}{0.79 ± 0.05} & 0.18 ± 0.04 \\
+ & EntOT & \cellcolor{red!36}{0.74 ± 0.07} & \cellcolor{red!61}{0.61 ± 0.04} & \cellcolor{green!90}{0.82 ± 0.03} & \cellcolor{green!38}{0.47 ± 0.03} \\
+ & MapOT & 0.87 ± 0.03 & \cellcolor{red!64}{0.60 ± 0.06} & \cellcolor{green!90}{0.82 ± 0.03} & \cellcolor{red!90}{0.10 ± 0.05} \\
+ & ClassRegOT & \cellcolor{red!34}{0.75 ± 0.09} & \cellcolor{red!68}{0.58 ± 0.04} & \cellcolor{green!90}{0.82 ± 0.03} & \cellcolor{red!45}{0.15 ± 0.02} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & \cellcolor{red!90}{0.46 ± 0.23} & \cellcolor{red!90}{0.48 ± 0.09} & \cellcolor{red!90}{0.55 ± 0.11} & \cellcolor{green!48}{0.57 ± 0.24} \\
+ & SA & \cellcolor{red!36}{0.74 ± 0.04} & 0.81 ± 0.04 & \cellcolor{green!80}{0.80 ± 0.03} & \cellcolor{red!81}{0.11 ± 0.06} \\
+ & TSL & 0.88 ± 0.03 & 0.85 ± 0.04 & 0.66 ± 0.02 & \cellcolor{green!16}{0.25 ± 0.19} \\
+ & JPCA & 0.88 ± 0.03 & 0.85 ± 0.04 & 0.66 ± 0.02 & 0.19 ± 0.03 \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & JDOT & \cellcolor{red!40}{0.72 ± 0.04} & \cellcolor{red!70}{0.57 ± 0.04} & \textbf{\cellcolor{green!90}{0.82 ± 0.03}} & \cellcolor{red!54}{0.14 ± 0.02} \\
+ & DASVM & 0.89 ± 0.02 & 0.86 ± 0.03 & 0.65 ± 0.03 & \cellcolor{red!54}{0.14 ± 0.04} \\
+ & OTLabelProp & 0.89 ± 0.03 & \cellcolor{red!29}{0.76 ± 0.05} & \cellcolor{green!85}{0.81 ± 0.04} & \cellcolor{red!63}{0.13 ± 0.04} \\
+\hline
+\end{tabular}
+\caption{Best realistic scorer table. Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}

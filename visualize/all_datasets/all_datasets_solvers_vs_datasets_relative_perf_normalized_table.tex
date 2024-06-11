@@ -1,0 +1,29 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|c|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Sim. Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Sim. Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Sim. Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Sim. Subspace}} & \mcrot{1}{|c|}{60}{\textbf{20NewsGroups}} & \mcrot{1}{|c|}{60}{\textbf{Digit}} & \mcrot{1}{|c|}{60}{\textbf{Mushrooms}} & \mcrot{1}{|c|}{60}{\textbf{Office31Decaf}} & \mcrot{1}{|c|}{60}{\textbf{Office31SURF}}\\
+\hline\hline
+\multirow{5}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & \cellcolor{red!10}{+0.0} & \cellcolor{green!21}{+0.11} & \cellcolor{red!14}{-0.1} & \cellcolor{green!14}{+0.02} & \textbf{\cellcolor{red!90}{-1.04}} & \cellcolor{red!80}{-0.36} & \cellcolor{red!82}{-0.81} & \cellcolor{red!90}{-10.0} & \cellcolor{red!79}{-0.84} \\
+ & KLIEP & \cellcolor{red!16}{-0.29} & \cellcolor{green!21}{+0.11} & \cellcolor{red!18}{-0.2} & \cellcolor{green!22}{+0.06} & \cellcolor{red!32}{-0.29} & \cellcolor{red!10}{+0.0} & \cellcolor{red!27}{-0.19} & \cellcolor{red!23}{-1.63} & \cellcolor{red!35}{-0.31} \\
+ & Disc. RW & \cellcolor{red!10}{+0.0} & \cellcolor{green!21}{+0.11} & \cellcolor{red!18}{-0.2} & \cellcolor{green!14}{+0.02} & \cellcolor{red!35}{-0.33} & \cellcolor{red!49}{-0.2} & \cellcolor{green!34}{+0.19} & \cellcolor{red!74}{-8.0} & \cellcolor{red!76}{-0.81} \\
+ & KMM & \cellcolor{green!29}{+0.14} & \cellcolor{green!21}{+0.11} & \cellcolor{red!18}{-0.2} & \cellcolor{green!16}{+0.03} & \cellcolor{red!32}{-0.29} & \cellcolor{red!23}{-0.07} & None & \cellcolor{red!33}{-2.88} & \cellcolor{red!41}{-0.38} \\
+ & MMDTarS & \cellcolor{green!29}{+0.14} & \textbf{\cellcolor{green!90}{+0.78}} & \cellcolor{red!32}{-0.5} & \cellcolor{green!16}{+0.03} & \cellcolor{red!32}{-0.29} & \cellcolor{red!13}{-0.02} & \cellcolor{red!63}{-0.59} & \cellcolor{red!22}{-1.5} & \cellcolor{red!35}{-0.31} \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & \cellcolor{red!20}{-0.43} & \cellcolor{green!32}{+0.22} & \cellcolor{red!18}{-0.2} & \cellcolor{green!14}{+0.02} & \cellcolor{red!76}{-0.87} & \cellcolor{red!45}{-0.18} & \cellcolor{green!29}{+0.15} & \cellcolor{red!30}{-2.5} & \cellcolor{red!30}{-0.25} \\
+ & MMDS & \cellcolor{green!70}{+0.43} & \cellcolor{red!28}{-0.89} & \textbf{\cellcolor{green!90}{+1.4}} & \cellcolor{green!16}{+0.03} & \cellcolor{red!29}{-0.25} & \cellcolor{red!13}{-0.02} & \cellcolor{red!13}{-0.04} & \cellcolor{red!22}{-1.5} & \cellcolor{red!35}{-0.31} \\
+ & LinOT & \textbf{\cellcolor{green!90}{+0.57}} & \cellcolor{red!14}{-0.22} & \cellcolor{green!72}{+1.1} & \cellcolor{green!16}{+0.03} & \cellcolor{red!38}{-0.37} & \cellcolor{red!13}{-0.02} & \cellcolor{green!48}{+0.3} & \cellcolor{red!18}{-1.0} & \cellcolor{red!30}{-0.25} \\
+ & EntOT & \cellcolor{red!20}{-0.43} & \cellcolor{red!71}{-3.0} & \cellcolor{green!84}{+1.3} & \cellcolor{green!32}{+0.11} & \cellcolor{red!70}{-0.79} & \cellcolor{green!54}{+0.05} & \cellcolor{red!43}{-0.37} & \cellcolor{red!22}{-1.5} & \cellcolor{red!53}{-0.53} \\
+ & MapOT & \cellcolor{red!13}{-0.14} & \cellcolor{red!69}{-2.89} & \cellcolor{green!72}{+1.1} & \cellcolor{red!90}{-0.06} & \cellcolor{red!29}{-0.25} & \textbf{\cellcolor{green!90}{+0.09}} & \cellcolor{red!56}{-0.52} & \cellcolor{red!22}{-1.5} & \cellcolor{red!43}{-0.41} \\
+ & ClassRegOT & \cellcolor{red!20}{-0.43} & \cellcolor{red!60}{-2.44} & \cellcolor{green!84}{+1.3} & \cellcolor{red!36}{-0.02} & \cellcolor{red!54}{-0.58} & \cellcolor{green!27}{+0.02} & \cellcolor{red!46}{-0.41} & \textbf{\cellcolor{red!88}{-9.75}} & \cellcolor{red!66}{-0.69} \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & \cellcolor{red!90}{-3.43} & \cellcolor{red!90}{-3.89} & \cellcolor{red!90}{-1.8} & \textbf{\cellcolor{green!90}{+0.39}} & \cellcolor{red!90}{-1.04} & \cellcolor{red!90}{-0.41} & \cellcolor{red!90}{-0.89} & \cellcolor{red!88}{-9.75} & \textbf{\cellcolor{red!90}{-0.97}} \\
+ & SA & \cellcolor{red!53}{-1.86} & \cellcolor{red!55}{-2.22} & \cellcolor{red!32}{-0.5} & \cellcolor{green!83}{+0.36} & \cellcolor{red!70}{-0.79} & \cellcolor{red!58}{-0.25} & \cellcolor{red!13}{-0.04} & \cellcolor{red!88}{-9.75} & \cellcolor{red!76}{-0.81} \\
+ & JPCA & \cellcolor{red!13}{-0.14} & \cellcolor{red!10}{+0.0} & \cellcolor{red!14}{-0.1} & \cellcolor{red!36}{-0.02} & \cellcolor{red!26}{-0.21} & \cellcolor{red!13}{-0.02} & \cellcolor{red!56}{-0.52} & \cellcolor{red!21}{-1.38} & \cellcolor{red!61}{-0.62} \\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{Other}}}} & JDOT & \cellcolor{red!20}{-0.43} & \cellcolor{red!67}{-2.78} & \cellcolor{green!78}{+1.2} & \cellcolor{red!50}{-0.03} & \cellcolor{red!16}{-0.08} & \cellcolor{green!90}{+0.09} & \cellcolor{red!56}{-0.52} & \cellcolor{red!20}{-1.25} & \cellcolor{red!41}{-0.38} \\
+ & DASVM & \cellcolor{green!90}{+0.57} & \cellcolor{green!55}{+0.44} & \cellcolor{red!18}{-0.2} & \cellcolor{red!90}{-0.06} & None & None & \textbf{\cellcolor{green!90}{+0.63}} & None & None \\
+\hline
+\end{tabular}
+\caption{Normalized relative performance of all the estimators on all the datasets table. (train with estimator accuracy - train on source accuracy) / (train on target accuracy - train on source accuracy). Color-code: the darker the result, the better. Bold value: best value per dataset.}
+\end{table}

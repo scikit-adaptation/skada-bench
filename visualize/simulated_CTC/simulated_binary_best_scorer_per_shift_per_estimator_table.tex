@@ -1,0 +1,14 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Subspace}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & DV, IWG & IWG & DV & CircV, IWG, PE, SND \\
+ & Train Tgt & SND & SND & SND & IWG \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & CTC & DV & IWG, SND & DV & PE \\
+\hline
+\end{tabular}
+\caption{Best scorer per dataset table}
+\end{table}

@@ -1,0 +1,35 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{amz$\rightarrow$dsl}} & \mcrot{1}{|c|}{60}{\textbf{amz$\rightarrow$web}} & \mcrot{1}{|c|}{60}{\textbf{dsl$\rightarrow$amz}} & \mcrot{1}{|c|}{60}{\textbf{dsl$\rightarrow$web}} & \mcrot{1}{|c|}{60}{\textbf{web$\rightarrow$amz}} & \mcrot{1}{|c|}{60}{\textbf{web$\rightarrow$dsl}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & Train Tgt & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW &  &  & IWG, PE & DV, IWG, PE & CircV, DV, IWG, PE & CircV, DV, IWG, PE, SND \\
+ & KLIEP & PE & CircV & CircV & CircV, IWG, PE & CircV & CircV, IWG, PE \\
+ & Disc. RW & CircV, IWG, PE & CircV, IWG, PE & CircV, IWG, PE & PE & CircV, IWG, PE & PE \\
+ & KMM & IWG & PE & IWG & IWG & CircV & CircV \\
+ & MMDTarS & CircV, IWG & CircV & CircV & CircV & IWG & CircV \\
+ & Dens. RW & CircV & CircV, IWG & CircV, IWG & CircV, PE & CircV, IWG & CircV, PE \\
+ & NN RW & SND & CircV, IWG, PE, SND & CircV, IWG, PE & CircV, IWG, PE & CircV, DV, IWG, PE & CircV, IWG, PE, SND \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & MMD-LS & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & LinOT & CircV & IWG & DV & DV, SND & DV & IWG \\
+ & EntOT & CircV & CircV & PE & CircV & CircV & CircV \\
+ & MapOT & IWG, PE & IWG, SND & PE & CircV, DV, IWG & CircV & CircV \\
+ & ClassRegOT & CircV, IWG & CircV, IWG & CircV, IWG & CircV, IWG & CircV, IWG & CircV, IWG \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & IWG & PE & CircV, IWG & CircV, DV, IWG, PE, SND & PE & CircV, SND \\
+ & SA & PE & CircV & IWG & CircV & IWG & CircV \\
+ & TSL & None & None & None & CircV & None & CircV, PE \\
+ & JPCA & DV & DV & IWG & CircV & IWG & CircV \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & JDOT & IWG, PE & PE & None & PE & None & PE \\
+ & OTLabelProp & IWG & PE & DV & CircV & PE & CircV \\
+\hline
+\end{tabular}
+\caption{Best scorer per dataset table}
+\end{table}

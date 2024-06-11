@@ -1,0 +1,14 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Subspace}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & \cellcolor{red!90}{-0.04} & \cellcolor{red!90}{-0.05} & \cellcolor{green!90}{+0.03} & +0.0 \\
+ & Train Tgt & \cellcolor{green!90}{+0.01} & \cellcolor{green!90}{+0.01} & \cellcolor{green!36}{+0.01} & \cellcolor{red!16}{-0.01} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & CTC & \textbf{+0.0} & \textbf{+0.0} & \textbf{\cellcolor{red!90}{-0.01}} & \textbf{\cellcolor{red!90}{-0.13}} \\
+\hline
+\end{tabular}
+\caption{Performance loss between supervised and best scorer table (the delta is computed as best scorer accuracy - supervised accuracy). Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}

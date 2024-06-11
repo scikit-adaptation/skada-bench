@@ -1,0 +1,69 @@
+\section{simulated\_binary}
+\subsection{Best realistic scorer}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Subspace}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & \cellcolor{red!10}{0.67 ± 0.02} & \cellcolor{red!90}{0.81 ± 0.03} & \cellcolor{red!10}{0.69 ± 0.04} & \cellcolor{red!90}{0.23 ± 0.03} \\
+ & Train Tgt & \cellcolor{green!90}{0.83 ± 0.05} & \cellcolor{green!90}{0.93 ± 0.02} & \cellcolor{green!90}{0.82 ± 0.05} & \cellcolor{green!90}{0.98 ± 0.01} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & CTC & \textbf{\cellcolor{red!90}{0.60 ± 0.15}} & \textbf{\cellcolor{green!43}{0.86 ± 0.04}} & \textbf{\cellcolor{red!90}{0.62 ± 0.03}} & \textbf{\cellcolor{green!17}{0.30 ± 0.08}} \\
+\hline
+\end{tabular}
+\caption{Best realistic scorer table. Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}
+
+\subsection{Delta between supervised and best scorer}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Subspace}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & \cellcolor{red!90}{-0.04} & \cellcolor{red!90}{-0.05} & \cellcolor{green!90}{+0.03} & +0.0 \\
+ & Train Tgt & \cellcolor{green!90}{+0.01} & \cellcolor{green!90}{+0.01} & \cellcolor{green!36}{+0.01} & \cellcolor{red!16}{-0.01} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & CTC & \textbf{+0.0} & \textbf{+0.0} & \textbf{\cellcolor{red!90}{-0.01}} & \textbf{\cellcolor{red!90}{-0.13}} \\
+\hline
+\end{tabular}
+\caption{Performance loss between supervised and best scorer table (the delta is computed as best scorer accuracy - supervised accuracy). Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}
+
+\subsection{Best scorer per estimator}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{best\_scorer}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & IWG \\
+ & Train Tgt & SND \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & CTC & DV \\
+\hline
+\end{tabular}
+\caption{Best scorer per estimator table}
+\end{table}
+
+\subsection{Best scorer per dataset}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Subspace}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & DV, IWG & IWG & DV & CircV, IWG, PE, SND \\
+ & Train Tgt & SND & SND & SND & IWG \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & CTC & DV & IWG, SND & DV & PE \\
+\hline
+\end{tabular}
+\caption{Best scorer per dataset table}
+\end{table}
+

@@ -1,0 +1,34 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{enl$\rightarrow$tap}} & \mcrot{1}{|c|}{60}{\textbf{tap$\rightarrow$enl}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & Train Tgt & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & CircV, IWG, SND & CircV, DV, IWG, PE, SND \\
+ & KLIEP & IWG & CircV, IWG \\
+ & Disc. RW & SND & IWG, SND \\
+ & KMM & SND & SND \\
+ & MMDTarS & SND & DV, IWG, PE, SND \\
+ & Dens. RW & CircV & DV \\
+ & NN RW & SND & SND \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & MMD-LS & DV & DV \\
+ & LinOT & IWG & SND \\
+ & EntOT & PE, SND & SND \\
+ & MapOT & CircV, DV, IWG, PE, SND & IWG, PE, SND \\
+ & ClassRegOT & IWG, PE, SND & DV, IWG, PE, SND \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & SND & PE \\
+ & SA & PE & IWG \\
+ & TSL & CircV & DV, IWG, PE, SND \\
+ & JPCA & SND & IWG, PE \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & OTLabelProp & IWG, PE & PE, SND \\
+\hline
+\end{tabular}
+\caption{Best scorer per dataset table}
+\end{table}

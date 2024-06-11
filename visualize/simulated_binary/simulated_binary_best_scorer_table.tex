@@ -1,0 +1,36 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{best\_scorer}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & CircV, DV, IWG, PE, SND \\
+ & Train Tgt & CircV, DV, IWG, PE, SND \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & SND \\
+ & KLIEP & SND \\
+ & Disc. RW & PE \\
+ & KMM & SND \\
+ & MMDTarS & CircV \\
+ & Dens. RW & IWG \\
+ & NN RW & IWG \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV, DV, IWG, PE, SND \\
+ & MMD-LS & SND \\
+ & LinOT & PE \\
+ & EntOT & PE \\
+ & MapOT & SND \\
+ & ClassRegOT & IWG \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & CircV \\
+ & SA & PE \\
+ & TSL & CircV, IWG, PE \\
+ & JPCA & CircV, IWG \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & JDOT & CircV, DV, IWG, PE, SND \\
+ & DASVM & CircV, DV, IWG, PE, SND \\
+ & OTLabelProp & IWG \\
+\hline
+\end{tabular}
+\caption{Best scorer per estimator table}
+\end{table}

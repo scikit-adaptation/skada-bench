@@ -1,0 +1,33 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{art$\rightarrow$clipart}} & \mcrot{1}{|c|}{60}{\textbf{art$\rightarrow$product}} & \mcrot{1}{|c|}{60}{\textbf{art$\rightarrow$realworld}} & \mcrot{1}{|c|}{60}{\textbf{clipart$\rightarrow$art}} & \mcrot{1}{|c|}{60}{\textbf{clipart$\rightarrow$product}} & \mcrot{1}{|c|}{60}{\textbf{clipart$\rightarrow$realworld}} & \mcrot{1}{|c|}{60}{\textbf{Mean}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & 0.34 ± 0.02 & 0.63 ± 0.01 & 0.70 ± 0.01 & 0.46 ± 0.02 & 0.60 ± 0.01 & None & 0.55 ± 0.14 \\
+ & Train Tgt & \textbf{\cellcolor{green!90}{0.71 ± 0.02}} & \textbf{\cellcolor{green!90}{0.92 ± 0.01}} & \textbf{\cellcolor{green!90}{0.84 ± 0.01}} & \textbf{\cellcolor{green!90}{0.73 ± 0.03}} & \textbf{\cellcolor{green!90}{0.91 ± 0.01}} & \textbf{0.83 ± 0.00} & \textbf{\cellcolor{green!90}{0.82 ± 0.09}} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & \cellcolor{red!40}{0.22 ± 0.01} & \cellcolor{red!90}{0.43 ± 0.01} & \cellcolor{red!21}{0.60 ± 0.02} & \cellcolor{red!90}{0.36 ± 0.02} & \cellcolor{red!90}{0.46 ± 0.02} & None & \cellcolor{red!31}{0.41 ± 0.14} \\
+ & KLIEP & 0.34 ± 0.02 & 0.63 ± 0.02 & 0.71 ± 0.01 & 0.46 ± 0.02 & 0.60 ± 0.01 & 0.63 ± 0.01 & \cellcolor{green!12}{0.56 ± 0.14} \\
+ & Disc. RW & 0.32 ± 0.02 & \cellcolor{red!37}{0.56 ± 0.03} & 0.70 ± 0.01 & \cellcolor{red!34}{0.43 ± 0.01} & \cellcolor{red!49}{0.53 ± 0.01} & 0.56 ± 0.02 & \cellcolor{red!14}{0.52 ± 0.13} \\
+ & KMM & 0.32 ± 0.01 & 0.62 ± 0.02 & 0.69 ± 0.01 & 0.48 ± 0.03 & 0.60 ± 0.01 & None & \cellcolor{red!11}{0.54 ± 0.15} \\
+ & MMDTarS & 0.34 ± 0.02 & 0.63 ± 0.02 & 0.70 ± 0.01 & 0.46 ± 0.01 & 0.60 ± 0.01 & None & 0.55 ± 0.14 \\
+ & Dens. RW & 0.34 ± 0.02 & 0.63 ± 0.01 & 0.70 ± 0.01 & 0.46 ± 0.02 & 0.60 ± 0.01 & 0.63 ± 0.01 & \cellcolor{green!12}{0.56 ± 0.13} \\
+ & NN RW & 0.34 ± 0.02 & 0.63 ± 0.01 & 0.70 ± 0.01 & 0.46 ± 0.02 & 0.59 ± 0.01 & 0.63 ± 0.02 & \cellcolor{green!12}{0.56 ± 0.13} \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & \cellcolor{green!20}{0.39 ± 0.02} & 0.64 ± 0.01 & 0.70 ± 0.01 & 0.48 ± 0.02 & 0.59 ± 0.01 & 0.60 ± 0.01 & \cellcolor{green!15}{0.57 ± 0.11} \\
+ & MMD-LS & 0.34 ± 0.02 & 0.63 ± 0.01 & 0.70 ± 0.01 & None & None & None & \cellcolor{green!12}{0.56 ± 0.19} \\
+ & LinOT & \cellcolor{green!20}{0.39 ± 0.02} & 0.64 ± 0.02 & 0.71 ± 0.01 & \cellcolor{green!21}{0.50 ± 0.02} & 0.60 ± 0.01 & None & \cellcolor{green!15}{0.57 ± 0.13} \\
+ & EntOT & \cellcolor{green!18}{0.38 ± 0.02} & \cellcolor{green!15}{0.65 ± 0.01} & 0.71 ± 0.01 & \cellcolor{green!24}{0.51 ± 0.01} & \cellcolor{green!15}{0.62 ± 0.02} & None & \cellcolor{green!15}{0.57 ± 0.13} \\
+ & MapOT & 0.35 ± 0.02 & \cellcolor{red!45}{0.54 ± 0.01} & \cellcolor{red!17}{0.64 ± 0.01} & \cellcolor{red!50}{0.41 ± 0.02} & \cellcolor{red!55}{0.52 ± 0.01} & 0.54 ± 0.02 & \cellcolor{red!17}{0.50 ± 0.10} \\
+ & ClassRegOT & \cellcolor{green!20}{0.39 ± 0.01} & \cellcolor{green!18}{0.66 ± 0.01} & \cellcolor{green!21}{0.72 ± 0.01} & \cellcolor{green!30}{0.53 ± 0.01} & None & None & \cellcolor{green!15}{0.57 ± 0.15} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & \cellcolor{red!90}{0.02 ± 0.00} & None & \cellcolor{red!90}{0.02 ± 0.00} & None & None & None & \cellcolor{red!90}{0.02 ± 0.00} \\
+ & SA & \cellcolor{green!20}{0.39 ± 0.02} & 0.64 ± 0.01 & 0.71 ± 0.01 & \cellcolor{green!21}{0.50 ± 0.02} & 0.60 ± 0.01 & 0.64 ± 0.01 & \cellcolor{green!18}{0.58 ± 0.12} \\
+ & JPCA & 0.34 ± 0.02 & 0.63 ± 0.01 & 0.70 ± 0.01 & 0.46 ± 0.02 & 0.60 ± 0.01 & 0.63 ± 0.01 & \cellcolor{green!12}{0.56 ± 0.13} \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & OTLabelProp & 0.35 ± 0.02 & None & \cellcolor{red!14}{0.66 ± 0.02} & \cellcolor{green!21}{0.50 ± 0.02} & None & None & \cellcolor{red!17}{0.50 ± 0.16} \\
+\hline
+\end{tabular}
+\caption{Best realistic scorer table. Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}

@@ -1,0 +1,145 @@
+\section{phishing}
+\subsection{Best unsupervised scorer}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{ip\_adress$\rightarrow$no\_ip\_adress}} & \mcrot{1}{|c|}{60}{\textbf{no\_ip\_adress$\rightarrow$ip\_adress}} & \mcrot{1}{|c|}{60}{\textbf{Mean}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & 0.94 ± 0.01 & 0.88 ± 0.01 & 0.91 ± 0.04 \\
+ & Train Tgt & \textbf{\cellcolor{green!90}{0.97 ± 0.01}} & \textbf{\cellcolor{green!90}{0.97 ± 0.01}} & \textbf{\cellcolor{green!90}{0.97 ± 0.00}} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & \cellcolor{red!53}{0.88 ± 0.01} & \cellcolor{red!90}{0.59 ± 0.00} & \cellcolor{red!90}{0.73 ± 0.21} \\
+ & KLIEP & 0.94 ± 0.01 & 0.89 ± 0.00 & \cellcolor{green!23}{0.92 ± 0.04} \\
+ & Disc. RW & 0.94 ± 0.01 & 0.89 ± 0.01 & \cellcolor{green!23}{0.92 ± 0.04} \\
+ & KMM & 0.94 ± 0.01 & 0.89 ± 0.01 & \cellcolor{green!23}{0.92 ± 0.04} \\
+ & MMDTarS & 0.94 ± 0.01 & 0.88 ± 0.01 & 0.91 ± 0.04 \\
+ & Dens. RW & 0.94 ± 0.01 & 0.88 ± 0.01 & 0.91 ± 0.04 \\
+ & NN RW & 0.94 ± 0.01 & 0.89 ± 0.01 & \cellcolor{green!23}{0.92 ± 0.04} \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & 0.93 ± 0.01 & \cellcolor{green!36}{0.91 ± 0.01} & \cellcolor{green!23}{0.92 ± 0.01} \\
+ & MMD-LS & 0.94 ± 0.01 & 0.88 ± 0.01 & 0.91 ± 0.04 \\
+ & LinOT & \cellcolor{red!31}{0.91 ± 0.01} & \cellcolor{green!36}{0.91 ± 0.01} & 0.91 ± 0.00 \\
+ & EntOT & \cellcolor{red!60}{0.87 ± 0.04} & \cellcolor{red!18}{0.85 ± 0.03} & \cellcolor{red!32}{0.86 ± 0.01} \\
+ & MapOT & \cellcolor{red!90}{0.83 ± 0.01} & \cellcolor{red!21}{0.84 ± 0.03} & \cellcolor{red!45}{0.83 ± 0.01} \\
+ & ClassRegOT & \cellcolor{red!39}{0.90 ± 0.02} & \cellcolor{green!27}{0.90 ± 0.01} & \cellcolor{red!14}{0.90 ± 0.00} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & SA & \cellcolor{red!31}{0.91 ± 0.02} & 0.88 ± 0.01 & \cellcolor{red!14}{0.90 ± 0.02} \\
+ & TSL & 0.94 ± 0.01 & 0.89 ± 0.01 & \cellcolor{green!23}{0.92 ± 0.04} \\
+ & JPCA & \cellcolor{red!24}{0.92 ± 0.01} & 0.89 ± 0.01 & 0.91 ± 0.02 \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & OTLabelProp & \cellcolor{red!68}{0.86 ± 0.01} & \cellcolor{red!15}{0.86 ± 0.01} & \cellcolor{red!32}{0.86 ± 0.00} \\
+\hline
+\end{tabular}
+\caption{Best realistic scorer table. Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}
+
+\subsection{Delta between supervised and best scorer}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{ip\_adress$\rightarrow$no\_ip\_adress}} & \mcrot{1}{|c|}{60}{\textbf{no\_ip\_adress$\rightarrow$ip\_adress}} & \mcrot{1}{|c|}{60}{\textbf{Mean}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & +0.0 & +0.0 & +0.0 \\
+ & Train Tgt & +0.0 & +0.0 & +0.0 \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & +0.0 & +0.0 & +0.0 \\
+ & KLIEP & +0.0 & +0.0 & +0.0 \\
+ & Disc. RW & +0.0 & \textbf{\cellcolor{green!90}{+0.01}} & \textbf{\cellcolor{green!90}{+0.01}} \\
+ & KMM & +0.0 & +0.0 & +0.0 \\
+ & MMDTarS & +0.0 & +0.0 & +0.0 \\
+ & Dens. RW & +0.0 & \cellcolor{red!90}{-0.01} & \cellcolor{red!50}{-0.01} \\
+ & NN RW & +0.0 & +0.0 & +0.0 \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & +0.0 & +0.0 & +0.0 \\
+ & MMD-LS & +0.0 & +0.0 & +0.0 \\
+ & LinOT & +0.0 & +0.0 & +0.0 \\
+ & EntOT & \cellcolor{red!90}{-0.03} & +0.0 & \cellcolor{red!90}{-0.02} \\
+ & MapOT & +0.0 & +0.0 & +0.0 \\
+ & ClassRegOT & \textbf{\cellcolor{green!90}{+0.01}} & +0.0 & +0.0 \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & SA & +0.0 & +0.0 & +0.0 \\
+ & TSL & +0.0 & +0.0 & +0.0 \\
+ & JPCA & +0.0 & +0.0 & +0.0 \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & OTLabelProp & +0.0 & +0.0 & +0.0 \\
+\hline
+\end{tabular}
+\caption{Performance loss between supervised and best scorer table (the delta is computed as best scorer accuracy - supervised accuracy). Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}
+
+\subsection{Best scorer per estimator}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{best\_scorer}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & CircV, DV, IWG, PE, SND \\
+ & Train Tgt & CircV, DV, IWG, PE, SND \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & PE \\
+ & KLIEP & DV \\
+ & Disc. RW & PE \\
+ & KMM & CircV \\
+ & MMDTarS & PE \\
+ & Dens. RW & IWG \\
+ & NN RW & SND \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV, DV, IWG, PE, SND \\
+ & MMD-LS & CircV, DV, IWG \\
+ & LinOT & PE \\
+ & EntOT & CircV \\
+ & MapOT & PE \\
+ & ClassRegOT & PE \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & SA & CircV \\
+ & TSL & CircV, IWG, PE \\
+ & JPCA & PE \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & OTLabelProp & CircV \\
+\hline
+\end{tabular}
+\caption{Best scorer per estimator table}
+\end{table}
+
+\subsection{Best scorer per dataset}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{ip\_adress$\rightarrow$no\_ip\_adress}} & \mcrot{1}{|c|}{60}{\textbf{no\_ip\_adress$\rightarrow$ip\_adress}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & Train Tgt & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & IWG, PE & PE \\
+ & KLIEP & CircV & DV \\
+ & Disc. RW & IWG, PE & DV \\
+ & KMM & CircV & PE \\
+ & MMDTarS & DV & CircV \\
+ & Dens. RW & CircV & IWG \\
+ & NN RW & SND & IWG, SND \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+ & MMD-LS & CircV, DV, IWG & CircV, DV, IWG, PE \\
+ & LinOT & PE & PE \\
+ & EntOT & CircV & CircV \\
+ & MapOT & DV & CircV, PE, SND \\
+ & ClassRegOT & IWG & CircV \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & SA & CircV, IWG & CircV \\
+ & TSL & CircV, IWG, PE & SND \\
+ & JPCA & CircV, IWG, PE & DV, PE \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & OTLabelProp & CircV & CircV \\
+\hline
+\end{tabular}
+\caption{Best scorer per dataset table}
+\end{table}
+

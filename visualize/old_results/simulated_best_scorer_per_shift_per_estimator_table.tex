@@ -1,0 +1,74 @@
+\begin{tabular}{ll}
+\hline
+                                                     & best\_scorer                                                              \\
+\hline
+ ('concept\_drift', 'CORAL')                          & importance\_wg                                                            \\
+ ('concept\_drift', 'JDOT\_XGB')                       & importance\_wg                                                            \\
+ ('concept\_drift', 'KLIEP')                          & circular\_val                                                             \\
+ ('concept\_drift', 'KMM')                            & pred\_entropy                                                             \\
+ ('concept\_drift', 'MMDSConS')                       & deep\_emb\_val, importance\_wg                                              \\
+ ('concept\_drift', 'NO\_DA\_SOURCE\_ONLY')              & deep\_emb\_val                                                             \\
+ ('concept\_drift', 'NO\_DA\_TARGET\_ONLY')              & soft\_neigh\_dens                                                          \\
+ ('concept\_drift', 'PCA')                            & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy                  \\
+ ('concept\_drift', 'TarS')                           & circular\_val                                                             \\
+ ('concept\_drift', 'class\_regularizer\_ot\_mapping')   & circular\_val                                                             \\
+ ('concept\_drift', 'discriminator\_reweight')         & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('concept\_drift', 'entropic\_ot\_mapping')            & circular\_val                                                             \\
+ ('concept\_drift', 'gaussian\_reweight')              & circular\_val                                                             \\
+ ('concept\_drift', 'linear\_ot\_mapping')              & pred\_entropy                                                             \\
+ ('concept\_drift', 'ot\_mapping')                     & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('concept\_drift', 'subspace\_alignment')             & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('concept\_drift', 'transfer\_component\_analysis')    & soft\_neigh\_dens                                                          \\
+ ('covariate\_shift', 'CORAL')                        & pred\_entropy                                                             \\
+ ('covariate\_shift', 'JDOT\_XGB')                     & deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens               \\
+ ('covariate\_shift', 'KLIEP')                        & importance\_wg                                                            \\
+ ('covariate\_shift', 'KMM')                          & pred\_entropy                                                             \\
+ ('covariate\_shift', 'MMDSConS')                     & deep\_emb\_val, importance\_wg                                              \\
+ ('covariate\_shift', 'NO\_DA\_SOURCE\_ONLY')            & pred\_entropy                                                             \\
+ ('covariate\_shift', 'NO\_DA\_TARGET\_ONLY')            & deep\_emb\_val                                                             \\
+ ('covariate\_shift', 'PCA')                          & circular\_val, importance\_wg, pred\_entropy                                \\
+ ('covariate\_shift', 'TarS')                         & circular\_val                                                             \\
+ ('covariate\_shift', 'class\_regularizer\_ot\_mapping') & importance\_wg                                                            \\
+ ('covariate\_shift', 'discriminator\_reweight')       & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('covariate\_shift', 'entropic\_ot\_mapping')          & circular\_val                                                             \\
+ ('covariate\_shift', 'gaussian\_reweight')            & importance\_wg                                                            \\
+ ('covariate\_shift', 'linear\_ot\_mapping')            & soft\_neigh\_dens                                                          \\
+ ('covariate\_shift', 'ot\_mapping')                   & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('covariate\_shift', 'subspace\_alignment')           & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('covariate\_shift', 'transfer\_component\_analysis')  & soft\_neigh\_dens                                                          \\
+ ('subspace', 'CORAL')                               & deep\_emb\_val, importance\_wg                                              \\
+ ('subspace', 'JDOT\_XGB')                            & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('subspace', 'KLIEP')                               & soft\_neigh\_dens                                                          \\
+ ('subspace', 'KMM')                                 & circular\_val                                                             \\
+ ('subspace', 'MMDSConS')                            & pred\_entropy                                                             \\
+ ('subspace', 'NO\_DA\_SOURCE\_ONLY')                   & pred\_entropy, soft\_neigh\_dens                                            \\
+ ('subspace', 'NO\_DA\_TARGET\_ONLY')                   & deep\_emb\_val                                                             \\
+ ('subspace', 'PCA')                                 & circular\_val                                                             \\
+ ('subspace', 'TarS')                                & pred\_entropy                                                             \\
+ ('subspace', 'class\_regularizer\_ot\_mapping')        & importance\_wg                                                            \\
+ ('subspace', 'discriminator\_reweight')              & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('subspace', 'entropic\_ot\_mapping')                 & soft\_neigh\_dens                                                          \\
+ ('subspace', 'gaussian\_reweight')                   & circular\_val                                                             \\
+ ('subspace', 'linear\_ot\_mapping')                   & soft\_neigh\_dens                                                          \\
+ ('subspace', 'ot\_mapping')                          & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('subspace', 'subspace\_alignment')                  & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('subspace', 'transfer\_component\_analysis')         & deep\_emb\_val                                                             \\
+ ('target\_shift', 'CORAL')                           & soft\_neigh\_dens                                                          \\
+ ('target\_shift', 'JDOT\_XGB')                        & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('target\_shift', 'KLIEP')                           & pred\_entropy                                                             \\
+ ('target\_shift', 'KMM')                             & soft\_neigh\_dens                                                          \\
+ ('target\_shift', 'MMDSConS')                        & soft\_neigh\_dens                                                          \\
+ ('target\_shift', 'NO\_DA\_SOURCE\_ONLY')               & deep\_emb\_val                                                             \\
+ ('target\_shift', 'NO\_DA\_TARGET\_ONLY')               & deep\_emb\_val                                                             \\
+ ('target\_shift', 'PCA')                             & circular\_val, importance\_wg, pred\_entropy                                \\
+ ('target\_shift', 'TarS')                            & soft\_neigh\_dens                                                          \\
+ ('target\_shift', 'class\_regularizer\_ot\_mapping')    & soft\_neigh\_dens                                                          \\
+ ('target\_shift', 'discriminator\_reweight')          & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('target\_shift', 'entropic\_ot\_mapping')             & circular\_val                                                             \\
+ ('target\_shift', 'gaussian\_reweight')               & circular\_val                                                             \\
+ ('target\_shift', 'linear\_ot\_mapping')               & soft\_neigh\_dens                                                          \\
+ ('target\_shift', 'ot\_mapping')                      & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('target\_shift', 'subspace\_alignment')              & circular\_val, deep\_emb\_val, importance\_wg, pred\_entropy, soft\_neigh\_dens \\
+ ('target\_shift', 'transfer\_component\_analysis')     & importance\_wg                                                            \\
+\hline
+\end{tabular}

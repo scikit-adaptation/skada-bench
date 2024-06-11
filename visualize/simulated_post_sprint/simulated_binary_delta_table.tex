@@ -1,0 +1,32 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Subspace}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & \cellcolor{red!17}{-0.03} & +0.0 & \cellcolor{green!63}{+0.02} & +0.0 \\
+ & Train Tgt & \cellcolor{red!12}{-0.01} & +0.0 & \cellcolor{green!36}{+0.01} & +0.0 \\
+\hline\hline
+\multirow{5}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & +0.0 & \cellcolor{red!13}{-0.02} & \cellcolor{red!23}{-0.05} & \cellcolor{red!12}{-0.01} \\
+ & KLIEP & \cellcolor{red!17}{-0.03} & \cellcolor{red!18}{-0.05} & \cellcolor{red!26}{-0.06} & +0.0 \\
+ & Disc. RW & \cellcolor{red!29}{-0.08} & \cellcolor{red!11}{-0.01} & \cellcolor{green!36}{+0.01} & +0.0 \\
+ & KMM & \cellcolor{red!22}{-0.05} & +0.0 & +0.0 & \cellcolor{red!12}{-0.01} \\
+ & MMDTarS & \cellcolor{red!36}{-0.11} & \cellcolor{red!16}{-0.04} & \cellcolor{red!44}{-0.13} & \cellcolor{red!17}{-0.03} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & \cellcolor{red!46}{-0.15} & \cellcolor{red!14}{-0.03} & \cellcolor{red!31}{-0.08} & +0.0 \\
+ & MMD-LS & \cellcolor{red!19}{-0.04} & \cellcolor{red!13}{-0.02} & \cellcolor{red!42}{-0.12} & \cellcolor{red!90}{-0.34} \\
+ & LinOT & \cellcolor{red!22}{-0.05} & \cellcolor{red!11}{-0.01} & \cellcolor{red!36}{-0.1} & \cellcolor{red!14}{-0.02} \\
+ & EntOT & \cellcolor{red!12}{-0.01} & \cellcolor{red!90}{-0.5} & \cellcolor{red!90}{-0.3} & +0.0 \\
+ & MapOT & +0.0 & \cellcolor{red!11}{-0.01} & \cellcolor{red!12}{-0.01} & +0.0 \\
+ & ClassRegOT & \cellcolor{red!22}{-0.05} & \cellcolor{red!11}{-0.01} & \cellcolor{red!12}{-0.01} & +0.0 \\
+ & TJM & \cellcolor{red!17}{-0.03} & \textbf{\cellcolor{green!90}{+0.06}} & \textbf{\cellcolor{green!90}{+0.03}} & \textbf{\cellcolor{green!90}{+0.07}} \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & \textbf{\cellcolor{green!90}{+0.16}} & \cellcolor{red!19}{-0.06} & \cellcolor{green!36}{+0.01} & \cellcolor{red!26}{-0.07} \\
+ & SA & \cellcolor{red!68}{-0.24} & \cellcolor{red!64}{-0.34} & \cellcolor{red!55}{-0.17} & \cellcolor{red!14}{-0.02} \\
+ & JPCA & \cellcolor{red!90}{-0.33} & \cellcolor{red!64}{-0.34} & \cellcolor{red!58}{-0.18} & \cellcolor{red!12}{-0.01} \\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{Other}}}} & JDOT & +0.0 & +0.0 & +0.0 & +0.0 \\
+\hline
+\end{tabular}
+\caption{Performance loss between supervised and best scorer table (the delta is computed as best scorer accuracy - supervised accuracy). Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}

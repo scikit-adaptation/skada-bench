@@ -1,0 +1,32 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{Cov. shift}} & \mcrot{1}{|c|}{60}{\textbf{Targ. shift}} & \mcrot{1}{|c|}{60}{\textbf{Con. drift}} & \mcrot{1}{|c|}{60}{\textbf{Subspace}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & IWG & IWG & IWG & SND \\
+ & Train Tgt & IWG, SND & DV & SND & DV \\
+\hline\hline
+\multirow{5}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & IWG & DV & PE & CircV \\
+ & KLIEP & PE & CircV & PE & SND \\
+ & Disc. RW & DV & IWG & IWG & CircV, PE, SND \\
+ & KMM & DV & SND & PE & SND \\
+ & MMDTarS & PE & DV, IWG & CircV & CircV \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV & IWG & IWG & SND \\
+ & MMD-LS & DV, IWG & CircV & DV, IWG & PE \\
+ & LinOT & IWG & SND & IWG & CircV \\
+ & EntOT & SND & CircV & CircV & SND \\
+ & MapOT & SND & CircV & IWG & IWG, PE, SND \\
+ & ClassRegOT & DV & SND & CircV & PE \\
+ & TJM & DV & SND & SND & IWG \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & PE & CircV & PE & IWG \\
+ & SA & CircV & CircV & CircV & IWG \\
+ & JPCA & PE & IWG & IWG & SND \\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{Other}}}} & JDOT & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND & CircV, DV, IWG, PE, SND \\
+\hline
+\end{tabular}
+\caption{Best scorer per dataset table}
+\end{table}

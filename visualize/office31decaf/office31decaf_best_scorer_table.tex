@@ -1,0 +1,29 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{best\_scorer}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & PE \\
+ & Train Tgt & PE \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & IWG \\
+ & KLIEP & PE \\
+ & Disc. RW & CircV, DV, IWG, PE, SND \\
+ & KMM & SND \\
+ & MMDTarS & DV, IWG \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & CircV \\
+ & MMD-LS & CircV \\
+ & LinOT & DV \\
+ & EntOT & CircV \\
+ & MapOT & CircV, DV, IWG, PE, SND \\
+ & ClassRegOT & CircV, IWG, PE \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & DV \\
+ & SA & PE \\
+ & JPCA & CircV \\
+\hline
+\end{tabular}
+\caption{Best scorer per estimator table}
+\end{table}

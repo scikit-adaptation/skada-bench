@@ -1,0 +1,34 @@
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{c|l|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+& & \mcrot{1}{|c|}{60}{\textbf{books$\rightarrow$dvd}} & \mcrot{1}{|c|}{60}{\textbf{books$\rightarrow$elec}} & \mcrot{1}{|c|}{60}{\textbf{books$\rightarrow$kitchen}} & \mcrot{1}{|c|}{60}{\textbf{dvd$\rightarrow$books}} & \mcrot{1}{|c|}{60}{\textbf{dvd$\rightarrow$elec}} & \mcrot{1}{|c|}{60}{\textbf{dvd$\rightarrow$kitchen}} & \mcrot{1}{|c|}{60}{\textbf{elec$\rightarrow$books}} & \mcrot{1}{|c|}{60}{\textbf{elec$\rightarrow$dvd}} & \mcrot{1}{|c|}{60}{\textbf{elec$\rightarrow$kitchen}} & \mcrot{1}{|c|}{60}{\textbf{kitchen$\rightarrow$books}} & \mcrot{1}{|c|}{60}{\textbf{kitchen$\rightarrow$dvd}} & \mcrot{1}{|c|}{60}{\textbf{kitchen$\rightarrow$elec}} & \mcrot{1}{|c|}{60}{\textbf{Mean}}\\
+\hline\hline
+\multirow{2}{*}{{\rotatebox{90}{\textbf{NO DA}}}} & Train Src & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+ & Train Tgt & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Reweighting}}}} & Gauss. RW & None & None & +0.0 & None & +0.0 & +0.0 & None & +0.0 & None & None & None & None & +0.0 \\
+ & KLIEP & \textbf{\cellcolor{green!90}{+0.02}} & \cellcolor{green!30}{+0.01} & +0.0 & \cellcolor{red!36}{-0.01} & \textbf{\cellcolor{green!90}{+0.01}} & \cellcolor{green!36}{+0.01} & \cellcolor{red!20}{-0.01} & +0.0 & +0.0 & \cellcolor{red!21}{-0.01} & \cellcolor{green!50}{+0.01} & \cellcolor{green!36}{+0.01} & +0.0 \\
+ & Disc. RW & +0.0 & \cellcolor{green!30}{+0.01} & \cellcolor{red!30}{-0.01} & \cellcolor{red!36}{-0.01} & +0.0 & \cellcolor{green!63}{+0.02} & \cellcolor{green!90}{+0.01} & \cellcolor{green!36}{+0.01} & +0.0 & +0.0 & +0.0 & \cellcolor{green!36}{+0.01} & \textbf{\cellcolor{green!90}{+0.01}} \\
+ & KMM & +0.0 & \cellcolor{red!90}{-0.03} & \cellcolor{red!70}{-0.03} & \cellcolor{red!36}{-0.01} & +0.0 & +0.0 & +0.0 & +0.0 & \cellcolor{green!36}{+0.01} & \cellcolor{green!90}{+0.01} & \textbf{\cellcolor{green!90}{+0.02}} & +0.0 & +0.0 \\
+ & MMDTarS & +0.0 & \cellcolor{red!36}{-0.01} & +0.0 & +0.0 & +0.0 & \cellcolor{green!36}{+0.01} & \textbf{\cellcolor{green!90}{+0.01}} & +0.0 & +0.0 & +0.0 & \cellcolor{green!50}{+0.01} & +0.0 & +0.0 \\
+ & Dens. RW & \cellcolor{green!50}{+0.01} & \cellcolor{green!30}{+0.01} & \cellcolor{red!30}{-0.01} & \cellcolor{red!36}{-0.01} & +0.0 & +0.0 & \cellcolor{green!90}{+0.01} & +0.0 & +0.0 & \cellcolor{red!21}{-0.01} & +0.0 & \cellcolor{green!36}{+0.01} & +0.0 \\
+ & NN RW & \cellcolor{red!36}{-0.01} & \cellcolor{red!36}{-0.01} & \cellcolor{red!50}{-0.02} & +0.0 & \cellcolor{green!90}{+0.01} & \cellcolor{green!36}{+0.01} & \cellcolor{red!20}{-0.01} & +0.0 & +0.0 & \cellcolor{green!90}{+0.01} & +0.0 & +0.0 & +0.0 \\
+\hline\hline
+\multirow{6}{*}{{\rotatebox{90}{\textbf{Mapping}}}} & CORAL & +0.0 & +0.0 & \cellcolor{red!90}{-0.04} & \cellcolor{red!90}{-0.03} & \cellcolor{red!90}{-0.07} & \cellcolor{red!90}{-0.07} & +0.0 & +0.0 & +0.0 & \textbf{\cellcolor{green!90}{+0.01}} & +0.0 & \cellcolor{green!63}{+0.02} & \cellcolor{red!63}{-0.02} \\
+ & LinOT & \cellcolor{green!50}{+0.01} & +0.0 & \cellcolor{red!30}{-0.01} & +0.0 & \cellcolor{green!90}{+0.01} & +0.0 & \cellcolor{green!90}{+0.01} & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+ & EntOT & +0.0 & \textbf{\cellcolor{green!90}{+0.04}} & \cellcolor{red!30}{-0.01} & \cellcolor{red!36}{-0.01} & \cellcolor{red!78}{-0.06} & \cellcolor{red!78}{-0.06} & \cellcolor{red!90}{-0.08} & \cellcolor{red!90}{-0.04} & +0.0 & \cellcolor{red!90}{-0.07} & \cellcolor{red!90}{-0.02} & +0.0 & \cellcolor{red!90}{-0.03} \\
+ & MapOT & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & \cellcolor{red!30}{-0.02} & \cellcolor{green!36}{+0.01} & \cellcolor{green!36}{+0.01} & \cellcolor{red!21}{-0.01} & +0.0 & +0.0 & +0.0 \\
+ & ClassRegOT & \cellcolor{red!90}{-0.03} & \cellcolor{red!63}{-0.02} & \cellcolor{red!30}{-0.01} & +0.0 & \cellcolor{red!32}{-0.02} & \cellcolor{red!44}{-0.03} & \cellcolor{red!20}{-0.01} & \cellcolor{red!30}{-0.01} & +0.0 & \cellcolor{red!44}{-0.03} & \cellcolor{red!50}{-0.01} & +0.0 & \cellcolor{red!63}{-0.02} \\
+\hline\hline
+\multirow{7}{*}{{\rotatebox{90}{\textbf{Subspace}}}} & TCA & \cellcolor{green!50}{+0.01} & \cellcolor{green!50}{+0.02} & \textbf{\cellcolor{green!90}{+0.02}} & \textbf{\cellcolor{green!90}{+0.01}} & \cellcolor{red!32}{-0.02} & \textbf{\cellcolor{green!90}{+0.03}} & \cellcolor{green!90}{+0.01} & \textbf{\cellcolor{green!90}{+0.03}} & \textbf{\cellcolor{green!90}{+0.03}} & +0.0 & +0.0 & \cellcolor{green!63}{+0.02} & \cellcolor{green!90}{+0.01} \\
+ & SA & \cellcolor{red!36}{-0.01} & \cellcolor{red!63}{-0.02} & \cellcolor{green!50}{+0.01} & \cellcolor{red!36}{-0.01} & +0.0 & \cellcolor{green!63}{+0.02} & +0.0 & +0.0 & +0.0 & \cellcolor{red!44}{-0.03} & \cellcolor{red!50}{-0.01} & \textbf{\cellcolor{green!90}{+0.03}} & +0.0 \\
+ & TSL & None & None & \cellcolor{green!50}{+0.01} & None & None & None & None & None & None & None & None & None & \cellcolor{green!90}{+0.01} \\
+ & JPCA & +0.0 & +0.0 & +0.0 & +0.0 & \cellcolor{green!90}{+0.01} & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+\hline\hline
+\multirow{3}{*}{{\rotatebox{90}{\textbf{Other}}}} & JDOT & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 & +0.0 \\
+ & OTLabelProp & \cellcolor{green!50}{+0.01} & \cellcolor{red!36}{-0.01} & +0.0 & +0.0 & +0.0 & \cellcolor{green!36}{+0.01} & +0.0 & \cellcolor{green!63}{+0.02} & \cellcolor{green!36}{+0.01} & +0.0 & \cellcolor{green!50}{+0.01} & \cellcolor{green!36}{+0.01} & +0.0 \\
+\hline
+\end{tabular}
+\caption{Performance loss between supervised and best scorer table (the delta is computed as best scorer accuracy - supervised accuracy). Color-code: the darker the result, the better. Bold value: best value per shift.}
+\end{table}
