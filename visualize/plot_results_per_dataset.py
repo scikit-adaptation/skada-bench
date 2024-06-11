@@ -1,10 +1,8 @@
 # %%
 import numpy as np
-import glob
 import pandas as pd
-import hiplot as hip
 import json
-import scipy.stats as stats
+import argparse
 
 
 def shade_of_color(
@@ -12,11 +10,7 @@ def shade_of_color(
     final_value,
     min_value=0,
     max_value=1,
-    is_delta_table=False,
 ):
-    # If is_delta_table, we want green > 0
-    # red < 0 and transparent = 0
-
     # Intensity range for the green and red colors
     intensity_range = (30, 70)
 
@@ -41,95 +35,61 @@ def shade_of_color(
         return final_value
 
 
-mapping_estimator_type = {
-    "Train Src": "NO DA",
-    "Train Tgt": "NO DA",
-    "Dens. RW": "Reweighting",
-    "Disc. RW": "Reweighting",
-    "Gauss. RW": "Reweighting",
-    "KLIEP": "Reweighting",
-    "KMM": "Reweighting",
-    "NN RW": "Reweighting",
-    "MMDTarS": "Reweighting",
-    "CORAL": "Mapping",
-    "MapOT": "Mapping",
-    "EntOT": "Mapping",
-    "ClassRegOT": "Mapping",
-    "LinOT": "Mapping",
-    "MMD-LS": "Mapping",
-    "JPCA": "Subspace",
-    "SA": "Subspace",
-    "TCA": "Subspace",
-    "TSL": "Subspace",
-    "JDOT": "Other",
-    "OTLabelProp": "Other",
-    "DASVM": "Other",
-}
-# %%
+def generate_table_results(csv_file):
+    df = pd.read_csv(csv_file)
+    df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 
+    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
+        lambda x: json.loads(x)
+    )
 
-# files = glob.glob("./readable_csv/*readable.csv")
-# df = pd.concat([pd.read_csv(file) for file in files])
-df = pd.read_csv("./readable_csv/results_05_06.csv")
-df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
+    df["nb_splits"] = df["target_accuracy-test-identity"].apply(
+        lambda x: len(x)
+    )
 
-df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
-    lambda x: json.loads(x)
-)
+    df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
+    df_source = df.query(
+        'estimator == "Train Src" & scorer !='
+        '"supervised" & scorer != "best_scorer"'
+    )
+    idx_source_best_scorer = df_source.groupby(["shift"])[
+        "target_accuracy-test-mean"
+    ].idxmax()
+    df_source = df_source.loc[idx_source_best_scorer]
 
-df["nb_splits"] = df["target_accuracy-test-identity"].apply(lambda x: len(x))
+    df = df.merge(
+        df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
+        on="shift",
+        suffixes=("", "_target"),
+    )
+    df = df.merge(
+        df_source[
+            [
+                "shift",
+                "target_accuracy-test-mean",
+                "target_accuracy-test-std",
+                "target_accuracy-test-identity",
+            ]
+        ],
+        on="shift",
+        suffixes=("", "_source"),
+    )
+    # remove rows where the source is better than the target
+    df = df[
+        df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]
+    ].reset_index()
+    # check if nb_splits is 5 and 25 for the simulated dataset
+    df = df.query("nb_splits == 5 | nb_splits == 25")
 
-# %%
-df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
-df_source = df.query(
-    'estimator == "Train Src" & scorer != "supervised" & scorer != "best_scorer"'
-)
-idx_source_best_scorer = df_source.groupby(["shift"])[
-    "target_accuracy-test-mean"
-].idxmax()
-df_source = df_source.loc[idx_source_best_scorer]
+    # remove duplicates
+    df = df.drop_duplicates(subset=["dataset", "scorer", "estimator", "shift"])
 
-df = df.merge(
-    df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
-    on="shift",
-    suffixes=("", "_target"),
-)
-df = df.merge(
-    df_source[
-        [
-            "shift",
-            "target_accuracy-test-mean",
-            "target_accuracy-test-std",
-            "target_accuracy-test-identity",
-        ]
-    ],
-    on="shift",
-    suffixes=("", "_source"),
-)
-# remove rows where the source is better than the target
-df = df[
-    df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]
-].reset_index()
-# check if nb_splits is 5 and 25 for the simulated dataset
-df = df.query("nb_splits == 5 | nb_splits == 25")
+    df["rank"] = df.groupby(["dataset", "scorer", "shift"])[
+        "target_accuracy-test-mean"
+    ].rank(ascending=False)
 
-# remove duplicates
-df = df.drop_duplicates(subset=["dataset", "scorer", "estimator", "shift"])
-
-# %%
-
-df["rank"] = df.groupby(["dataset", "scorer", "shift"])[
-    "target_accuracy-test-mean"
-].rank(ascending=False)
-
-# %%
-datasets = df["dataset"].unique()
-lat_tabs = []
-for dataset in datasets:
-    print(dataset)
-    df_dataset = df.query(f"dataset == '{dataset}'")
     df_best_scorer = pd.read_csv("./best_scorer.csv")
-    df_dataset = df_dataset.merge(
+    df_dataset = df.merge(
         df_best_scorer[
             [
                 "estimator",
@@ -154,51 +114,20 @@ for dataset in datasets:
 
     # create the table
     df_tab = df_dataset.pivot(
-        index="shift", columns=["type", "estimator"], values="target_accuracy-test-mean"
+        index="shift", columns=["type", "estimator"],
+        values="target_accuracy-test-mean"
     )
     df_tab_acc_std = df_dataset.pivot(
         index="shift", columns=["type", "estimator"], values="acc_std"
     )
     df_tab = df_tab.reindex(
-        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
+        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"],
+        level=0
     )
     df_tab_acc_std = df_tab_acc_std.reindex(
-        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
+        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"],
+        level=0
     )
-    # reindex and create new columns for missing ones
-    for col in [
-        "Train Src",
-        "Train Tgt",
-        "Dens. RW",
-        "Disc. RW",
-        "Gauss. RW",
-        "KLIEP",
-        "KMM",
-        "NN RW",
-        "MMDTarS",
-        "CORAL",
-        "MapOT",
-        "EntOT",
-        "ClassRegOT",
-        "LinOT",
-        "MMD-LS",
-        "JPCA",
-        "SA",
-        "TCA",
-        "TSL",
-        "JDOT",
-        "OTLabelProp",
-        "DASVM",
-    ]:
-        if col not in df_tab.columns.get_level_values(1):
-            df_tab[(mapping_estimator_type[col], col)] = np.nan
-            df_rank = df_rank.append(
-                {
-                    "estimator": col,
-                    "rank": np.nan,
-                },
-                ignore_index=True,
-            )
 
     df_tab = df_tab.reindex(
         columns=[
@@ -274,6 +203,39 @@ for dataset in datasets:
         }
     )
 
+    if df_dataset["dataset"].values[0] == "Simulated":
+        df_tab = df_tab.reindex(
+            columns=[
+                "covariate_shift",
+                "target_shift",
+                "concept_drift",
+                "subspace",
+            ],
+        )
+        df_tab = df_tab.rename(
+            columns={
+                "covariate_shift": "\\underline{Cov. shift}",
+                "target_shift": "\\underline{Tar. shift}",
+                "concept_drift": "\\underline{Cond. shift}",
+                "subspace": "\\underline{Sub. shift}",
+            }
+        )
+        df_tab_acc_std = df_tab_acc_std.reindex(
+            columns=[
+                "covariate_shift",
+                "target_shift",
+                "concept_drift",
+                "subspace",
+            ],
+        )
+        df_tab_acc_std = df_tab_acc_std.rename(
+            columns={
+                "covariate_shift": "\\underline{Cov. shift}",
+                "target_shift": "\\underline{Tar. shift}",
+                "concept_drift": "\\underline{Cond. shift}",
+                "subspace": "\\underline{Sub. shift}",
+            }
+        )
     df_mean_dataset = (
         df_dataset.groupby(["estimator", "scorer"])[
             "target_accuracy-test-mean", "target_accuracy-test-std"
@@ -295,10 +257,6 @@ for dataset in datasets:
         df_mean_dataset[["estimator", "Mean"]], on="estimator",
     )
     df_tab = df_tab.merge(df_rank, on="estimator")
-    # add a column with mean
-
-    # df_tab = df_tab.reset_index().merge(df_mean_dataset[["estimator", "scorer"]], on="estimator")
-    # df_tab = df_tab.reset_index().merge(df_wilco[["estimator", "pvalue"]], on=["estimator"])
 
     df_tab = df_tab.set_index(["type", "estimator"])
     df_tab = df_tab.round(2)
@@ -361,8 +319,23 @@ for dataset in datasets:
     lat_tab = lat_tab.replace("\multirow[t]", "\multirow")
     lat_tab = lat_tab.replace("bottomrule", "hline")
 
-    lat_tabs.append(lat_tab)
+    # save in txt file
+    with open(f"table_results_{df['dataset'].values[0]}.txt", "w") as f:
+        f.write(lat_tab)
 
-# %%
-print(lat_tabs[7])
-# %%
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Generate table results per dataset"
+    )
+
+    parser.add_argument(
+        "--csv-file",
+        type=str,
+        help="Path to the csv file containing results for one dataset",
+        default='../outputs'
+    )
+
+    args = parser.parse_args()
+
+    df = generate_table_results(args.csv_file)
