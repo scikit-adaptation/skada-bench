@@ -26,7 +26,7 @@ class Solver(DASolver):
     
     default_param_grid = {
         'discriminatorreweightadapter__domain_classifier__estimator_name': ["LR", "SVC", "KNN", "XGB"],
-        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):

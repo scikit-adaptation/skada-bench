@@ -1,0 +1,15 @@
+dataset:
+- Phishing
+solver:
+- PCA:
+    param_grid:
+    - finalestimator__estimator_name:
+      - XGB_subsample0.8_colsample0.65_maxdepth20
+      pca__n_components:
+      - 1
+      - 2
+      - 5
+      - 10
+      - 20
+      - 50
+      - 100

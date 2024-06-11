@@ -1,0 +1,9 @@
+dataset:
+- Simulated
+solver:
+- gaussian_reweight:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC
+      gaussianreweightadapter__reg:
+      - auto

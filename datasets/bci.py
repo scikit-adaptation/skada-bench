@@ -29,7 +29,7 @@ class Dataset(BaseDataset):
 
     install_cmd = 'conda'
 
-    requirements = ['mne==1.6.1', 'braindecode', 'moabb', 'pyriemann']
+    requirements = ['mne==1.6.1', 'braindecode==0.8.1', 'moabb==0.5', 'pyriemann==0.3']
 
     parameters = {
         'subject_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],

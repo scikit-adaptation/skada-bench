@@ -1,0 +1,7 @@
+dataset:
+- Mushrooms
+solver:
+- NO_DA_SOURCE_ONLY:
+    param_grid:
+    - finalestimator__estimator_name:
+      - LR

@@ -17,11 +17,20 @@ class Solver(DASolver):
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    default_param_grid = {
-        'otlabelpropadapter__metric': ['sqeuclidean', 'cosine', 'cityblock'],
-        'otlabelpropadapter__reg': [None, 0.1, 1.],
-        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
-    }
+    default_param_grid = [
+        {
+            'otlabelpropadapter__metric': ['sqeuclidean', 'cosine', 'cityblock'],
+            'otlabelpropadapter__reg': [None],
+            'otlabelpropadapter__n_iter_max': [10000],
+            'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        },
+        {
+            'otlabelpropadapter__metric': ['sqeuclidean', 'cosine', 'cityblock'],
+            'otlabelpropadapter__reg': [0.1, 1],
+            'otlabelpropadapter__n_iter_max': [100],
+            'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
+        },
+    ]
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.

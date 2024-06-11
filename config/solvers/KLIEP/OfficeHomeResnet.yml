@@ -1,0 +1,28 @@
+dataset:
+- OfficeHomeResnet
+solver:
+- KLIEP:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.001
+      kliepreweightadapter__cv:
+      - 5
+      kliepreweightadapter__gamma:
+      - 0.0001
+      - 0.001
+      - 0.01
+      - 0.1
+      - 1.0
+      - 10.0
+      - 100.0
+      - 1000.0
+      - auto
+      - scale
+      kliepreweightadapter__max_iter:
+      - 1000
+      kliepreweightadapter__n_centers:
+      - 100
+      kliepreweightadapter__random_state:
+      - 0
+      kliepreweightadapter__tol:
+      - 1.0e-06

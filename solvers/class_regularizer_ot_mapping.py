@@ -26,7 +26,7 @@ class Solver(DASolver):
             'classregularizerotmappingadapter__max_iter': [10],
             'classregularizerotmappingadapter__max_inner_iter': [1000],
             'classregularizerotmappingadapter__tol': [1e-6],
-            'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+            'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
         },
         {
             'classregularizerotmappingadapter__reg_e': [0.5],
@@ -36,7 +36,7 @@ class Solver(DASolver):
             'classregularizerotmappingadapter__max_iter': [10],
             'classregularizerotmappingadapter__max_inner_iter': [1000],
             'classregularizerotmappingadapter__tol': [1e-6],
-            'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+            'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
         },
         {
             'classregularizerotmappingadapter__reg_e': [1.],
@@ -46,7 +46,7 @@ class Solver(DASolver):
             'classregularizerotmappingadapter__max_iter': [10],
             'classregularizerotmappingadapter__max_inner_iter': [1000],
             'classregularizerotmappingadapter__tol': [1e-6],
-            'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+            'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
         }
     ]
 

@@ -39,8 +39,7 @@ class Dataset(BaseDataset):
             ("sci", "talk"),
         ],
         "preprocessing": [
-            "min_hash",
-            "sentence_transformers"
+            "sentence_transformers",
         ]
     }
 

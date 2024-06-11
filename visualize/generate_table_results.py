@@ -35,6 +35,7 @@ import pandas as pd
 import numpy as np
 import re
 import matplotlib.pyplot as plt
+import json
 
 SCORER_DICT = {
     'supervised_scorer': 'SS',
@@ -212,14 +213,11 @@ def generate_df(file_path):
     df['data_name'] = \
         df['data_name'].str.replace(regex_random_state, '', regex=True)
 
-    # Group by 'data_name' and 'solver_name'
-    grouped_df = df.groupby(['data_name', 'solver_name'])
-
     # Exclude specific columns and select only the metrics columns
     exclude_columns = [
         'objective_name',
+        'objective_value',
         'objective_cv_results',
-        'objective_value'
     ]
     metrics_columns = [
         col
@@ -227,8 +225,54 @@ def generate_df(file_path):
         if col.startswith('objective_') and col not in exclude_columns
     ]
 
-    # Compute mean and standard deviation for each metric
-    grouped_df = grouped_df[metrics_columns].agg(['mean', 'std'])
+    def extract_mean_test_cv(text):
+        # This pattern matches the key and the array, including multiline arrays
+        pattern = r"('mean_test_\w+': array\(\[.*?\]\))"
+        result = {}
+        try:
+            matches = re.findall(pattern, text, re.DOTALL)
+            
+            for match in matches:
+                key_pattern = r"'(mean_test_\w+)'"
+                key_match = re.search(key_pattern, match)
+                if key_match:
+                    key = key_match.group(1)
+                    array_pattern = r"array\((\[.*?\])\)"
+                    array_match = re.search(array_pattern, match, re.DOTALL)
+                    if array_match:
+                        array_str = array_match.group(1).replace('\n', '')
+                        array = np.fromstring(array_str.strip('[]'), sep=', ')
+
+                        # We take only the max value in the list
+                        # Since its the one that has been considered
+                        # To chosse the right hps
+                        result[key] = max(array.tolist())
+        except Exception:
+            pass
+
+        return result
+
+    df['cv_score'] = df['objective_cv_results'].apply(lambda x: extract_mean_test_cv(x))
+    df_exploded = pd.json_normalize(df['cv_score'])
+
+    if df_exploded.size != 0:
+        df = pd.concat([df.drop(columns=['cv_score']), df_exploded], axis=1)
+
+
+    # Compute mean and standard deviation for each metric    
+    def identity(x):
+        return json.dumps(x.tolist())
+
+    # Group by 'data_name' and 'solver_name'
+    grouped_df = df.groupby(['data_name', 'solver_name'])
+
+    # Aggregate the specified metrics with mean, std, and identity
+    agg_metrics = grouped_df[metrics_columns].agg([np.mean, np.std, identity])
+
+    if df_exploded.size != 0:
+        agg_mean_cv = grouped_df[df_exploded.columns].agg([identity])
+
+    grouped_df = agg_metrics
 
     # Rename columns --> Remove 'objective_'
     new_column_names = []
@@ -293,10 +337,28 @@ def generate_df(file_path):
                     new_df.columns.get_loc((col[0], col[1], col[2]))
                 ] = row[old_col[0]][old_col[1]]
 
+
+    if df_exploded.size != 0:
+        agg_mean_cv = agg_mean_cv.reset_index()
+        agg_mean_cv.columns = agg_mean_cv.columns.droplevel(1)
+
+        df_melted = agg_mean_cv.melt(id_vars=['data_name', 'solver_name'], var_name='scorer', value_name='cv_score')
+        df_melted['scorer'] = df_melted['scorer'].str.replace('mean_test_', '')
+
+        new_df = new_df.reset_index(names=['index'])
+        new_df[['data_name', 'solver_name']] = pd.DataFrame(new_df['index'].tolist(), index=new_df.index)
+        new_df = new_df.drop(columns = ['index'])
+
+        merged_df = pd.merge(new_df, df_melted, on=['scorer', 'data_name', 'solver_name'], how='outer')
+
+        merged_df = merged_df.set_index(['data_name', 'solver_name'])
+    else:
+        merged_df = new_df
+
     # multi_index = \
     #    pd.MultiIndex.from_tuples(new_df.columns.values[:-1]).append(pd.Index(['scorer']))
     # new_df.columns = multi_index
-    return new_df
+    return merged_df
 
 
 def tabulate_but_better_estimator_index(df, latex_file_name):
@@ -715,8 +777,8 @@ def generate_all_tables(
 
     exlude_solvers = [solver.lower() for solver in exlude_solvers]
 
-    # We remove '[param_grid=default]' in each method name
-    df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=default]')[0]))
+    # We remove '[param_grid=...]' from the dataset name
+    df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=')[0]))
 
     # We keep only the rows with the dataset in the index
     filtered_df = df[
@@ -1374,6 +1436,7 @@ def plot_accuracy_vs_shifts(df, folder, plot_file_name):
     x = np.arange(len(shifts))  # the label locations
     width = 0.05  # the width of the bars
     multiplier = 0
+    offset = 0
 
     for estimator in means.index:
         color_map_key = None
@@ -1536,6 +1599,7 @@ def plot_relative_performances_per_estimator(
     x = np.arange(len(shifts))  # the label locations
     width = 0.05  # the width of the bars
     multiplier = 0
+    offset = 0
 
     for estimator in df.index:
         color_map_key = None

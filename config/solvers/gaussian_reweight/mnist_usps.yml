@@ -1,0 +1,9 @@
+dataset:
+- mnist_usps
+solver:
+- gaussian_reweight:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      gaussianreweightadapter__reg:
+      - auto

@@ -1,0 +1,26 @@
+dataset:
+- Mushrooms
+solver:
+- OTLabelProp:
+    param_grid:
+    - - finalestimator__estimator_name:
+        - LR
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 10000
+        otlabelpropadapter__reg:
+        - null
+      - finalestimator__estimator_name:
+        - LR
+        otlabelpropadapter__metric:
+        - sqeuclidean
+        - cosine
+        - cityblock
+        otlabelpropadapter__n_iter_max:
+        - 100
+        otlabelpropadapter__reg:
+        - 0.1
+        - 1

@@ -1,30 +1,27 @@
 20NewsGroups:
-  Best: XGB
-  BestSVC: SVC
+  Best: SVC_C10.0_Gamma10.0
+  BestSVC: SVC_C10.0_Gamma10.0
 AmazonReview:
-  Best: LR_C200.0
-  BestSVC: SVC_C100.0_Gamma1.0
+  Best: SVC_C1000.0_Gamma0.001
+  BestSVC: SVC_C1000.0_Gamma0.001
 BCI:
-  Best: LR_C0.2
-  BestSVC: SVC_C100.0_Gamma0.1
+  Best: LR_C2.0
+  BestSVC: SVC_C10.0_Gamma0.1
 Mushrooms:
   Best: LR
   BestSVC: SVC
 Office31:
-  Best: LR_C0.2
+  Best: LR_C0.01
   BestSVC: SVC
 OfficeHomeResnet:
   Best: SVC_C10.0_Gamma0.001
   BestSVC: SVC_C10.0_Gamma0.001
 Phishing:
   Best: XGB_subsample0.8_colsample0.65_maxdepth20
-  BestSVC: SVC_C10.0_Gamma0.1
+  BestSVC: SVC_C100.0_Gamma0.1
+Simulated:
+  Best: SVC
+  BestSVC: SVC
 mnist_usps:
   Best: SVC_C10.0_Gamma0.01
   BestSVC: SVC_C10.0_Gamma0.01
-mnist_usps[n_samples_source=10000,n_samples_target=10000]:
-  Best: LR
-  BestSVC: SVC
-mnist_usps[n_samples_source=3000,n_samples_target=3000]:
-  Best: LR
-  BestSVC: SVC

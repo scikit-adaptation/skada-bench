@@ -1,0 +1,9 @@
+dataset:
+- AmazonReview
+solver:
+- DASVM:
+    param_grid:
+    - dasvmclassifier__base_estimator__estimator_name:
+      - SVC_C1000.0_Gamma0.001
+      dasvmclassifier__max_iter:
+      - 200

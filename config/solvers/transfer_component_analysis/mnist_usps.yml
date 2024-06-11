@@ -1,0 +1,16 @@
+dataset:
+- mnist_usps
+solver:
+- transfer_component_analysis:
+    param_grid:
+    - finalestimator__estimator_name:
+      - SVC_C10.0_Gamma0.01
+      transfercomponentanalysisadapter__kernel:
+      - rbf
+      transfercomponentanalysisadapter__mu:
+      - 10
+      - 100
+      transfercomponentanalysisadapter__n_components:
+      - 5
+      - 10
+      - 20

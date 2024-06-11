@@ -1,0 +1,16 @@
+dataset:
+- Phishing
+solver:
+- transfer_component_analysis:
+    param_grid:
+    - finalestimator__estimator_name:
+      - XGB_subsample0.8_colsample0.65_maxdepth20
+      transfercomponentanalysisadapter__kernel:
+      - rbf
+      transfercomponentanalysisadapter__mu:
+      - 10
+      - 100
+      transfercomponentanalysisadapter__n_components:
+      - 5
+      - 10
+      - 20

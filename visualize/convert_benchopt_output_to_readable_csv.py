@@ -18,6 +18,7 @@ Arguments:
     --domain:    Specify whether to output the results of the 'target' or 'source' domains.
     --output:    Path to the directory where the cleaned CSV file will be saved.
                  Default is './cleaned_outputs'.
+    --file_name: Name of the output file
 
 Example:
     python clean_benchopt_output_to_readable_format.py --directory ../outputs --domain target --output ./cleaned_outputs
@@ -36,9 +37,21 @@ from generate_table_results import (
     ESTIMATOR_DICT,
 )
 
-def clean_benchopt_df(df, domain):
-    # We remove '[param_grid=default]' in each method name
-    df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=default]')[0]))
+def clean_benchopt_df(df, domain, dataset_params):
+    # We remove '[param_grid=...]' from the dataset name
+    df['params'] = df.index.map(lambda x: (x[1].split('[param_grid=')[1][:-1]))
+    df.index = df.index.map(lambda x: (x[0], x[1].split('[param_grid=')[0]))
+
+    dataset_params = [param.lower() for param in dataset_params]
+
+    # We keep only the rows with the dataset_params in the index
+    for dataset_param in dataset_params:
+        df = df[
+            [
+                dataset_param in index_tuple[0].lower()
+                for index_tuple in df.index
+            ]
+        ]
 
     # We keep only the columns domain/test + the scorer column
     filtered_columns = [
@@ -50,6 +63,13 @@ def clean_benchopt_df(df, domain):
     ]
 
     filtered_columns.append('scorer')
+
+    if 'params' in df.columns:
+        filtered_columns.append('params')
+    
+    if 'cv_score' in df.columns:
+        filtered_columns.append('cv_score')
+
     df = df.loc[:, filtered_columns]
 
     # Get df for the best unsupervised scorer
@@ -59,6 +79,7 @@ def clean_benchopt_df(df, domain):
         best_unsupervised,
         specific_col = (domain + '_accuracy', 'test', 'mean'),
     )
+    
 
     # Remove NO_DA methods from the best_unsupervised df
     no_da_methods = [solver for solver in DA_TECHNIQUES['NO DA']]
@@ -81,14 +102,14 @@ def clean_benchopt_df(df, domain):
 
     # Rename the columns by concatenating the tuples with a hyphen, except 'scorer'
     df.columns = [
-        '-'.join([col[0], col[2]])
+        '-'.join([col[0], col[1], col[2]])
         if isinstance(col, tuple) and len(col) > 2
         else col
         for col in df.columns
     ]
 
     # Remove the domain in col names since here its implied
-    df.columns = [col.replace(domain + '_', '') for col in df.columns]
+    #df.columns = [col.replace(domain + '_', '') for col in df.columns]
 
     # Move dataset name and estimator from index
     df['dataset'] = [index_tuple[0] for index_tuple in df.index]
@@ -129,6 +150,7 @@ def clean_benchopt_df(df, domain):
         ['dataset', 'shift', 'estimator', 'scorer', 'type'] +
         [col for col in df.columns if col not in ['dataset', 'shift', 'estimator', 'scorer', 'type']]
     ]
+
     return df
 
 
@@ -160,6 +182,20 @@ if __name__ == "__main__":
         default='./cleaned_outputs'
     )
 
+    parser.add_argument(
+        "--dataset_params",
+        nargs="+",
+        help="Dataset parameters to select the results",
+        default=[]
+    )
+
+    parser.add_argument(
+        "--file_name",
+        type=str,
+        help="Name of the output file",
+        default="results"
+    )
+
     args = parser.parse_args()
 
     # Step 1: Load the Data
@@ -168,11 +204,11 @@ if __name__ == "__main__":
 
     print(f"Using {args.domain} domain to generate csv file")
     # Step 2: Clean the dataframe
-    df = clean_benchopt_df(df, args.domain)
+    df = clean_benchopt_df(df, args.domain, args.dataset_params)
 
     # Step 3: Export to CSV
     output_directory = args.output
 
     os.makedirs(output_directory, exist_ok=True)
 
-    df.to_csv(output_directory + '/readable_csv.csv', index=False)
+    df.to_csv(output_directory + '/%s.csv'%args.file_name, index=False)

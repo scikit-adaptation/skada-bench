@@ -20,7 +20,7 @@ class Solver(DASolver):
     default_param_grid = {
         'linearotmappingadapter__reg': [1e-08, 1e-06, 0.1, 1, 10],
         'linearotmappingadapter__bias': [True, False],
-        'finalestimator__estimator_name': ["LR", "SVC", "SVC_mnist_usps", "XGB"],
+        'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
     def get_estimator(self):
