@@ -58,7 +58,6 @@ def generate_table_results(
 
     if dataset == "simulated":
         df = pd.read_csv(csv_file_simulated)
-        print(df)
     else:
         df = pd.read_csv(csv_file)
         df = df.query("dataset == @dataset")
