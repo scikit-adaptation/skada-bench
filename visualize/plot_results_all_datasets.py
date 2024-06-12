@@ -15,9 +15,6 @@ def shade_of_color_pvalue(
     max_value=1,
     color_threshold=0.05,
 ):
-    # If is_delta_table, we want green > 0
-    # red < 0 and transparent = 0
-
     # Intensity range for the green and red colors
     intensity_range = (10, 60)
 
@@ -58,12 +55,10 @@ def shade_of_color_pvalue(
             return df_value
 
 
-def generate_table(directory, scorer_selection="unsupervised"):
-    files = glob.glob(f"{directory}/*readable.csv")
-    df = pd.concat([pd.read_csv(file) for file in files])
+def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"):
+    df = pd.read_csv(csv_file)
 
-    df_simulated = df.query("dataset == 'simulated'")
-    df = df.query("dataset != 'simulated'")
+    df_simulated = pd.read_csv(csv_file_simulated)
 
     df_simulated["dataset"] = df_simulated["shift"]
 
@@ -429,11 +424,19 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--directory",
+        "--csv-file",
         type=str,
-        help="Path to the directory containing CSV or Parquet files",
-        default="../outputs",
+        help="Path to the csv file containing results for real data",
+        default='./readable_csv/results_all_datasets_experiments.csv'
     )
+
+    parser.add_argument(
+        "--csv-file-simulated",
+        type=str,
+        help="Path to the csv file containing results for simulated data",
+        default='./readable_csv/simulated_31_05_readable.csv'
+    )
+
     parser.add_argument(
         "--scorer-selection",
         type=str,
@@ -441,4 +444,4 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    df = generate_table(args.directory, args.scorer_selection)
+    df = generate_table(args.csv_file, args.csv_file_simulated, args.scorer_selection)

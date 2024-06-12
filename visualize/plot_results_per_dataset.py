@@ -35,22 +35,29 @@ def shade_of_color(
         return final_value
 
 
-def generate_table_results(csv_file):
-    df = pd.read_csv(csv_file)
+def generate_table_results(
+    dataset,
+    csv_file,
+    csv_file_simulated,
+):
+    if dataset == "simulated":
+        df = pd.read_csv(csv_file_simulated)
+        print(df)
+    else:
+        df = pd.read_csv(csv_file)
+        df = df.query("dataset == @dataset")
+
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 
     df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
         lambda x: json.loads(x)
     )
 
-    df["nb_splits"] = df["target_accuracy-test-identity"].apply(
-        lambda x: len(x)
-    )
+    df["nb_splits"] = df["target_accuracy-test-identity"].apply(lambda x: len(x))
 
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
     df_source = df.query(
-        'estimator == "Train Src" & scorer !='
-        '"supervised" & scorer != "best_scorer"'
+        'estimator == "Train Src" & scorer !=' '"supervised" & scorer != "best_scorer"'
     )
     idx_source_best_scorer = df_source.groupby(["shift"])[
         "target_accuracy-test-mean"
@@ -114,19 +121,16 @@ def generate_table_results(csv_file):
 
     # create the table
     df_tab = df_dataset.pivot(
-        index="shift", columns=["type", "estimator"],
-        values="target_accuracy-test-mean"
+        index="shift", columns=["type", "estimator"], values="target_accuracy-test-mean"
     )
     df_tab_acc_std = df_dataset.pivot(
         index="shift", columns=["type", "estimator"], values="acc_std"
     )
     df_tab = df_tab.reindex(
-        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"],
-        level=0
+        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
     )
     df_tab_acc_std = df_tab_acc_std.reindex(
-        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"],
-        level=0
+        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
     )
 
     df_tab = df_tab.reindex(
@@ -254,7 +258,8 @@ def generate_table_results(csv_file):
         + df_mean_dataset["target_accuracy-test-std"].round(2).astype(str)
     )
     df_tab_acc_std = df_tab_acc_std.reset_index().merge(
-        df_mean_dataset[["estimator", "Mean"]], on="estimator",
+        df_mean_dataset[["estimator", "Mean"]],
+        on="estimator",
     )
     df_tab = df_tab.merge(df_rank, on="estimator")
 
@@ -325,17 +330,26 @@ def generate_table_results(csv_file):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Generate table results per dataset"
-    )
+    parser = argparse.ArgumentParser(description="Generate table results per dataset")
+
+    parser.add_argument("--dataset", type=str, help="dataset name", default="simulated")
 
     parser.add_argument(
         "--csv-file",
         type=str,
-        help="Path to the csv file containing results for one dataset",
-        default='../outputs'
+        help="Path to the csv file containing results for real data",
+        default="./readable_csv/results_all_datasets_experiments.csv",
+    )
+
+    parser.add_argument(
+        "--csv-file-simulated",
+        type=str,
+        help="Path to the csv file containing results for simulated data",
+        default="./readable_csv/simulated_31_05_readable.csv",
     )
 
     args = parser.parse_args()
 
-    df = generate_table_results(args.csv_file)
+    df = generate_table_results(
+        args.dataset, args.csv_file, args.csv_file_simulated
+    )

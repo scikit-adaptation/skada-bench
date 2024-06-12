@@ -2,18 +2,14 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-import glob
 import numpy as np
 import json
 import argparse
 
-# %%
 
-def generate_scatter(directory):
-    files = glob.glob(f"{directory}/*readable.csv")
-    df = pd.concat([pd.read_csv(file) for file in files])
+def generate_scatter(csv_file):
+    df = pd.read_csv(csv_file)
 
-    df = df.query("dataset != 'simulated'")
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
     df_source = df.query('estimator == "Train Src" & scorer == "best_scorer"')
     df = df.merge(
@@ -212,12 +208,12 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--directory",
+        "--csv-file",
         type=str,
-        help="Path to the directory containing CSV or Parquet files",
-        default='../outputs'
+        help="Path to the csv file containing results for real data",
+        default='./readable_csv/results_all_datasets_experiments.csv'
     )
 
     args = parser.parse_args()
 
-    df = generate_scatter(args.directory)
+    df = generate_scatter(args.csv_file)
