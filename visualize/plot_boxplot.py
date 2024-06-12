@@ -8,9 +8,11 @@ import argparse
 
 def generate_boxplot(csv_file):
     df = pd.read_csv(csv_file)
+    df_rm_supervised = df.query("scorer != 'supervised' & scorer != 'best_scorer'")
+    df_rm_supervised = df_rm_supervised.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 
     df_best_scorer = (
-        df.groupby(["estimator", "scorer"])[
+        df_rm_supervised.groupby(["estimator", "scorer"])[
             "target_accuracy-test-mean"
         ]
         .mean()

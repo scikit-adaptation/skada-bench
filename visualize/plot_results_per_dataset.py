@@ -39,8 +39,10 @@ def generate_table_results(
     dataset,
     csv_file,
     csv_file_simulated,
-):  
+):
     df_base = pd.read_csv(csv_file)
+    df_base = df_base.query("scorer != 'supervised' & scorer != 'best_scorer'")
+    df_base = df_base.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
     df_best_scorer = (
         df_base.groupby(["estimator", "scorer"])[
             "target_accuracy-test-mean"
