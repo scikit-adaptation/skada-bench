@@ -8,6 +8,21 @@ import argparse
 
 def generate_boxplot(csv_file):
     df = pd.read_csv(csv_file)
+    df_rm_supervised = df.query("scorer != 'supervised' & scorer != 'best_scorer'")
+    df_rm_supervised = df_rm_supervised.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
+
+    df_best_scorer = (
+        df_rm_supervised.groupby(["estimator", "scorer"])[
+            "target_accuracy-test-mean"
+        ]
+        .mean()
+        .reset_index()
+    )
+
+    idx_best_scorer = df_best_scorer.groupby(["estimator"])[
+        "target_accuracy-test-mean"
+    ].idxmax()
+    df_best_scorer = df_best_scorer.loc[idx_best_scorer]
 
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
     df_source = df.query('estimator == "Train Src" & scorer == "best_scorer"')
@@ -54,7 +69,6 @@ def generate_boxplot(csv_file):
         df_tot["target_accuracy-test-mean"] - df_tot["target_accuracy-test-mean_supervised"]
     )
 
-    df_best_scorer = pd.read_csv("./best_scorer.csv")
     df_tot = df_tot.merge(
         df_best_scorer[
             [
