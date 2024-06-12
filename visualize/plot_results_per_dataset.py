@@ -39,7 +39,21 @@ def generate_table_results(
     dataset,
     csv_file,
     csv_file_simulated,
-):
+):  
+    df_base = pd.read_csv(csv_file)
+    df_best_scorer = (
+        df_base.groupby(["estimator", "scorer"])[
+            "target_accuracy-test-mean"
+        ]
+        .mean()
+        .reset_index()
+    )
+
+    idx_best_scorer = df_best_scorer.groupby(["estimator"])[
+        "target_accuracy-test-mean"
+    ].idxmax()
+    df_best_scorer = df_best_scorer.loc[idx_best_scorer]
+
     if dataset == "simulated":
         df = pd.read_csv(csv_file_simulated)
         print(df)
@@ -95,7 +109,6 @@ def generate_table_results(
         "target_accuracy-test-mean"
     ].rank(ascending=False)
 
-    df_best_scorer = pd.read_csv("./best_scorer.csv")
     df_dataset = df.merge(
         df_best_scorer[
             [
