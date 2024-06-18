@@ -17,6 +17,7 @@ with safe_import_context() as import_ctx:
         DeepEmbeddedValidation,
         CircularValidation,
     )
+
     from skada.model_selection import (
         StratifiedDomainShuffleSplit,
         DomainShuffleSplit
@@ -27,6 +28,7 @@ with safe_import_context() as import_ctx:
     from xgboost import XGBClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
+    from .scorers import CRITERIONS
 
 
 LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
@@ -101,14 +103,7 @@ class DASolver(BaseSolver):
         "pip:xgboost",
     ]
 
-    criterions = {
-        'supervised': SupervisedScorer(),
-        'prediction_entropy': PredictionEntropyScorer(),
-        'importance_weighted': ImportanceWeightedScorer(),
-        'soft_neighborhood_density': SoftNeighborhoodDensity(),
-        'deep_embedded_validation': DeepEmbeddedValidation(),
-        'circular_validation': CircularValidation()
-    }
+    criterions = CRITERIONS
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
