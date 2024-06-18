@@ -1,3 +1,19 @@
+import os
+import re
+import json
+import numpy as np
+import pandas as pd
+
+SOURCE_TARGET_ACRONYMS = {
+    'amazon': 'amz',
+    'caltech': 'cal',
+    'dslr': 'dsl',
+    'webcam': 'web',
+    'enlarging': 'enl',
+    'tapering': 'tap',
+}
+
+
 def generate_df(file_path):
     # Read the CSV or Parquet file into a pandas DataFrame
     if file_path.endswith(".csv"):
