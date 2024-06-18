@@ -1,0 +1,13 @@
+benchopt @ git+https://github.com/benchopt/benchopt.git
+skada @ git+https://github.com/scikit-adaptation/skada.git
+seaborn==0.12.2
+pandas==1.5.3
+torch==2.2.1
+torchvision==0.17.1
+POT==0.9.1
+xgboost==2.0.3
+mne==1.6.1
+braindecode==0.8.1
+moabb==0.5
+pyriemann==0.3
+sentence_transformers==3.0.0

@@ -21,8 +21,6 @@ class Dataset(BaseDataset):
 
     install_cmd = 'conda'
 
-    requirements = ['scikit-learn']
-
     references = [
         "Dai W., Yang Q., Xue G., and Yu Y, "
         "'Boosting for transfer learning' "

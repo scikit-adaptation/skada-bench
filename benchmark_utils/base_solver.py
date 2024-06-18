@@ -9,15 +9,6 @@ with safe_import_context() as import_ctx:
     import os
     from sklearn.base import clone
     from sklearn.model_selection import GridSearchCV
-    from skada.metrics import (
-        SupervisedScorer,
-        PredictionEntropyScorer,
-        ImportanceWeightedScorer,
-        SoftNeighborhoodDensity,
-        DeepEmbeddedValidation,
-        CircularValidation,
-    )
-
     from skada.model_selection import (
         StratifiedDomainShuffleSplit,
         DomainShuffleSplit
@@ -100,7 +91,7 @@ class DASolver(BaseSolver):
     sampling_strategy = "run_once"
 
     requirements = [
-        "pip:xgboost",
+        "pip:xgboost==2.0.3",
     ]
 
     criterions = CRITERIONS
