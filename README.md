@@ -7,8 +7,10 @@ To reproduce the results in this paper, you have three options:
 - **Start from Scratch (Step 1):** Generate new config files and proceed from there.
 
 We provided all the necessary files for running each step without the need for
-running the previous one. 
+running the previous one.
 
+If you want to add new solvers, dataset or scorers just follow the instructions in the
+CONTRIBUTE.md file.
 
 ## Requirements
 
