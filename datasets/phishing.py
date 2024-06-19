@@ -18,7 +18,10 @@ class Dataset(BaseDataset):
 
     install_cmd = "conda"
 
-    requirements = ["scikit-learn"]
+    requirements = [
+        "pip:scipy"
+        "pip:pandas==1.5.3"
+    ]
 
     references = [
         "R. Mohammad, F. Thabtah, L. Mccluskey,"
