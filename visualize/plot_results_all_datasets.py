@@ -64,9 +64,9 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
 
     df = pd.concat([df, df_simulated])
 
-    df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
+    df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'").copy()
 
-    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
+    df.loc[:, "target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
         lambda x: json.loads(x)
     )
 
@@ -152,6 +152,7 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
                 stats.wilcoxon(
                     acc_da,
                     acc_source,
+                    method="approx",
                 )[1]
             )
             scorer.append(df_["scorer"].values[0])
@@ -389,6 +390,17 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
 
     df_tab = df_tab.fillna("\\color{gray!90}NA")
 
+
+    # # Disable escaping by using the Styler's format method
+    # styled_df = df_tab.style.format(escape="latex")
+
+    # # Convert the styled DataFrame to LaTeX format
+    # lat_tab = styled_df.to_latex(
+    #     multicol_align="c",
+    #     #multirow=True,
+    #     column_format="|l|l||rrrr||rrr|rr|rr|r||rr|"
+    # )
+
     # convert to latex
     lat_tab = df_tab.to_latex(
         escape=False,
@@ -396,6 +408,7 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
         multirow=True,
         column_format="|l|l||rrrr||rrr|rr|rr|r||rr|",
     )
+
     lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
     lat_tab = lat_tab.replace("toprule", "hline")
     lat_tab = lat_tab.replace("midrule", "hline")

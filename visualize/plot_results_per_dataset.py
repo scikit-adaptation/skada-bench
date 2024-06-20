@@ -62,9 +62,9 @@ def generate_table_results(
         df = pd.read_csv(csv_file)
         df = df.query("dataset == @dataset")
 
-    df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
+    df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'").copy()
 
-    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
+    df.loc[:, "target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
         lambda x: json.loads(x)
     )
 
@@ -255,9 +255,9 @@ def generate_table_results(
             }
         )
     df_mean_dataset = (
-        df_dataset.groupby(["estimator", "scorer"])[
+        df_dataset.groupby(["estimator", "scorer"])[[
             "target_accuracy-test-mean", "target_accuracy-test-std"
-        ]
+        ]]
         .mean()
         .reset_index()
     )
