@@ -19,8 +19,6 @@ class Dataset(BaseDataset):
     # Name to select the dataset in the CLI and to display the results.
     name = "20NewsGroups"
 
-    install_cmd = 'conda'
-
     references = [
         "Dai W., Yang Q., Xue G., and Yu Y, "
         "'Boosting for transfer learning' "

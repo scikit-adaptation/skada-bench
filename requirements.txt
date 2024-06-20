@@ -1,0 +1,30 @@
+# Mandatory to run benchmarks
+benchopt @ git+https://github.com/benchopt/benchopt.git
+
+# Mandatory for visualization scripts
+seaborn==0.12.2
+
+# Already required-by benchopt
+# pandas==1.5.3
+# numpy==1.24.4
+# matplotlib==3.8.2
+# scipy==1.10.1
+
+# For preprocessing scripts
+sentence_transformers==3.0.0
+skrub==0.1.1
+torch==2.2.1
+torchvision==0.17.1
+scikit-learn==1.4.0
+
+# Imported with benchopt install
+# skada @ git+https://github.com/scikit-adaptation/skada.git
+# torch==2.2.1
+# torchvision==0.17.1
+# POT==0.9.1
+# xgboost==2.0.3
+# mne==1.6.1
+# braindecode==0.8.1
+# moabb==0.5
+# pyriemann==0.3
+# sentence_transformers==3.0.0

@@ -17,10 +17,6 @@ class Dataset(BaseDataset):
     # Name to select the dataset in the CLI and to display the results.
     name = "Mushrooms"
 
-    install_cmd = 'conda'
-
-    requirements = ['scikit-learn']
-
     references = [
         "Dai W., Yang Q., Xue G., and Yu Y, "
         "'Boosting for transfer learning' "

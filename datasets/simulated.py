@@ -1,6 +1,7 @@
 from benchopt import BaseDataset
-from skada.datasets import make_shifted_datasets
 
+with safe_import_context() as import_ctx:
+    from skada.datasets import make_shifted_datasets
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
 class Dataset(BaseDataset):

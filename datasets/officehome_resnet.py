@@ -1,6 +1,6 @@
 from benchopt import BaseDataset, safe_import_context
+
 with safe_import_context() as import_ctx:
-    import scipy
     import numpy as np
     from sklearn.decomposition import PCA
     from sklearn.preprocessing import LabelEncoder
@@ -13,10 +13,6 @@ class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
     name = "OfficeHomeResnet"
-
-    requirements = [
-        "pip:scipy"
-    ]
 
     # List of parameters to generate the datasets. The benchmark will consider
     # the cross product for each key in the dictionary.

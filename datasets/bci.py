@@ -27,8 +27,6 @@ class Dataset(BaseDataset):
     # Name to select the dataset in the CLI and to display the results.
     name = "BCI"
 
-    install_cmd = 'conda'
-
     requirements = ['mne==1.6.1', 'braindecode==0.8.1', 'moabb==0.5', 'pyriemann==0.3']
 
     parameters = {

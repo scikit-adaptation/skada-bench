@@ -16,13 +16,6 @@ class Dataset(BaseDataset):
     # Name to select the dataset in the CLI and to display the results.
     name = "Phishing"
 
-    install_cmd = "conda"
-
-    requirements = [
-        "pip:scipy"
-        "pip:pandas==1.5.3"
-    ]
-
     references = [
         "R. Mohammad, F. Thabtah, L. Mccluskey,"
         "'An assessment of features related to phishing websites using an automated technique' "
