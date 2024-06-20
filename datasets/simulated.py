@@ -1,4 +1,4 @@
-from benchopt import BaseDataset
+from benchopt import BaseDataset, safe_import_context
 
 with safe_import_context() as import_ctx:
     from skada.datasets import make_shifted_datasets
