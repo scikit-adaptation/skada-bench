@@ -401,12 +401,26 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
     #     column_format="|l|l||rrrr||rrr|rr|rr|r||rr|"
     # )
 
-    # convert to latex
-    lat_tab = df_tab.to_latex(
-        escape=False,
-        multicolumn_format="c",
-        multirow=True,
+    # # convert to latex
+    # lat_tab = df_tab.to_latex(
+    #     escape=False,
+    #     multicolumn_format="c",
+    #     multirow=True,
+    #     column_format="|l|l||rrrr||rrr|rr|rr|r||rr|",
+    # )
+
+    # Create a Styler object
+    styler = df_tab.style
+
+    # Apply your desired styles and formatting (customize as needed)
+    styler = styler.format(precision=2)
+
+    # Convert to LaTeX
+    lat_tab = styler.to_latex(
         column_format="|l|l||rrrr||rrr|rr|rr|r||rr|",
+        multicol_align="c",
+        multirow_align="c",
+        hrules=True,
     )
 
     lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
