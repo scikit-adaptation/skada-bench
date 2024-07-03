@@ -39,7 +39,6 @@ class Dataset(BaseDataset):
             ('realworld', 'clipart'),
             ('realworld', 'product'),
         ],
-        'n_components': [100]
     }
 
     path_dataset = "data/OfficeHome.zip"
