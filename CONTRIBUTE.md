@@ -9,6 +9,10 @@ Welcome to the DA-Bench project! We appreciate your interest in contributing to 
     - [Example](#example-dataset)
 3. [Adding a New Scorer](#adding-a-new-scorer)
     - [Example](#example-scorer)
+4. [Contributing to the Repository](#contributing-to-the-repository)
+    - [Opening Pull Requests](#opening-pull-requests)
+    - [Code Review Process](#code-review-process)
+    - [Reporting Issues](#reporting-issues)
 
 ## Adding a New DA Method
 
@@ -145,4 +149,60 @@ CRITERIONS = {
 }
 ```
 
-For further questions or help, feel free to open an issue on the GitHub repository or contact the maintainers.
+## Contributing to the Repository
+
+We welcome contributions to the DA-Bench project! Here's how you can contribute by opening Pull Requests (PRs) and participating in the development process.
+
+### Opening Pull Requests
+
+1. **Fork the Repository:**
+   - Visit https://github.com/scikit-adaptation/skada-bench
+   - Click the "Fork" button in the top-right corner to create your own copy of the repository.
+
+2. **Clone Your Fork:**
+   ```
+   git clone https://github.com/your-username/skada-bench.git
+   cd skada-bench
+   ```
+
+3. **Create a New Branch:**
+   ```
+   git checkout -b feature/your-feature-name
+   ```
+
+4. **Make Your Changes:**
+   - Add your new DA method, dataset, or scorer as described in the sections above.
+   - Make sure to follow the project's coding style and conventions.
+
+5. **Commit Your Changes:**
+   ```
+   git add .
+   git commit -m "Add a brief, descriptive commit message"
+   ```
+
+6. **Push to Your Fork:**
+   ```
+   git push origin feature/your-feature-name
+   ```
+
+7. **Open a Pull Request:**
+   - Go to https://github.com/scikit-adaptation/skada-bench
+   - Click on "Pull requests" and then the "New pull request" button.
+   - Select your fork and the branch you created.
+   - Fill in the PR template with a clear title and description of your changes.
+
+### Code Review Process
+
+1. **Wait for Review:** Maintainers will review your PR as soon as possible.
+2. **Address Feedback:** If changes are requested, make the necessary updates and push them to your branch.
+3. **Approval and Merge:** Once approved, a maintainer will merge your PR into the main branch.
+
+### Reporting Issues
+
+If you find a bug or have a suggestion for improvement:
+
+1. Check the [Issues](https://github.com/scikit-adaptation/skada-bench/issues) page to see if it has already been reported.
+2. If not, create a new issue with a clear title and detailed description.
+3. Use labels to categorize the issue (e.g., bug, enhancement, question).
+
+Thank you for contributing to DA-Bench! Your efforts help improve the project for everyone in the domain adaptation community.
