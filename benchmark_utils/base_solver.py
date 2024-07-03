@@ -20,6 +20,7 @@ with safe_import_context() as import_ctx:
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
     from .scorers import CRITERIONS
+    import torch
 
 
 LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
@@ -113,6 +114,12 @@ class DASolver(BaseSolver):
     else:
         n_jobs = 1
 
+    # Set device depending on the gpu/cpu available
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+
     @abstractmethod
     def get_estimator(self):
         """Return an estimator compatible with the `sklearn.GridSearchCV`."""
@@ -131,7 +138,8 @@ class DASolver(BaseSolver):
         self.X, self.y, self.sample_domain = X, y, sample_domain
         self.unmasked_y_train = unmasked_y_train
 
-        self.da_estimator = self.get_estimator()
+        n_classes = len(np.unique(self.unmasked_y_train))
+        self.da_estimator = self.get_estimator(n_classes=n_classes, device=self.device)
 
         # check y is discrete or continuous
         self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
