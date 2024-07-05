@@ -14,11 +14,24 @@ CONTRIBUTE.md file.
 
 ## Requirements
 
-To install the necessary requirements, run the following commands:
+To install the necessary requirements to run a benchmark, use the following commands:
 
-```bash
-pip install -r requirements.txt              # Install dependencies
-```
+1. Install the dependencies listed in the `requirements.txt` file:
+   ```bash
+   pip install git+https://github.com/benchopt/benchopt.git
+   ```
+
+2. Install the desired datasets and solvers using `benchopt`. Specify the dataset and solver you want to use (e.g., `simulated` and `bci` solver):
+   ```bash
+   benchopt install . -d simulated -d bci
+   ```
+
+3. [NOT MANDATORY] Install the preprocessing - visualising - all requirements:
+   ```bash
+   pip install requirements_preprocess.txt    # Install preprocessing dependencies
+   pip install requirements_plot.txt          # Install plotting dependencies
+   pip install requirements_all.txt           # Install all dependencies
+   ```
 
 ## Running the Benchmark
 
@@ -29,7 +42,7 @@ pip install -r requirements.txt              # Install dependencies
 Generate the config file for selecting base estimator on source:
 
 ```bash
-python benchmark_utils/generate_base_estim_config.py
+python benchmark_utils/generate_config/generate_base_estim_config.py
 ```
 
 This generates `config/find_best_base_estimators_per_dataset.yml`.
@@ -69,7 +82,7 @@ This generates `config/best_base_estimators.yml`.
 Update the config file per dataset with the best base estimator:
 
 ```bash
-python benchmark_utils/generate_config_per_dataset.py
+python benchmark_utils/generate_config/generate_config_per_dataset.py
 ```
 
 This generates a config file for each dataset in `config/datasets/`.
