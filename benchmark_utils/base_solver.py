@@ -20,9 +20,6 @@ with safe_import_context() as import_ctx:
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
 
-    import sys
-    import os
-
     from scorers import CRITERIONS
 
 
