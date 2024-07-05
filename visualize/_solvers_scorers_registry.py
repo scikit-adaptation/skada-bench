@@ -1,7 +1,7 @@
 """
-This script serves as a central registry for domain adaptation (DA) methods and scorers.
-It provides a comprehensive structure for grouping and referencing various methods used in domain adaptation tasks.
-When adding new methods and new scorers, users need to update the respective dictionaries, ensuring a consistent and organized framework.
+This script serves as a central registry for domain adaptation (DA) methods, scorers, and datasets.
+It provides a comprehensive structure for grouping and referencing various methods and datasets used in domain adaptation tasks.
+When adding new methods, scorers, or datasets, users need to update the respective dictionaries, ensuring a consistent and organized framework.
 
 Domain Adaptation Techniques
 -----------------------------
@@ -9,29 +9,10 @@ Domain Adaptation Techniques
 The `DA_TECHNIQUES` dictionary categorizes different domain adaptation techniques into five groups:
 
 - NO DA: Methods that do not perform domain adaptation.
-  - 'NO_DA_SOURCE_ONLY'
-  - 'NO_DA_TARGET_ONLY'
-
-- Reweighting: Methods that reweight reweight the source data to make it closer to the target data.
-  - 'gaussian_reweight'
-  - 'KLIEP'
-  - ...
-
+- Reweighting: Methods that reweight the source data to make it closer to the target data.
 - Mapping: Methods that find a mapping between the source and target data that minimizes the distribution shift.
-  - 'CORAL'
-  - 'MMDSConS'
-  - ...
-
 - Subspace: Methods that learn a subspace where the source and target data have the same distribution.
-  - 'transfer_component_analysis'
-  - 'subspace_alignment'
-  - ...
-
 - Other: Various other methods that do not fit into the above categories.
-  - 'DASVM'
-  - 'OTLabelProp'
-  - ...
-
 
 Scorer Dictionary
 -----------------
@@ -39,25 +20,20 @@ Scorer Dictionary
 The `SCORER_DICT` dictionary maps scorer methods to their abbreviations.
 These scorers are used to evaluate the performance of domain adaptation techniques.
 
-- 'supervised_scorer': 'SS'
-- 'importance_weighted': 'IWG'
-- 'soft_neighborhood_density': 'SND'
-- 'deep_embedded_validation': 'DV'
-- 'circular_validation': 'CircV'
-- 'prediction_entropy': 'PE'
-
-
 Estimator Dictionary
 --------------------
 
 The `ESTIMATOR_DICT` dictionary maps each domain adaptation method to a corresponding estimator abbreviation.
 This provides a shorthand notation for each technique.
 
-- 'CORAL': 'CORAL'
-- 'KLIEP': 'KLIEP'
-- 'discriminator_reweight': 'Disc. RW'
-- ...
+Dataset Dictionary
+------------------
 
+The `DATASET_DICT` dictionary categorizes different datasets used in domain adaptation tasks into four groups:
+- Computer Vision: Datasets commonly used for computer vision tasks.
+- NLP: Datasets used for natural language processing tasks.
+- Tabular: Datasets in tabular format.
+- Biosignals: Datasets related to biological signals.
 
 Adding a New Method - Scorer
 ----------------------------
@@ -67,8 +43,9 @@ To add a new domain adaptation method or scorer:
 1. Domain Adaptation Technique: Add the method to the appropriate category in the `DA_TECHNIQUES` dictionary.
                                 + Add its abbreviation to the `ESTIMATOR_DICT` dictionary.
 2. Scorer: Add the new scorer method and its abbreviation to the `SCORER_DICT` dictionary.
+3. Dataset: Add the new dataset to the appropriate category in the `DATASET_DICT` dictionary.
 
-This centralized approach ensures that all domain adaptation methods and scorers are consistently organized and easily accessible.
+This centralized approach ensures that all domain adaptation methods, scorers, and datasets are consistently organized and easily accessible.
 """
 
 DA_TECHNIQUES = {
@@ -144,4 +121,23 @@ ESTIMATOR_DICT = {
     'density_reweight': 'Dens. RW',
     'nearest_neighbor_reweight': 'NN RW',
     'OTLabelProp': 'OTLabelProp'
+}
+
+DATASET_DICT = {
+  'Computer_vision': [
+    'Office31',
+    'OfficeHomeResnet',
+    'mnist_usps',
+  ],
+  'NLP': [
+    '20NewsGroups',
+    'AmazonReview',
+  ],
+  'Tabular': [
+    'Mushrooms',
+    'Phishing',
+  ],
+  'Biosignals': [
+    'BCI',
+  ],
 }
