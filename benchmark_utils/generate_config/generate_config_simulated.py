@@ -3,15 +3,15 @@ import importlib.util
 import sys
 import yaml
 
-PATH = Path(__file__).resolve().parents[1]
+PATH_benchmark_utils = Path(__file__).resolve().parents[1]
+PATH_skada_bench = Path(__file__).resolve().parents[2]
+
+sys.path.extend([str(PATH_benchmark_utils), str(PATH_skada_bench)])
 
 if __name__ == "__main__":
-
-    sys.path.append(str(PATH))
-
-    solvers_path = PATH / "solvers"
-    datasets_path = PATH / "datasets"
-    config_path = PATH / "config"
+    solvers_path = PATH_skada_bench / "solvers"
+    datasets_path = PATH_skada_bench / "datasets"
+    config_path = PATH_skada_bench / "config"
 
     filenames = [f for f in solvers_path.iterdir() if f.is_file() and not f.name.startswith('.') and f.suffix == '.py']
 
