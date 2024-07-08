@@ -19,7 +19,8 @@ with safe_import_context() as import_ctx:
     from xgboost import XGBClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
-    from .scorers import CRITERIONS
+
+    from scorers import CRITERIONS
 
 
 LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
