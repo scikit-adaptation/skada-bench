@@ -18,7 +18,7 @@ torchvision==0.17.1
 scikit-learn==1.4.0
 
 # Imported with benchopt install
-skada @ git+https://github.com/scikit-adaptation/skada.git
+skada==0.3.0
 torch==2.2.1
 torchvision==0.17.1
 POT==0.9.1
