@@ -20,6 +20,11 @@ with safe_import_context() as import_ctx:
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
 
+    from pathlib import Path
+    import sys
+    PATH_benchmark_utils = Path(__file__).resolve().parents[0]
+    sys.path.append(str(PATH_benchmark_utils))
+
     from scorers import CRITERIONS
 
 
