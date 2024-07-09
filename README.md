@@ -16,7 +16,7 @@ CONTRIBUTE.md file.
 
 To install the necessary requirements to run a benchmark, use the following commands:
 
-1. Install the dependencies listed in the `requirements.txt` file:
+1. Install the benchopt library:
    ```bash
    pip install git+https://github.com/benchopt/benchopt.git
    ```
@@ -28,9 +28,9 @@ To install the necessary requirements to run a benchmark, use the following comm
 
 3. [NOT MANDATORY] Install the preprocessing - visualising - all requirements:
    ```bash
-   pip install requirements_preprocess.txt    # Install preprocessing dependencies
-   pip install requirements_plot.txt          # Install plotting dependencies
-   pip install requirements_all.txt           # Install all dependencies
+   pip install -r requirements_preprocess.txt    # Install preprocessing dependencies
+   pip install -r requirements_plot.txt          # Install plotting dependencies
+   pip install -r requirements_all.txt           # Install all dependencies
    ```
 
 ## Running the Benchmark
