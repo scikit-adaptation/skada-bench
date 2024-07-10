@@ -10,7 +10,7 @@ We provided all the necessary files for running each step without the need for
 running the previous one.
 
 If you want to add new solvers, dataset or scorers just follow the instructions in the
-CONTRIBUTE.md file.
+[CONTRIBUTE.md](CONTRIBUTE.md) file.
 
 ## Requirements
 
@@ -30,8 +30,14 @@ To install the necessary requirements to run a benchmark, use the following comm
 
 3. Install the desired datasets and solvers using `benchopt`. Specify the dataset and solver you want to use (e.g., `simulated` and `bci` solver):
   ```bash
-  benchopt install . -d simulated -d bci --download
+  benchopt install . -d simulated -d bci [--download]
   ```
+
+**Note:** The `--download` flag is optional but highly recommended. It pre-downloads the datasets, which is particularly useful in the following scenarios:
+
+- When working on large clusters where internet access might be limited on computing nodes.
+- To avoid multiple processes attempting to download data simultaneously.
+- To ensure data is properly loaded when installing the benchmark.
 
 4. [NOT MANDATORY] Install the preprocessing - visualising - all requirements:
   ```bash
@@ -40,8 +46,7 @@ To install the necessary requirements to run a benchmark, use the following comm
   pip install -r requirements_all.txt # Install all dependencies
   ```
 
-> **Note:** If you need to install Python 3.10, you can download it from the 
-> official Python website or use a version manager like pyenv.
+> **Note:** If you need to install Python 3.10, you can download it from the official Python website or use a version manager like pyenv.
 
 
 ## Running the Benchmark
@@ -159,9 +164,7 @@ In the `visualize` folder, run the following commands to generate various result
 
 All the generated tables and plots can be found in the `visualize` folder.
 
-> **Note:** For the `get_computational_time` script, you need to give directly
-> benchopt outputs which are not provided due to size limits (all other results
-> are provided).
+> **Note:** For the `get_computational_time` script, you need to give directly benchopt outputs which are not provided due to size limits (all other results are provided).
 
 
 Happy benchmarking!
