@@ -6,6 +6,8 @@ from benchopt import BaseDataset, safe_import_context
 with safe_import_context() as import_ctx:
     import pandas as pd
     import numpy as np
+    import urllib.request
+    from pathlib import Path
     from scipy.io.arff import loadarff
     from skada.utils import source_target_merge
 
@@ -14,7 +16,7 @@ with safe_import_context() as import_ctx:
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "Phishing"
+    name = "phishing"
 
     references = [
         "R. Mohammad, F. Thabtah, L. Mccluskey,"
@@ -25,6 +27,9 @@ class Dataset(BaseDataset):
     parameters = {
         "source_target": [("ip_adress", "no_ip_adress"), ("no_ip_adress", "ip_adress")],
     }
+
+    path_data = "data/phishing.arff"
+    url_data = "https://figshare.com/ndownloader/files/47541842"
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
@@ -65,7 +70,13 @@ class Dataset(BaseDataset):
             "target",
         ]
 
-        path_data = "./data/phishing/phishing.arff"
+        # Check if data are available
+        # If not, download them
+        path_data = Path(self.path_data)
+        if not path_data.exists():
+            urllib.request.urlretrieve(self.url_data, path_data)
+
+        # Load data
         raw_data = loadarff(path_data)
         data = pd.DataFrame(raw_data[0])
         data.columns = columns
