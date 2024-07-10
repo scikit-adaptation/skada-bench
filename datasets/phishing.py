@@ -16,7 +16,7 @@ with safe_import_context() as import_ctx:
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "phishing"
+    name = "Phishing"
 
     references = [
         "R. Mohammad, F. Thabtah, L. Mccluskey,"
