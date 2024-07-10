@@ -14,24 +14,35 @@ CONTRIBUTE.md file.
 
 ## Requirements
 
+**Note: This project requires Python 3.10.**
+
 To install the necessary requirements to run a benchmark, use the following commands:
 
-1. Install the benchopt library:
-   ```bash
-   pip install git+https://github.com/benchopt/benchopt.git
-   ```
+1. Ensure you have Python 3.10 installed. You can check your Python version with:
+  ```bash
+  python --version
+  ```
 
-2. Install the desired datasets and solvers using `benchopt`. Specify the dataset and solver you want to use (e.g., `simulated` and `bci` solver):
-   ```bash
-   benchopt install . -d simulated -d bci
-   ```
+2. Install the benchopt library:
+  ```bash
+  pip install git+https://github.com/benchopt/benchopt.git@caba28729b34146f66b7bcd2fb72c78500b6a450
+  ```
 
-3. [NOT MANDATORY] Install the preprocessing - visualising - all requirements:
-   ```bash
-   pip install -r requirements_preprocess.txt    # Install preprocessing dependencies
-   pip install -r requirements_plot.txt          # Install plotting dependencies
-   pip install -r requirements_all.txt           # Install all dependencies
-   ```
+3. Install the desired datasets and solvers using `benchopt`. Specify the dataset and solver you want to use (e.g., `simulated` and `bci` solver):
+  ```bash
+  benchopt install . -d simulated -d bci
+  ```
+
+4. [NOT MANDATORY] Install the preprocessing - visualising - all requirements:
+  ```bash
+  pip install -r requirements_preprocess.txt # Install preprocessing dependencies
+  pip install -r requirements_plot.txt # Install plotting dependencies
+  pip install -r requirements_all.txt # Install all dependencies
+  ```
+
+> **Note:** If you need to install Python 3.10, you can download it from the 
+> official Python website or use a version manager like pyenv.
+
 
 ## Running the Benchmark
 

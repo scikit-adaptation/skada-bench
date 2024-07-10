@@ -1,5 +1,8 @@
 # Mandatory to run benchmarks
-benchopt @ git+https://github.com/benchopt/benchopt.git
+benchopt @ git+https://github.com/benchopt/benchopt.git@caba28729b34146f66b7bcd2fb72c78500b6a450
+
+# Mandatory to use slurm
+#benchopt[slurm] @ git+https://github.com/benchopt/benchopt.git@caba28729b34146f66b7bcd2fb72c78500b6a450
 
 # Mandatory for visualization scripts
 seaborn==0.12.2
