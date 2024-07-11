@@ -62,7 +62,7 @@ def generate_scatter(csv_file):
     ]
 
     for i, scorer in enumerate(scorers):
-        df_scorer = df_tot.query(f'scorer == "{scorer}"')
+        df_scorer = df_tot.query(f'scorer == "{scorer}"').copy()
         df_scorer.rename(columns={"type": "Method type", "dataset": "Dataset"}, inplace=True)
         if i < 4:
             sns.scatterplot(
