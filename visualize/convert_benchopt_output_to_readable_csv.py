@@ -29,12 +29,15 @@ import argparse
 
 import pandas as pd
 
-from generate_table_results import (
+from _solvers_scorers_registry import (
+    DA_TECHNIQUES,
+    ESTIMATOR_DICT,
+)
+
+from _utils import (
     process_files_in_directory,
     keep_only_best_scorer_per_estimator,
     regex_match,
-    DA_TECHNIQUES,
-    ESTIMATOR_DICT,
 )
 
 def clean_benchopt_df(df, domain, dataset_params):
