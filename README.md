@@ -68,17 +68,17 @@ This generates `config/find_best_base_estimators_per_dataset.yml`.
 Run base estimator experiments and store the results:
 
 ```bash
-benchopt run --config config/find_best_base_estimators_per_dataset.yml --output results_base_estimators --no-plot --no-html
+benchopt run --config config/find_best_base_estimators_per_dataset.yml --output base_estimators/results_base_estimators --no-plot --no-html
 ```
 
-This generates `outputs/results_base_estimators`.
+This generates `outputs/base_estimators/results_base_estimators`.
 
 #### 1.3 Extract the results
 
 Extract the results and store them in a CSV file `results_base_estimators/`:
 
 ```bash
-python visualize/convert_benchopt_output_to_readable_csv.py --domain source --directory outputs --output results_base_estimators --file_name results_base_estim_experiments
+python visualize/convert_benchopt_output_to_readable_csv.py --domain source --directory outputs/base_estimators --output results_base_estimators --file_name results_base_estim_experiments
 ```
 
 This generates `results_base_estimators/results_base_estim_experiments.csv`.
@@ -108,16 +108,17 @@ This generates a config file for each dataset in `config/datasets/`.
 To launch the benchmark for each dataset, run the following command:
 
 ```bash
-benchopt run --config dataset.yml --timeout 3h --output output_dataset --no-plot --no-html
+benchopt run --config dataset.yml --timeout 3h --output output_directory/output_dataset --no-plot --no-html
 ```
 
 - `dataset.yml`: Config file of the specified dataset.
+- `output_directory`: Name of the output directory (`real_datasets` or `simulated_datasets` depending on your data)
 - `output_dataset`: Name of the output result parquet/csv.
 
 #### Example: Simulated Dataset
 
 ```bash
-benchopt run --config config/datasets/Simulated.yml --timeout 3h --output output_simulated --no-plot --no-html
+benchopt run --config config/datasets/Simulated.yml --timeout 3h --output simulated_datasets/output_simulated --no-plot --no-html
 ```
 
 > **Note:** In the paper results, the timeout was set to 3 hours.
@@ -128,7 +129,7 @@ benchopt run --config config/datasets/Simulated.yml --timeout 3h --output output
 Convert the `benchopt` output into a CSV format:
 
 ```bash
-python visualize/convert_benchopt_output_to_readable_csv.py --directory outputs --domain target --file_name output_readable_dataset
+python visualize/convert_benchopt_output_to_readable_csv.py --directory outputs/simulated_datasets --domain target --file_name output_readable_dataset
 ```
 
 This generates `visualize/cleaned_outputs/output_readable_dataset.csv`. This csv file can then be used by anyone to plot the benchmarking results.
