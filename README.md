@@ -27,7 +27,7 @@ To install the necessary requirements to run a benchmark, use the following comm
 
 2. Install the benchopt library:
   ```bash
-  pip install git+https://github.com/benchopt/benchopt.git@caba28729b34146f66b7bcd2fb72c78500b6a450
+  pip install benchopt==1.6.0
   ```
 
 3. Install the desired datasets and solvers using `benchopt`. Specify the dataset and solver you want to use (e.g., `simulated` and `bci` solver):
