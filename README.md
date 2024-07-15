@@ -32,7 +32,7 @@ To install the necessary requirements to run a benchmark, use the following comm
 
 3. Install the desired datasets and solvers using `benchopt`. Specify the dataset and solver you want to use (e.g., `simulated` and `bci` solver):
   ```bash
-  benchopt install . -d simulated -d bci [--download]
+  benchopt install .  [--download]
   ```
 
 **Note:** The `--download` flag is optional but highly recommended. It pre-downloads the datasets, which is particularly useful in the following scenarios:
