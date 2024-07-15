@@ -12,7 +12,7 @@ running the previous one.
 If you want to add new solvers, dataset or scorers just follow the instructions in the
 [CONTRIBUTE.md](CONTRIBUTE.md) file.
 
-> **Note:** The current implementation closely reproduces the results from the paper, with minor variations in some cases. Expect minor adjustments and enhancements to the codebase in the coming weeks to improve reproducibility. 
+> **Note:** Current implementation reproduces results from the paper, with minor variations in some cases. Expect minor code adjustments in coming weeks to improve reproducibility. A revised paper version with near-exact reproducibility is also planned.
 
 ## Requirements
 
