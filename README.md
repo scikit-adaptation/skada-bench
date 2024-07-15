@@ -48,8 +48,6 @@ To install the necessary requirements to run a benchmark, use the following comm
   pip install -r requirements_all.txt # Install all dependencies
   ```
 
-> **Note:** If you need to install Python 3.10, you can download it from the official Python website or use a version manager like pyenv.
-
 
 ## Running the Benchmark
 
