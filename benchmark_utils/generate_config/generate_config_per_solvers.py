@@ -3,15 +3,15 @@ import importlib.util
 import sys
 import yaml
 
-PATH = Path(__file__).resolve().parents[1]
+PATH_benchmark_utils = Path(__file__).resolve().parents[1]
+PATH_skada_bench = Path(__file__).resolve().parents[2]
+
+sys.path.extend([str(PATH_benchmark_utils), str(PATH_skada_bench)])
 
 if __name__ == "__main__":
-
-    sys.path.append(str(PATH))
-
-    solvers_path = PATH / "solvers"
-    datasets_path = PATH / "datasets"
-    config_path = PATH / "config"
+    solvers_path = PATH_skada_bench / "solvers"
+    datasets_path = PATH_skada_bench / "datasets"
+    config_path = PATH_skada_bench / "config"
 
     filenames = [f for f in solvers_path.iterdir() if f.is_file() and not f.name.startswith('.') and f.suffix == '.py']
 
@@ -35,11 +35,11 @@ if __name__ == "__main__":
         best = best_base_estimators[dataset]["Best"]
         bestSVC = best_base_estimators[dataset]["BestSVC"]
 
-        DD = {}
-        DD["dataset"] = [dataset]
-        DD["solver"] = []
-
         for filepath in filenames:
+            DD = {}
+            DD["dataset"] = [dataset]
+            DD["solver"] = []
+
             name = filepath.stem  # Remove the .py suffix
             print(name)
             spec = importlib.util.spec_from_file_location(name, filepath)
@@ -65,5 +65,7 @@ if __name__ == "__main__":
 
             DD["solver"].append({foo.Solver.name: {"param_grid": [param_grid]}})
 
-        with open(config_path / "datasets" / f"{dataset}.yml", 'w+') as ff:
-            yaml.dump(DD, ff, default_flow_style=False)
+            path = config_path / "solvers" / f"{foo.Solver.name}"
+            path.mkdir(parents=True, exist_ok=True)
+            with open(config_path / "solvers" / f"{foo.Solver.name}" / f"{dataset}.yml", 'w+') as ff:
+                yaml.dump(DD, ff, default_flow_style=False)

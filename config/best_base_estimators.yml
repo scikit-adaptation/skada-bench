@@ -18,7 +18,7 @@ OfficeHomeResnet:
   BestSVC: SVC_C10.0_Gamma0.001
 Phishing:
   Best: XGB_subsample0.8_colsample0.65_maxdepth20
-  BestSVC: SVC_C100.0_Gamma0.1
+  BestSVC: SVC_C10.0_Gamma0.1
 Simulated:
   Best: SVC
   BestSVC: SVC
