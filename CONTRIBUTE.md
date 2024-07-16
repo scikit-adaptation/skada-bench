@@ -1,6 +1,6 @@
-# How to Contribute to DA-Bench
+# How to Contribute to SKADA-Bench
 
-Welcome to the DA-Bench project! We appreciate your interest in contributing to our domain adaptation benchmark. This guide will help you add new DA methods, datasets or scorers to DA-Bench using the `benchopt` framework.
+Welcome to the SKADA-Bench project! We appreciate your interest in contributing to our domain adaptation benchmark. This guide will help you add new DA methods, datasets or scorers to SKADA-Bench using the `benchopt` framework.
 
 ## Table of Contents
 1. [Adding a New DA Method](#adding-a-new-da-method)
@@ -151,7 +151,7 @@ CRITERIONS = {
 
 ## Contributing to the Repository
 
-We welcome contributions to the DA-Bench project! Here's how you can contribute by opening Pull Requests (PRs) and participating in the development process.
+We welcome contributions to the SKADA-Bench project! Here's how you can contribute by opening Pull Requests (PRs) and participating in the development process.
 
 ### Opening Pull Requests
 
@@ -205,4 +205,4 @@ If you find a bug or have a suggestion for improvement:
 2. If not, create a new issue with a clear title and detailed description.
 3. Use labels to categorize the issue (e.g., bug, enhancement, question).
 
-Thank you for contributing to DA-Bench! Your efforts help improve the project for everyone in the domain adaptation community.
+Thank you for contributing to SKADA-Bench! Your efforts help improve the project for everyone in the domain adaptation community.
