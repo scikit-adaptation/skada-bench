@@ -25,6 +25,7 @@ with safe_import_context() as import_ctx:
         SoftNeighborhoodDensity,
         DeepEmbeddedValidation,
         CircularValidation,
+        MixValScorer,
     )
 
 CRITERIONS = {
@@ -33,5 +34,8 @@ CRITERIONS = {
     'importance_weighted': ImportanceWeightedScorer(),
     'soft_neighborhood_density': SoftNeighborhoodDensity(),
     'deep_embedded_validation': DeepEmbeddedValidation(),
-    'circular_validation': CircularValidation()
+    'circular_validation': CircularValidation(),
+    'mix_val_both': MixValScorer(ice_type='both'),
+    'mix_val_inter': MixValScorer(ice_type='inter'),
+    'mix_val_intra': MixValScorer(ice_type='intra'),
 }
