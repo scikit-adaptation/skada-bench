@@ -5,7 +5,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 
-from generate_table_results import (
+from _solvers_scorers_registry import (
     DA_TECHNIQUES,
     ESTIMATOR_DICT,
 )

@@ -22,6 +22,13 @@ with safe_import_context() as import_ctx:
     from .scorers import CRITERIONS
     import torch
 
+    from pathlib import Path
+    import sys
+    PATH_benchmark_utils = Path(__file__).resolve().parents[0]
+    sys.path.append(str(PATH_benchmark_utils))
+
+    from scorers import CRITERIONS
+
 
 LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
              0.2, 0.5, 1., 2., 5., 10., 20.,
