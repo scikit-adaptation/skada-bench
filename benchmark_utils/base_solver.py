@@ -123,8 +123,21 @@ class DASolver(BaseSolver):
     print(f"device: {device}")
 
     @abstractmethod
-    def get_estimator(self):
-        """Return an estimator compatible with the `sklearn.GridSearchCV`."""
+    def get_estimator(self, n_classes=None, device=None):
+        """Return an estimator compatible with the `sklearn.GridSearchCV`.
+
+        Parameters:
+        -----------
+        n_classes : int, optional
+            The number of classes in the target variable.
+        device : torch.device, optional
+            The device (CPU or GPU) to use for computations.
+
+        Returns:
+        --------
+        estimator : object
+            An estimator compatible with sklearn.GridSearchCV.
+        """
         pass
 
     # def get_base_estimator(self):
