@@ -35,9 +35,11 @@ def generate_scatter(csv_file):
     ].reset_index()
 
     # filtering
-    df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
+    df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'").copy()
 
-    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(lambda x: json.loads(x))
+    df.loc[:, "target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
+        lambda x: json.loads(x)
+    )
     df["cv_score"] = df["cv_score"].apply(lambda x: json.loads(x))
 
     df_filtered = df.query("estimator != 'Train Tgt'")
@@ -87,7 +89,7 @@ def generate_scatter(csv_file):
 
     # iterate over axes
     for i, ax in enumerate(axes.flat):
-        df_scorer = df_final.query(f'scorer == "{scorers[i]}"')
+        df_scorer = df_final.query(f'scorer == "{scorers[i]}"').copy()
         df_scorer.rename(
             columns={"type": "Method type", "dataset": "Dataset"},
             inplace=True
@@ -166,7 +168,6 @@ def generate_scatter(csv_file):
                     y="cv_score",
                     ax=axes[j, i],
                     alpha=0.3,
-                    palette="colorblind",
                     edgecolor="gray",
                     linewidth=0,
                     marker=".",
@@ -180,11 +181,10 @@ def generate_scatter(csv_file):
                     legend=False,
                     alpha=0.3,
                     edgecolor="gray",
-                    palette="colorblind",
                     linewidth=0,
                     marker=".",
                 )
-                axes[j, i].legend(fontsize=6)
+                #axes[j, i].legend(fontsize=6)
 
             axes[j, i].set_xlabel("")
             axes[j, i].set_ylabel("")
