@@ -10,7 +10,8 @@ To add a new scorer to the script:
 1. **Import the Scorer**: Add the import statement for the new scorer class within the `safe_import_context` block.
 2. **Update `CRITERIONS` Dictionary**: Add a new entry in the `CRITERIONS` dictionary with the scorer's name and its initialized instance.
 
-This method ensures that all scorers are organized and easily accessible for evaluating domain adaptation methods.
+This method ensures that all scorers are organized and easily accessible
+for evaluating domain adaptation methods.
 """
 from benchopt import safe_import_context
 
