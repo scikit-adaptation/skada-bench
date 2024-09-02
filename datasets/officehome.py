@@ -143,8 +143,6 @@ class Dataset(BaseDataset):
         # Create a DataLoader for the dataset
         dataset = ImageDataset(self.path_extract, transform=preprocess, domain_select=domain_select)
         dataloader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
-        # TODO: set batch_size=len(dataset), rn its 10k for testing purposes ONLY
-        #dataloader = DataLoader(dataset, batch_size=1000, shuffle=True)
 
         images, labels = next(iter(dataloader))
         images = images.numpy()
@@ -152,9 +150,10 @@ class Dataset(BaseDataset):
 
         # Sklearn doesnt accept 4D arrays, thus we need to convert our input
         # from (n, c, w, h) to (n, c * w * h)
+        input_shape = images.shape[1:]
         images = images.reshape((images.shape[0], -1))
 
-        return images, labels
+        return images, labels, input_shape
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
@@ -163,8 +162,8 @@ class Dataset(BaseDataset):
         self._download_and_extract_officehome()
 
         source, target = self.source_target
-        X_source, y_source = self._get_dataset(source)
-        X_target, y_target = self._get_dataset(target)
+        X_source, y_source, input_shape = self._get_dataset(source)
+        X_target, y_target, _ = self._get_dataset(target)
 
         # XGBoost only supports labels in [0, num_classes-1]
         le = LabelEncoder()
@@ -185,4 +184,5 @@ class Dataset(BaseDataset):
             X=X,
             y=y,
             sample_domain=sample_domain,
+            input_shape=input_shape,
         )

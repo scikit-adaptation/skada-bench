@@ -152,9 +152,10 @@ class DASolver(BaseSolver):
     def set_objective(self, X, y, sample_domain, unmasked_y_train, **kwargs):
         self.X, self.y, self.sample_domain = X, y, sample_domain
         self.unmasked_y_train = unmasked_y_train
+        input_shape = kwargs.get('input_shape', None)
 
         n_classes = len(np.unique(self.unmasked_y_train))
-        self.da_estimator = self.get_estimator(n_classes=n_classes, device=self.device)
+        self.da_estimator = self.get_estimator(n_classes=n_classes, input_shape=input_shape, device=self.device)
 
         # check y is discrete or continuous
         self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE

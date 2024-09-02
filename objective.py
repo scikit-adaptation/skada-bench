@@ -50,11 +50,12 @@ class Objective(BaseObjective):
     n_splits_data = 5
     test_size_data = 0.2
 
-    def set_data(self, X, y, sample_domain):
+    def set_data(self, X, y, sample_domain, **kwargs):
         # The keyword arguments of this function are the keys of the dictionary
         # returned by `Dataset.get_data`. This defines the benchmark's
         # API to pass data. This is customizable for each benchmark.
         self.X, self.y, self.sample_domain = X, y, sample_domain
+        self.input_shape = kwargs.get('input_shape', None)
 
         # check y is discrete or continuous
         self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
@@ -239,4 +240,5 @@ class Objective(BaseObjective):
                     sample_domain=sample_domain,
                     unmasked_y_train=unmasked_y_train,
                     dataset_name=self._dataset.name,
+                    input_shape=self.input_shape,
                     )

@@ -16,11 +16,17 @@ with safe_import_context() as import_ctx:
 
 
 class ResNet50WithMLP(nn.Module):
-    def __init__(self, n_classes=2, hidden_size=256):
+    def __init__(self, n_classes=2, hidden_size=256, input_shape=(3, 224, 224)):
         super().__init__()
-     
+        
+        self.input_shape = input_shape
+        in_channels, height, width = input_shape
+
         # Load pre-trained ResNet50
         resnet = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
+        # Modify the first layer if input channels != 3
+        if in_channels != 3:
+            resnet.conv1 = nn.Conv2d(in_channels, 64, kernel_size=7, stride=2, padding=3, bias=False)
         # Remove the last fully connected layer
         self.features = nn.Sequential(*list(resnet.children())[:-1])
         # To flatten the tensor
@@ -34,10 +40,9 @@ class ResNet50WithMLP(nn.Module):
             nn.Linear(hidden_size, n_classes),
             nn.Softmax(dim=1),
         )
-       
 
     def forward(self, x, sample_weight=None):
-        x = x.reshape((x.shape[0], 3, 224, 224))
+        x = x.reshape((x.shape[0], *self.input_shape))
         x = self.features(x)
         x = self.flatten(x)
         x = self.mlp(x)
@@ -62,8 +67,11 @@ class Solver(DASolver):
     }
 
 
-    def get_estimator(self, n_classes, device):
-        model = ResNet50WithMLP(n_classes=n_classes)
+    def get_estimator(self, n_classes, input_shape, device):
+        if input_shape is None:
+            raise ValueError("input_shape cannot be None")
+
+        model = ResNet50WithMLP(n_classes=n_classes, input_shape=input_shape)
         net = DeepCoral(
             model,
             optimizer=Adam,
