@@ -27,7 +27,8 @@ class Dataset(BaseDataset):
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
-        'n_samples_source, n_samples_target': [(3000, 3000)],
+        #'n_samples_source, n_samples_target': [(3000, 3000)],
+        'n_samples_source, n_samples_target': [(None, None)],
         'source_target': [('MNIST', 'USPS'),
                           ('USPS', 'MNIST')],
         'random_state': [27],
@@ -45,7 +46,7 @@ class Dataset(BaseDataset):
             if dataset_name == 'mnist':
                 transform = torchvision.transforms.Compose([
                     torchvision.transforms.ToTensor(),
-                    torchvision.transforms.Pad(2),
+                    #torchvision.transforms.Pad(2),
                     torchvision.transforms.Normalize((0.1307,), (0.3081,)),
                 ])
                 dataset = MNIST(
@@ -57,7 +58,8 @@ class Dataset(BaseDataset):
             elif dataset_name == 'usps':
                 transform = torchvision.transforms.Compose([
                     torchvision.transforms.ToTensor(),
-                    torchvision.transforms.Pad(8),
+                    #torchvision.transforms.Pad(8),
+                    torchvision.transforms.Pad(6),
                     torchvision.transforms.Grayscale(),
                     torchvision.transforms.Normalize((0.1307,), (0.3081,)),
                 ])
@@ -120,7 +122,8 @@ class Dataset(BaseDataset):
         X_target, y_target = self._get_dataset(data, target, self.n_samples_target)
 
         X, y, sample_domain = source_target_merge(
-            X_source, X_target, y_source, y_target)
+            X_source, X_target, y_source, y_target
+        )
 
         return dict(
             X=X,
