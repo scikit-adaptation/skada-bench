@@ -97,6 +97,8 @@ class Objective(BaseObjective):
                                  self.y_train,
                                  sample_domain=self.sample_domain_train
                                  )
+        sample_domain_train_source = self.sample_domain_train[extract_source_indices(self.sample_domain_train)]
+        sample_domain_train_target = self.sample_domain_train[~extract_source_indices(self.sample_domain_train)]
 
         # Test target-source split
         (X_test_source, X_test_target,
@@ -106,26 +108,29 @@ class Objective(BaseObjective):
                                  sample_domain=self.sample_domain_test
                                  )
 
+        sample_domain_test_source = self.sample_domain_test[extract_source_indices(self.sample_domain_test)]
+        sample_domain_test_target = self.sample_domain_test[~extract_source_indices(self.sample_domain_test)]
+
         all_metrics = {}
 
         for criterion, estimator in dict_estimators.items():
             # TRAIN metrics
             # Source accuracy
-            y_pred_train_source = estimator.predict(X_train_source)
-            y_pred_train_source_proba = estimator.predict_proba(X_train_source)
+            y_pred_train_source = estimator.predict(X_train_source, sample_domain = sample_domain_train_source)
+            y_pred_train_source_proba = estimator.predict_proba(X_train_source, sample_domain = sample_domain_train_source)
 
             # Target accuracy
-            y_pred_train_target = estimator.predict(X_train_target)
-            y_pred_train_target_proba = estimator.predict_proba(X_train_target)
+            y_pred_train_target = estimator.predict(X_train_target, sample_domain = sample_domain_train_target)
+            y_pred_train_target_proba = estimator.predict_proba(X_train_target, sample_domain = sample_domain_train_target)
 
             # TEST metrics
             # Source accuracy
-            y_pred_test_source = estimator.predict(X_test_source)
-            y_pred_test_source_proba = estimator.predict_proba(X_test_source)
+            y_pred_test_source = estimator.predict(X_test_source, sample_domain = sample_domain_test_source)
+            y_pred_test_source_proba = estimator.predict_proba(X_test_source, sample_domain = sample_domain_test_source)
 
             # Target accuracy
-            y_pred_test_target = estimator.predict(X_test_target)
-            y_pred_test_target_proba = estimator.predict_proba(X_test_target)
+            y_pred_test_target = estimator.predict(X_test_target, sample_domain = sample_domain_test_target)
+            y_pred_test_target_proba = estimator.predict_proba(X_test_target, sample_domain = sample_domain_test_target)
 
             for metric_name, metric in metrics.items():
                 if metric_name == 'roc_auc_score':
