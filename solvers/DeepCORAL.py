@@ -20,7 +20,7 @@ class ResNet50WithMLP(nn.Module):
         super().__init__()
         
         self.input_shape = input_shape
-        in_channels, height, width = input_shape
+        in_channels = input_shape[0]  # First dimension is always the number of channels
 
         # Load pre-trained ResNet50
         resnet = models.resnet50(weights=models.ResNet50_Weights.IMAGENET1K_V1)
@@ -68,9 +68,6 @@ class Solver(DASolver):
 
 
     def get_estimator(self, n_classes, input_shape, device):
-        if input_shape is None:
-            raise ValueError("input_shape cannot be None")
-
         model = ResNet50WithMLP(n_classes=n_classes, input_shape=input_shape)
         net = DeepCoral(
             model,
