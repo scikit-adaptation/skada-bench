@@ -28,7 +28,7 @@ class Dataset(BaseDataset):
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
         #'n_samples_source, n_samples_target': [(3000, 3000)],
-        'n_samples_source, n_samples_target': [(None, None)],
+        'n_samples_source, n_samples_target': [(1000, 1000)],
         'source_target': [('MNIST', 'USPS'),
                           ('USPS', 'MNIST')],
         'random_state': [27],
@@ -48,6 +48,7 @@ class Dataset(BaseDataset):
                     torchvision.transforms.ToTensor(),
                     #torchvision.transforms.Pad(2),
                     torchvision.transforms.Normalize((0.1307,), (0.3081,)),
+                    torchvision.transforms.Lambda(lambda x: x.repeat(3, 1, 1)),  # Repeat grayscale 3 times
                 ])
                 dataset = MNIST(
                     root='./data/MNIST',
@@ -62,6 +63,8 @@ class Dataset(BaseDataset):
                     torchvision.transforms.Pad(6),
                     torchvision.transforms.Grayscale(),
                     torchvision.transforms.Normalize((0.1307,), (0.3081,)),
+                    torchvision.transforms.Lambda(lambda x: x.repeat(3, 1, 1)),  # Repeat grayscale 3 times
+
                 ])
                 dataset = USPS(
                     root='./data/USPS',
@@ -84,8 +87,6 @@ class Dataset(BaseDataset):
                     embeddings.append(images)
             embeddings = torch.cat(embeddings, dim=0)
             embeddings = embeddings.cpu().numpy()
-            input_shape = embeddings.shape[1:]
-            embeddings = embeddings.reshape(embeddings.shape[0], -1)
 
             # Save the preprocessed data
             preprocessed_data[dataset_name] = {
@@ -93,7 +94,7 @@ class Dataset(BaseDataset):
                 'y': np.concatenate([y for _, y in dataloader])
             }
 
-        return preprocessed_data, input_shape
+        return preprocessed_data
 
 
 
@@ -116,7 +117,7 @@ class Dataset(BaseDataset):
         # API to pass data. It is customizable for each benchmark.
 
         # Generate pseudorandom data using `numpy`.
-        data, input_shape = self._download_data()
+        data = self._download_data()
         source, target = self.source_target
         X_source, y_source = self._get_dataset(data, source, self.n_samples_source)
         X_target, y_target = self._get_dataset(data, target, self.n_samples_target)
@@ -129,5 +130,4 @@ class Dataset(BaseDataset):
             X=X,
             y=y,
             sample_domain=sample_domain,
-            input_shape=input_shape,
         )
