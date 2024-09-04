@@ -95,6 +95,21 @@ class ShallowConvNet(nn.Module):
 
         return logits
 
+class ShallowMLP(nn.Module):
+    def __init__(self, input_dim, n_classes, hidden_dim=64):
+        super().__init__()
+        self.feature_layer = nn.Linear(input_dim, hidden_dim)
+        self.mlp = nn.Sequential(
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(hidden_dim, n_classes)
+        )
+    
+    def forward(self, x, sample_weight=None):
+        x = self.feature_layer(x)
+        x = self.mlp(x)
+        return nn.LogSoftmax(dim=1)(x)
+
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
@@ -111,7 +126,7 @@ class Solver(DASolver):
     }
 
 
-    def get_estimator(self, n_classes, device):
+    def get_estimator(self, n_classes, device, dataset_name, **kwargs):
         # For testing purposes, we use the following criterions:
         self.criterions = {
             'supervised': SupervisedScorer(),
@@ -119,7 +134,18 @@ class Solver(DASolver):
         }
 
         #model = ResNet50WithMLP(n_classes=n_classes, input_shape=input_shape)
-        model = ShallowConvNet(n_classes=n_classes)
+        dataset_name = dataset_name.split("[")[0].lower()
+
+        if dataset_name in ['mnist_usps']:
+            model = ShallowConvNet(n_classes=n_classes)
+        elif dataset_name in ['office31', 'officehome']:
+            # To change for a more suitable net
+            model = ShallowConvNet(n_classes=n_classes)
+        elif dataset_name in ['bci']:
+            model = ShallowMLP(input_dim=253, n_classes=n_classes)
+        else:
+            raise ValueError(f"Unsupported dataset: {dataset_name}")
+        
         net = DeepCoral(
             model,
             optimizer=AdamW,

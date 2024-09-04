@@ -118,7 +118,7 @@ class Dataset(BaseDataset):
         )
         X = ts_projector.fit_transform(X)
         return dict(
-            X=X,
+            X=X.astype(np.float32),
             y=y,
             sample_domain=sample_domain
         )
