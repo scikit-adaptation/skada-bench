@@ -149,7 +149,7 @@ class Dataset(BaseDataset):
 
         source, target = self.source_target
         X_source, y_source = self._get_dataset(source)
-        X_target, y_target, _ = self._get_dataset(target)
+        X_target, y_target = self._get_dataset(target)
 
         # XGBoost only supports labels in [0, num_classes-1]
         le = LabelEncoder()

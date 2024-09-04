@@ -28,7 +28,7 @@ class Dataset(BaseDataset):
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
         #'n_samples_source, n_samples_target': [(3000, 3000)],
-        'n_samples_source, n_samples_target': [(1000, 1000)],
+        'n_samples_source, n_samples_target': [(10000, 10000)],
         'source_target': [('MNIST', 'USPS'),
                           ('USPS', 'MNIST')],
         'random_state': [27],
