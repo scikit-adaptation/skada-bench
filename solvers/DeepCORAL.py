@@ -105,7 +105,8 @@ class Solver(DASolver):
             # To change for a more suitable net
             model = ShallowConvNet(n_classes=n_classes)
         elif dataset_name in ['bci']:
-            model = ShallowMLP(input_dim=253, n_classes=n_classes)
+            # Use double precision for BCI data
+            model = ShallowMLP(input_dim=253, n_classes=n_classes).double()
         else:
             raise ValueError(f"Unsupported dataset: {dataset_name}")
         
