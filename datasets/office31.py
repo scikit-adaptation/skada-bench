@@ -1,10 +1,18 @@
 from benchopt import BaseDataset, safe_import_context
 with safe_import_context() as import_ctx:
     import numpy as np
-    from sklearn.decomposition import PCA
     from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
-    from skada.datasets import fetch_office31_decaf_all, Office31CategoriesPreset
+    import torchvision.transforms as transforms
+    import os
+    from torch.utils.data import Dataset, DataLoader
+    from PIL import Image
+    from pathlib import Path
+    import sys
+
+    PATH_skada_bench = Path(__file__).resolve().parents[1]
+    sys.path.extend([str(PATH_skada_bench)])
+    from utils import download_and_extract_zipfile, ImageDataset
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
@@ -25,33 +33,45 @@ class Dataset(BaseDataset):
             ('amazon', 'dslr'),
             ('amazon', 'webcam')
         ],
-        'n_components': [100]
     }
+
+    path_dataset = "data/OFFICE31.zip"
+    path_extract = "data/OFFICE31/"
+    url_dataset = "https://wjdcloud.blob.core.windows.net/dataset/OFFICE31.zip"
+
+
+    def _get_dataset(self, domain_select):
+        # Define transformations to preprocess the images
+        preprocess = transforms.Compose([
+            transforms.Resize(256),
+            transforms.CenterCrop(224),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ])
+
+        # Create a DataLoader for the dataset
+        dataset = ImageDataset(self.path_extract, transform=preprocess, domain_select=domain_select)
+        dataloader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+
+        images, labels = next(iter(dataloader))
+        images = images.numpy()
+        labels = np.array(labels)
+
+        return images, labels
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
         # to `Objective.set_data`. This defines the benchmark's
         # API to pass data. It is customizable for each benchmark.
-
-        tmp_folder = './data/OFFICE_31_DECAF_DATASET/'
-        dataset = fetch_office31_decaf_all(
-            # categories=Office31CategoriesPreset.CALTECH256,
-            data_home=tmp_folder
+        download_and_extract_zipfile(
+            url_dataset=self.url_dataset,
+            path_dataset=self.path_dataset,
+            path_extract=self.path_extract,
         )
 
-        # Fit PCA on all domains
-        domains = dataset.domain_names_.keys()
-        X_total = np.concatenate([dataset.get_domain(d)[0] for d in domains])
-        pca = PCA(n_components=self.n_components).fit(X_total)
-
-        # Get source and target data and apply PCA
-        source = self.source_target[0]
-        target = self.source_target[1]
-
-        X_source, y_source = dataset.get_domain(source)
-        X_target, y_target = dataset.get_domain(target)
-        X_source = pca.transform(X_source)
-        X_target = pca.transform(X_target)
+        source, target = self.source_target
+        X_source, y_source = self._get_dataset(source)
+        X_target, y_target = self._get_dataset(target)
 
         # XGBoost only supports labels in [0, num_classes-1]
         le = LabelEncoder()
