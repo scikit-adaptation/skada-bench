@@ -50,7 +50,7 @@ class Objective(BaseObjective):
     n_splits_data = 5
     test_size_data = 0.2
 
-    def set_data(self, X, y, sample_domain, **kwargs):
+    def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary
         # returned by `Dataset.get_data`. This defines the benchmark's
         # API to pass data. This is customizable for each benchmark.
