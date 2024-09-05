@@ -75,16 +75,12 @@ class ImageDataset(Dataset):
     Custom dataset class to load images from a specific domain.
     """
     def __init__(self, dataset_dir, domain_select, transform=None):
-        self.dataset_dir = dataset_dir
+        self.dataset_dir = Path(dataset_dir)
         self.image_paths = []
-        for root, dirs, files in os.walk(dataset_dir):
-            for file in files:
-                if file.endswith(".jpg"):
-                    image_path = os.path.join(root, file)
-                    domain = os.path.basename(os.path.dirname(os.path.dirname(image_path)))
-
-                    if np.char.lower(domain) == domain_select:
-                        self.image_paths.append(os.path.join(root, file))
+        for image_path in self.dataset_dir.rglob('*.jpg'):
+            domain = image_path.parent.parent.name
+            if domain.lower() == domain_select:
+                self.image_paths.append(image_path)
 
         self.transform = transform
 
@@ -95,8 +91,8 @@ class ImageDataset(Dataset):
         image_path = self.image_paths[idx]
 
         # Extract label and domain from the image path
-        label = os.path.basename(os.path.dirname(image_path))
-        domain = os.path.basename(os.path.dirname(os.path.dirname(image_path)))
+        label = image_path.parent.name
+        domain = image_path.parent.parent.name
 
         image = Image.open(image_path).convert("RGB")
         if self.transform:
