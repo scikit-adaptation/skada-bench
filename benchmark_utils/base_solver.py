@@ -19,13 +19,8 @@ with safe_import_context() as import_ctx:
     from xgboost import XGBClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
-
-    from pathlib import Path
-    import sys
-    PATH_benchmark_utils = Path(__file__).resolve().parents[0]
-    sys.path.append(str(PATH_benchmark_utils))
-
-    from scorers import CRITERIONS
+    from .scorers import CRITERIONS
+    import torch
 
 
 LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
@@ -106,7 +101,7 @@ class DASolver(BaseSolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     parameters = {
-        "param_grid": ["default"]
+        "param_grid": ["default"],
     }
 
     # Random state
@@ -119,9 +114,30 @@ class DASolver(BaseSolver):
     else:
         n_jobs = 1
 
+    # Set device depending on the gpu/cpu available
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
+    print(f"n_jobs: {n_jobs}")
+    print(f"device: {device}")
+
     @abstractmethod
-    def get_estimator(self):
-        """Return an estimator compatible with the `sklearn.GridSearchCV`."""
+    def get_estimator(self, n_classes=None, device=None):
+        """Return an estimator compatible with the `sklearn.GridSearchCV`.
+
+        Parameters:
+        -----------
+        n_classes : int, optional
+            The number of classes in the target variable.
+        device : torch.device, optional
+            The device (CPU or GPU) to use for computations.
+
+        Returns:
+        --------
+        estimator : object
+            An estimator compatible with sklearn.GridSearchCV.
+        """
         pass
 
     # def get_base_estimator(self):
@@ -133,11 +149,16 @@ class DASolver(BaseSolver):
     #     estimator.set_score_request(sample_weight=True)
     #     return estimator
 
-    def set_objective(self, X, y, sample_domain, unmasked_y_train, **kwargs):
+    def set_objective(self, X, y, sample_domain, unmasked_y_train, dataset_name, **kwargs):
         self.X, self.y, self.sample_domain = X, y, sample_domain
         self.unmasked_y_train = unmasked_y_train
 
-        self.da_estimator = self.get_estimator()
+        n_classes = len(np.unique(self.unmasked_y_train))
+        self.da_estimator = self.get_estimator(
+            n_classes=n_classes,
+            device=self.device,
+            dataset_name=dataset_name,
+        )
 
         # check y is discrete or continuous
         self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
@@ -161,7 +182,7 @@ class DASolver(BaseSolver):
             self.param_grid = self.default_param_grid
         
         print("Param Grid", self.param_grid)
-        
+
         self.clf = GridSearchCV(
             self.da_estimator, self.param_grid, refit=False,
             scoring=self.criterions, cv=self.gs_cv, error_score=-np.inf,

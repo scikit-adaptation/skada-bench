@@ -25,7 +25,7 @@ class Solver(DASolver):
         'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
     }
 
-    def get_estimator(self):
+    def get_estimator(self, **kwargs):
         return make_da_pipeline(
             KLIEPReweightAdapter(gamma=None),
             FinalEstimator(),

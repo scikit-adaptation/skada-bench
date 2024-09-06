@@ -37,7 +37,7 @@ class Solver(DASolver):
 
         return False, None
 
-    def get_estimator(self):
+    def get_estimator(self, **kwargs):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             DASVMClassifier(base_estimator=FinalEstimator())
