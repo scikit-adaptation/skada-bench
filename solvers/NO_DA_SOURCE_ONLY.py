@@ -20,7 +20,7 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {'finalestimator__estimator_name': ["LR", "SVC", "XGB"]}
 
-    def get_estimator(self):
+    def get_estimator(self, **kwargs):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             ('finalestimator', SelectSource(FinalEstimator())),
