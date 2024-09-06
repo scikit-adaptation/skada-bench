@@ -6,6 +6,8 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
     from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP
+    from skorch.callbacks import LRScheduler, EpochScoring
+    from torch.optim.lr_scheduler import ReduceLROnPlateau
     from skada.deep import DeepCoral
     from torch.optim import AdamW
     from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
@@ -47,7 +49,17 @@ class Solver(DASolver):
             model = ShallowMLP(input_dim=253, n_classes=n_classes).double()
         else:
             raise ValueError(f"Unsupported dataset: {dataset_name}")
-        
+
+        # Define learning rate scheduler
+        lr_scheduler = LRScheduler(
+            policy = ReduceLROnPlateau,
+            monitor = 'train_loss',
+            mode = 'min',
+            patience = 3,
+            factor = 0.1,
+        )
+
+        # Initialize DeepCORAL network
         net = DeepCoral(
             model,
             optimizer=AdamW,
@@ -56,6 +68,7 @@ class Solver(DASolver):
             max_epochs=1,
             train_split=None,
             device=device,
+            callbacks = [lr_scheduler],
         )
 
         return net
