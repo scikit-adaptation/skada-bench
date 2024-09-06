@@ -45,10 +45,7 @@ class ShallowConvNet(nn.Module):
         for layer in self.mlp:
             x = layer(x)
 
-        # Apply log softmax to get log probabilities
-        logits = nn.LogSoftmax(dim=1)(x)
-
-        return logits
+        return x    # Return raw logits
 
 
 class ShallowMLP(nn.Module):
@@ -64,4 +61,5 @@ class ShallowMLP(nn.Module):
     def forward(self, x, sample_weight=None):
         x = self.feature_layer(x)
         x = self.mlp(x)
-        return nn.LogSoftmax(dim=1)(x)
+
+        return x    # Return raw logits
