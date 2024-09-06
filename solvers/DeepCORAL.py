@@ -23,6 +23,7 @@ class Solver(DASolver):
     default_param_grid = {
         'max_epochs': [20],
         'lr': [1e-3],
+        'optimizer__weight_decay': [0.01],
     }
 
 
@@ -49,7 +50,6 @@ class Solver(DASolver):
         net = DeepCoral(
             model,
             optimizer=AdamW,
-            reg=1,
             layer_name="feature_layer",
             batch_size=256,
             max_epochs=1,
