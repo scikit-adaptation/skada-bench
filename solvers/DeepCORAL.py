@@ -23,6 +23,7 @@ class Solver(DASolver):
     default_param_grid = {
         'max_epochs': [20],
         'lr': [1e-3],
+        'criterion__reg': [1],
         'optimizer__weight_decay': [0.01],
     }
 
