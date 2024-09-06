@@ -18,7 +18,7 @@ class Solver(DASolver):
 
     default_param_grid = {'finalestimator__estimator_name': ["LR", "SVC", "XGB"]}
 
-    def get_estimator(self):
+    def get_estimator(self, **kwargs):
         # We only use the supervised scorer!
         self.criterions = {
             'supervised': SupervisedScorer()
