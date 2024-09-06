@@ -6,7 +6,7 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
     from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP
-    from skorch.callbacks import LRScheduler, EpochScoring
+    from skorch.callbacks import LRScheduler
     from torch.optim.lr_scheduler import ReduceLROnPlateau
     from skada.deep import DeepCoral
     from torch.optim import AdamW
