@@ -150,14 +150,12 @@ class Objective(BaseObjective):
                                     ),
                                 f'{criterion}_test_source_{metric_name}':
                                     metric(y_test_source,
-                                        y_pred_test_source_proba,
-                                        **roc_args
-                                        ),
+                                           y_pred_test_source_proba,
+                                           **roc_args),
                                 f'{criterion}_test_target_{metric_name}':
                                     metric(y_test_target,
-                                        y_pred_test_target_proba,
-                                        **roc_args
-                                        ),
+                                           y_pred_test_target_proba,
+                                           **roc_args),
                             })
                         except Exception as e:
                             print(e)
@@ -171,13 +169,21 @@ class Objective(BaseObjective):
                 try:
                     all_metrics.update({
                         f'{criterion}_train_source_{metric_name}':
-                            metric(y_train_source, y_pred_train_source, **f1_args),
+                            metric(
+                                y_train_source, y_pred_train_source, **f1_args
+                            ),
                         f'{criterion}_train_target_{metric_name}':
-                            metric(y_train_target, y_pred_train_target, **f1_args),
+                            metric(
+                                y_train_target, y_pred_train_target, **f1_args
+                            ),
                         f'{criterion}_test_source_{metric_name}':
-                            metric(y_test_source, y_pred_test_source, **f1_args),
+                            metric(
+                                y_test_source, y_pred_test_source, **f1_args
+                            ),
                         f'{criterion}_test_target_{metric_name}':
-                            metric(y_test_target, y_pred_test_target, **f1_args)
+                            metric(
+                                y_test_target, y_pred_test_target, **f1_args
+                            )
                     })
                 except Exception as e:
                     print(e)
@@ -232,11 +238,14 @@ class Objective(BaseObjective):
         # benchmark's API for passing the objective to the solver.
         # It is customizable for each benchmark.
         X, y, sample_domain, unmasked_y_train = self.get_split(
-            self.X, self.y, self.sample_domain)
+            self.X, self.y, self.sample_domain
 
-        return dict(X=X,
-                    y=y,
-                    sample_domain=sample_domain,
-                    unmasked_y_train=unmasked_y_train,
-                    dataset_name=self._dataset.name,
-                    )
+        )
+
+        return dict(
+            X=X,
+            y=y,
+            sample_domain=sample_domain,
+            unmasked_y_train=unmasked_y_train,
+            dataset_name=self._dataset.name,
+        )

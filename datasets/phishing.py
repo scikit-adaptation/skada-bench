@@ -20,12 +20,15 @@ class Dataset(BaseDataset):
 
     references = [
         "R. Mohammad, F. Thabtah, L. Mccluskey,"
-        "'An assessment of features related to phishing websites using an automated technique' "
-        "International Conference for Internet Technology and Secured Transactions (2012)."
+        "'An assessment of features related to phishing websites using an "
+        "automated technique' International Conference for Internet "
+        "Technology and Secured Transactions (2012)."
     ]
 
     parameters = {
-        "source_target": [("ip_adress", "no_ip_adress"), ("no_ip_adress", "ip_adress")],
+        "source_target": [
+            ("ip_adress", "no_ip_adress"), ("no_ip_adress", "ip_adress")
+        ],
     }
 
     path_data = "data/phishing.arff"

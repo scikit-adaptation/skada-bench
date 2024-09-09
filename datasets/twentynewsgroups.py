@@ -40,7 +40,10 @@ class Dataset(BaseDataset):
     }
 
     path_preprocessed_data = "data/20newsgroups_preprocessed.pkl"
-    url_preprocessed_data = "https://figshare.com/ndownloader/files/46120377?private_link=dc7d508b76a6006757f6"
+    url_preprocessed_data = (
+        "https://figshare.com/ndownloader/files/"
+        "46120377?private_link=dc7d508b76a6006757f6"
+    )
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments

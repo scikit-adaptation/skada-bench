@@ -7,6 +7,11 @@ with safe_import_context() as import_ctx:
     from skada import NearestNeighborReweightAdapter, make_da_pipeline
     from benchmark_utils.base_solver import DASolver, FinalEstimator
 
+    from benchmark_utils.base_solver import import_ctx as base_import_ctx
+    if base_import_ctx.failed_import:
+        exc, val, tb = base_import_ctx.import_error
+        raise exc(val).with_traceback(tb)
+
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
@@ -21,7 +26,7 @@ class Solver(DASolver):
         'nearestneighborreweightadapter__n_neighbors': [1],
         'nearestneighborreweightadapter__laplace_smoothing': [True, False],
         'finalestimator__estimator_name': ["LR", "SVC", "XGB"],
-}
+    }
 
     def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.

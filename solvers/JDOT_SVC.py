@@ -6,7 +6,11 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from skada import JDOTClassifier, make_da_pipeline
     from benchmark_utils.base_solver import DASolver, FinalEstimator
-    from sklearn.svm import SVC
+
+    from benchmark_utils.base_solver import import_ctx as base_import_ctx
+    if base_import_ctx.failed_import:
+        exc, val, tb = base_import_ctx.import_error
+        raise exc(val).with_traceback(tb)
 
 
 # The benchmark solvers must be named `Solver` and
@@ -29,6 +33,11 @@ class Solver(DASolver):
         'jdotclassifier__tol': [1e-6],
         'jdotclassifier__thr_weights': [1e-7],
         'jdotclassifier__base_estimator__estimator_name': ["SVC"],
+    }
+
+    test_param_grid = {
+        "jdotclassifier__base_estimator__estimator_name": ["SVC"],
+        "jdotclassifier__n_iter_max": [10]
     }
 
     def get_estimator(self):
