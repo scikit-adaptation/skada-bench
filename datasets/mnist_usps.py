@@ -85,8 +85,6 @@ class Dataset(BaseDataset):
                 for images, _ in dataloader:
                     embeddings.append(images)
             embeddings = torch.cat(embeddings, dim=0)
-            print(f"Embeddings min: {embeddings.min()}")
-            print(f"Embeddings max: {embeddings.max()}")
             embeddings = embeddings.cpu().numpy()
 
             # Save the preprocessed data
