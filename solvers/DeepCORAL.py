@@ -7,7 +7,8 @@ with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
     from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP
     from skada.deep import DeepCoral
-    from torch.optim import AdamW
+    from torch.optim import Adadelta
+    from skorch.callbacks import LRScheduler
     from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
 
 
@@ -21,10 +22,9 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'max_epochs': [20],
-        'lr': [1e-3],
-        'criterion__reg': [1],
-        'optimizer__weight_decay': [0.01],
+        'max_epochs': [14],
+        'lr': [1],
+        'criterion__reg': [0],
     }
 
 
@@ -48,14 +48,23 @@ class Solver(DASolver):
         else:
             raise ValueError(f"Unsupported dataset: {dataset_name}")
         
+        lr_scheduler = LRScheduler(
+            policy='StepLR',
+            step_every='epoch',
+            step_size=1,
+            gamma=0.7
+        )
+        
+        
         net = DeepCoral(
             model,
-            optimizer=AdamW,
-            layer_name="feature_layer",
+            optimizer=Adadelta,
+            layer_name="fc1",
             batch_size=256,
             max_epochs=1,
             train_split=None,
             device=device,
+            callbacks=[lr_scheduler],
         )
 
         return net
