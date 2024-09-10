@@ -22,9 +22,9 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'max_epochs': [10, 14, 20],
-        'lr': [1, 1e-1],
-        'criterion__reg': [0, 1e-1, 1e-2, 1e-3],
+        'max_epochs': [14],
+        'lr': [1],
+        'criterion__reg': [50, 20, 10, 5, 0],
     }
 
 
