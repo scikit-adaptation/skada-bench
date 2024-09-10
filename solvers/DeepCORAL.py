@@ -61,7 +61,6 @@ class Solver(DASolver):
             optimizer=Adadelta,
             layer_name="fc1",
             batch_size=256,
-            max_epochs=1,
             train_split=None,
             device=device,
             callbacks=[lr_scheduler],
