@@ -3,6 +3,7 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
+from torchvision.models import resnet50, ResNet50_Weights
 
 
 class ShallowConvNet(nn.Module):
@@ -33,6 +34,25 @@ class ShallowConvNet(nn.Module):
 
         return x
 
+class OfficeConvNet(nn.Module):
+    def __init__(self, n_classes):
+        super().__init__()
+        
+        # Load pretrained ResNet50
+        self.resnet = resnet50(weights=ResNet50_Weights.DEFAULT)
+        
+        num_ftrs = self.resnet.fc.in_features
+        self.fc1 = nn.Linear(num_ftrs, 1024)
+        self.fc2 = nn.Linear(1024, n_classes)
+        
+        # Replace ResNet's fc layer with Identity
+        self.resnet.fc = nn.Identity()
+
+    def forward(self, x, sample_weight=None):
+        x = self.resnet(x)
+        x = F.relu(self.fc1(x))
+        x = self.fc2(x)
+        return x
 
 class ShallowMLP(nn.Module):
     def __init__(self, input_dim, n_classes, hidden_dim=64):

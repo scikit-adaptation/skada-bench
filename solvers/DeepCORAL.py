@@ -5,7 +5,7 @@ from benchopt import safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
-    from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP
+    from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP, OfficeConvNet
     from skada.deep import DeepCoral
     from torch.optim import Adadelta
     from skorch.callbacks import LRScheduler
@@ -27,7 +27,6 @@ class Solver(DASolver):
         'criterion__reg': [0],
     }
 
-
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
         # For testing purposes, we use the following criterions:
         self.criterions = {
@@ -41,21 +40,20 @@ class Solver(DASolver):
             model = ShallowConvNet(n_classes=n_classes)
         elif dataset_name in ['office31', 'officehome']:
             # To change for a more suitable net
-            model = ShallowConvNet(n_classes=n_classes)
+            model = OfficeConvNet(n_classes=n_classes)
         elif dataset_name in ['bci']:
             # Use double precision for BCI data
             model = ShallowMLP(input_dim=253, n_classes=n_classes).double()
         else:
             raise ValueError(f"Unsupported dataset: {dataset_name}")
-        
+
         lr_scheduler = LRScheduler(
             policy='StepLR',
             step_every='epoch',
             step_size=1,
             gamma=0.7
         )
-        
-        
+
         net = DeepCoral(
             model,
             optimizer=Adadelta,

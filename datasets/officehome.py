@@ -5,13 +5,7 @@ with safe_import_context() as import_ctx:
     from skada.utils import source_target_merge
     import torchvision.transforms as transforms
     from torch.utils.data import DataLoader
-    from PIL import Image
-    from pathlib import Path
-    import sys
-
-    PATH_skada_bench = Path(__file__).resolve().parents[1]
-    sys.path.extend([str(PATH_skada_bench)])
-    from utils import download_and_extract_zipfile, ImageDataset
+    from benchmark_utils.utils import download_and_extract_zipfile, ImageDataset
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
@@ -50,12 +44,19 @@ class Dataset(BaseDataset):
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            transforms.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+            ),
         ])
 
         # Create a DataLoader for the dataset
-        dataset = ImageDataset(self.path_extract, transform=preprocess, domain_select=domain_select)
-        dataloader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+        dataset = ImageDataset(
+            self.path_extract, transform=preprocess, domain_select=domain_select
+        )
+        dataloader = DataLoader(
+            dataset, batch_size=len(dataset), shuffle=False
+        )
 
         images, labels = next(iter(dataloader))
         images = images.numpy()
@@ -86,11 +87,8 @@ class Dataset(BaseDataset):
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target)
 
-        # Mps device doesnt accept float64
-        # TODO: Check with cuda devices
-        # X = np.float32(X)
-        # y = np.float32(y)
-        # sample_domain = np.float32(sample_domain)
+        print(f'OfficeHome mean {X.mean()}')
+        print(f'OfficeHome std {X.std()}')
 
         return dict(
             X=X,
