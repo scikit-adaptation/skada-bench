@@ -13,36 +13,48 @@ def generate_scatter(csv_file):
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
     df_source = df.query('estimator == "Train Src" & scorer == "best_scorer"')
     df = df.merge(
-        df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
-        on="shift",
-        suffixes=("", "_target"),
+        df_target[[
+            "shift", "target_accuracy-test-mean", "target_accuracy-test-std"
+        ]], on="shift", suffixes=("", "_target"),
     )
     df = df.merge(
-        df_source[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
-        on="shift",
-        suffixes=("", "_source"),
+        df_source[[
+            "shift", "target_accuracy-test-mean", "target_accuracy-test-std"
+        ]], on="shift", suffixes=("", "_source"),
     )
     df["accn"] = (
-        df["target_accuracy-test-mean"] - df["target_accuracy-test-mean_source"]
-    ) / (df["target_accuracy-test-mean_target"] - df["target_accuracy-test-mean_source"])
+        (
+            df["target_accuracy-test-mean"]
+            - df["target_accuracy-test-mean_source"]
+        ) / (
+            df["target_accuracy-test-mean_target"]
+            - df["target_accuracy-test-mean_source"]
+        )
+    )
 
     df["stdn"] = df["target_accuracy-test-std"] / np.abs(
-        (df["target_accuracy-test-mean_target"] - df["target_accuracy-test-mean_source"])
+        df["target_accuracy-test-mean_target"]
+        - df["target_accuracy-test-mean_source"]
     )
     # remove rows where the source is better than the target
     df = df[
-        df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]
+        df["target_accuracy-test-mean_source"]
+        < df["target_accuracy-test-mean_target"]
     ].reset_index()
 
     # filtering
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 
-    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(lambda x: json.loads(x))
+    df["target_accuracy-test-identity"] = (
+        df["target_accuracy-test-identity"].apply(lambda x: json.loads(x))
+    )
     df["cv_score"] = df["cv_score"].apply(lambda x: json.loads(x))
 
     df_filtered = df.query("estimator != 'Train Tgt'")
     df_filtered = df_filtered.query("estimator != 'Train Src'")
-    df_grouped = df_filtered.groupby(["dataset", "scorer", "estimator", "shift"])
+    df_grouped = df_filtered.groupby([
+        "dataset", "scorer", "estimator", "shift"
+    ])
     cv_score = []
     acc = []
     scorer = []

@@ -42,12 +42,13 @@ def generate_df(file_path):
     ]
 
     def extract_mean_test_cv(text):
-        # This pattern matches the key and the array, including multiline arrays
+        # This pattern matches the key and the array,
+        # including multiline arrays
         pattern = r"('mean_test_\w+': array\(\[.*?\]\))"
         result = {}
         try:
             matches = re.findall(pattern, text, re.DOTALL)
-            
+
             for match in matches:
                 key_pattern = r"'(mean_test_\w+)'"
                 key_match = re.search(key_pattern, match)
@@ -68,14 +69,15 @@ def generate_df(file_path):
 
         return result
 
-    df['cv_score'] = df['objective_cv_results'].apply(lambda x: extract_mean_test_cv(x))
+    df['cv_score'] = df['objective_cv_results'].apply(
+        lambda x: extract_mean_test_cv(x)
+    )
     df_exploded = pd.json_normalize(df['cv_score'])
 
     if df_exploded.size != 0:
         df = pd.concat([df.drop(columns=['cv_score']), df_exploded], axis=1)
 
-
-    # Compute mean and standard deviation for each metric    
+    # Compute mean and standard deviation for each metric
     def identity(x):
         return json.dumps(x.tolist())
 
@@ -153,19 +155,26 @@ def generate_df(file_path):
                     new_df.columns.get_loc((col[0], col[1], col[2]))
                 ] = row[old_col[0]][old_col[1]]
 
-
     if df_exploded.size != 0:
         agg_mean_cv = agg_mean_cv.reset_index()
         agg_mean_cv.columns = agg_mean_cv.columns.droplevel(1)
 
-        df_melted = agg_mean_cv.melt(id_vars=['data_name', 'solver_name'], var_name='scorer', value_name='cv_score')
+        df_melted = agg_mean_cv.melt(
+            id_vars=['data_name', 'solver_name'],
+            var_name='scorer', value_name='cv_score'
+        )
         df_melted['scorer'] = df_melted['scorer'].str.replace('mean_test_', '')
 
         new_df = new_df.reset_index(names=['index'])
-        new_df[['data_name', 'solver_name']] = pd.DataFrame(new_df['index'].tolist(), index=new_df.index)
-        new_df = new_df.drop(columns = ['index'])
+        new_df[['data_name', 'solver_name']] = pd.DataFrame(
+            new_df['index'].tolist(), index=new_df.index
+        )
+        new_df = new_df.drop(columns=['index'])
 
-        merged_df = pd.merge(new_df, df_melted, on=['scorer', 'data_name', 'solver_name'], how='outer')
+        merged_df = pd.merge(
+            new_df, df_melted, on=['scorer', 'data_name', 'solver_name'],
+            how='outer'
+        )
 
         merged_df = merged_df.set_index(['data_name', 'solver_name'])
     else:
@@ -195,7 +204,7 @@ def process_files_in_directory(directory):
     return all_df
 
 
-def keep_only_best_scorer_per_estimator(df, specific_col = None):
+def keep_only_best_scorer_per_estimator(df, specific_col=None):
     df_copy = df.copy()
     df_copy['estimator'] = [index_tuple[1] for index_tuple in df.index]
     df_copy['dataset'] = [index_tuple[0] for index_tuple in df.index]
@@ -212,8 +221,10 @@ def keep_only_best_scorer_per_estimator(df, specific_col = None):
 
     if mean_index is None:
         raise ValueError('No mean column found')
-    
-    max_indices = df_copy.groupby([df_copy['dataset'], 'estimator'])[[df_copy.columns[mean_index]]].idxmax()
+
+    max_indices = df_copy.groupby(
+        [df_copy['dataset'], 'estimator']
+    )[[df_copy.columns[mean_index]]].idxmax()
     max_rows = df_copy.iloc[max_indices.values.flatten()]
 
     max_rows = max_rows.set_index(['dataset', 'estimator'])
