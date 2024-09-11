@@ -10,14 +10,12 @@ PATH_skada_bench = Path(__file__).resolve().parents[2]
 
 sys.path.extend([str(PATH_benchmark_utils), str(PATH_skada_bench)])
 
-from base_solver import BASE_ESTIMATOR_DICT  # noqa: E402
-from base_solver import create_estimator_grid  # noqa: E402
+from base_solver import get_estimator_grid  # noqa: E402
 
 
 if __name__ == "__main__":
-    create_estimator_grid()
     param_list = [
-        {"finalestimator__estimator_name": [k]} for k in BASE_ESTIMATOR_DICT
+        {"finalestimator__estimator_name": [k]} for k in get_estimator_grid()
         if k != "test"
     ]
     param_dict = {

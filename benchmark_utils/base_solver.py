@@ -23,14 +23,8 @@ with safe_import_context() as import_ctx:
 
     from benchmark_utils.scorers import CRITERIONS
 
-    BASE_ESTIMATOR_DICT = {
-        "LR": LogisticRegression(),
-        "SVC": SVC(probability=True),
-        "XGB": XGBClassifier(),
-        "test": DummyClassifier(),
-    }
 
-
+# Parameters' grid for LR, SVC and XGBoost models
 LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
              0.2, 0.5, 1., 2., 5., 10., 20.,
              50., 100., 200., 500., 1000.]
@@ -42,18 +36,35 @@ XGB_SUBSAMPLE_GRID = [0.5, 0.65, 0.8]
 XGB_COLSAMPLE_GRID = [0.5, 0.65, 0.8]
 XGB_MAXDEPTH_GRID = [3, 6, 10, 20]
 
+# Global variable to hold all the estimator configurations
+_BASE_ESTIMATOR_DICT = None
 
-def create_estimator_grid():
-    if len(BASE_ESTIMATOR_DICT) > 3:
-        return
+
+def get_estimator_grid():
+    """Factory to construct a dictionary with all estimator's configuration.
+
+    The dictionary is saved in a global variable to avoid recomputing it for
+    each new model.
+    """
+    global _BASE_ESTIMATOR_DICT
+    if _BASE_ESTIMATOR_DICT is None:
+        return _BASE_ESTIMATOR_DICT
+
+    _BASE_ESTIMATOR_DICT = {
+        "LR": LogisticRegression(),
+        "SVC": SVC(probability=True),
+        "XGB": XGBClassifier(),
+        "test": DummyClassifier(),
+    }
+
     for c in LR_C_GRID:
         k = f"LR_C{c}"
-        BASE_ESTIMATOR_DICT[k] = LogisticRegression(C=c)
+        _BASE_ESTIMATOR_DICT[k] = LogisticRegression(C=c)
 
     for c in SVC_C_GRID:
         for gamma in SVC_GAMMA_GRID:
             k = f"SVC_C{c}_Gamma{gamma}"
-            BASE_ESTIMATOR_DICT[k] = SVC(
+            _BASE_ESTIMATOR_DICT[k] = SVC(
                 probability=True, kernel="rbf", C=c, gamma=gamma
             )
 
@@ -64,7 +75,7 @@ def create_estimator_grid():
                     f"XGB_subsample{subsample}_colsample{colsample}"
                     f"_maxdepth{maxdepth}"
                 )
-                BASE_ESTIMATOR_DICT[k] = XGBClassifier(
+                _BASE_ESTIMATOR_DICT[k] = XGBClassifier(
                     max_depth=maxdepth,
                     subsample=subsample,
                     colsample_bytree=colsample,
@@ -81,8 +92,8 @@ class FinalEstimator(BaseEstimator):
         self.estimator_name = estimator_name
 
     def fit(self, X, y, sample_weight=None, **fit_params):
-        create_estimator_grid()
-        self.estimator_ = clone(BASE_ESTIMATOR_DICT[self.estimator_name])
+        estimator_grid = get_estimator_grid()
+        self.estimator_ = clone(estimator_grid[self.estimator_name])
         self.estimator_.fit(X, y, sample_weight=sample_weight, **fit_params)
         return self
 
