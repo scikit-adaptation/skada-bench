@@ -82,6 +82,7 @@ def get_estimator_grid():
                     colsample_bylevel=colsample,
                     colsample_bynode=colsample
                 )
+    return _BASE_ESTIMATOR_DICT
 
 
 class FinalEstimator(BaseEstimator):
