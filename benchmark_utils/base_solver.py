@@ -190,7 +190,7 @@ class DASolver(BaseSolver):
         )
 
     def run(self, n_iter):
-        if self.name == 'NO_DA_TARGET_ONLY' or 'Deep_NO_DA_TARGET_ONLY':
+        if self.name in ('NO_DA_TARGET_ONLY', 'Deep_NO_DA_TARGET_ONLY'):
             # We are in a case of no domain adaptation
             # We dont need to use masked targets
             self.clf.fit(
@@ -219,7 +219,7 @@ class DASolver(BaseSolver):
             refit_estimator.set_params(**best_params)
 
             try:
-                if self.name == 'NO_DA_TARGET_ONLY':
+                if self.name in ('NO_DA_TARGET_ONLY', 'Deep_NO_DA_TARGET_ONLY'):
                     refit_estimator.fit(
                         self.X,
                         self.unmasked_y_train,
