@@ -24,7 +24,8 @@ class Solver(DASolver):
     default_param_grid = {
         'max_epochs': [14],
         'lr': [1e-3],
-        'criterion__reg': [1e-4],
+        'reg_cl': [1e-4],
+        'reg_dist': [1e-3],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -58,7 +59,7 @@ class Solver(DASolver):
             model,
             optimizer=Adadelta,
             layer_name="fc1",
-            batch_size=256,
+            batch_size=500,
             train_split=None,
             device=device,
             callbacks=[lr_scheduler],
