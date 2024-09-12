@@ -4,6 +4,7 @@ from benchopt import BaseObjective, safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    import random
     from skada.model_selection import (StratifiedDomainShuffleSplit,
                                        DomainShuffleSplit
                                        )
@@ -49,6 +50,16 @@ class Objective(BaseObjective):
     random_state = 0
     n_splits_data = 5
     test_size_data = 0.2
+
+    # Set random states
+    random.seed(random_state)
+    np.random.seed(random_state)
+
+    try:
+        import torch
+        torch.manual_seed(random_state)
+    except:
+        pass
 
     def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary

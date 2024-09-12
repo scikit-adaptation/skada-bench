@@ -5,8 +5,8 @@ from benchopt import safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
-    from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP, OfficeConvNet
-    from skada.deep import DeepCoral
+    from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP
+    from skada.deep import DeepJDOT, DeepJDOTLoss
     from torch.optim import Adadelta
     from skorch.callbacks import LRScheduler
     from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
@@ -16,15 +16,15 @@ with safe_import_context() as import_ctx:
 # inherit from `BaseSolver` for `benchopt` to work properly.
 class Solver(DASolver):
     # Name to select the solver in the CLI and to display the results.
-    name = 'DeepCORAL'
+    name = 'DeepJDOT'
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
         'max_epochs': [14],
-        'lr': [1],
-        'criterion__reg': [50, 20, 10, 5, 1],
+        'lr': [1e-3],
+        'criterion__adapt_criterion': [DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3)],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -40,7 +40,7 @@ class Solver(DASolver):
             model = ShallowConvNet(n_classes=n_classes)
         elif dataset_name in ['office31', 'officehome']:
             # To change for a more suitable net
-            model = OfficeConvNet(n_classes=n_classes)
+            model = ShallowConvNet(n_classes=n_classes)
         elif dataset_name in ['bci']:
             # Use double precision for BCI data
             model = ShallowMLP(input_dim=253, n_classes=n_classes).double()
@@ -54,11 +54,11 @@ class Solver(DASolver):
             gamma=0.7
         )
 
-        net = DeepCoral(
+        net = DeepJDOT(
             model,
             optimizer=Adadelta,
             layer_name="fc1",
-            batch_size=256,
+            batch_size=500,
             train_split=None,
             device=device,
             callbacks=[lr_scheduler],
