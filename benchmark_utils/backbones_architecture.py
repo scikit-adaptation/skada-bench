@@ -2,6 +2,8 @@
 
 import torch
 from torch import nn
+import torch.nn.functional as F
+
 
 class ShallowConvNet(nn.Module):
     # This is a simple convolutional neural network (CNN) for MNIST dataset
@@ -9,46 +11,27 @@ class ShallowConvNet(nn.Module):
     def __init__(self, n_classes):
         super().__init__()
 
-        # Convolutional layers and first dropout in a ModuleList
-        self.convs = nn.ModuleList([
-            nn.Conv2d(3, 32, 3, 1),  # First convolutional layer
-            nn.ReLU(),
-            nn.Conv2d(32, 64, 3, 1),  # Second convolutional layer
-            nn.ReLU(),
-            nn.Dropout(0.25)  # First dropout layer
-        ])
-        
-        # Global Average Pooling (this layer is fixed and doesn't depend on input size)
-        self.global_pool = nn.AdaptiveAvgPool2d((1, 1))
-        
-        # MLP layers with ReLU and Dropout
-        self.feature_layer = nn.Linear(64, 128) # First MLP layer
-        self.mlp = nn.ModuleList([
-            nn.ReLU(),
-            nn.Dropout(0.5),  # Dropout after the first MLP layer
-            nn.Linear(128, n_classes)  # Output layer directly in MLP
-        ])
-    
+        self.conv1 = nn.Conv2d(1, 32, 3, 1)
+        self.conv2 = nn.Conv2d(32, 64, 3, 1)
+        self.dropout1 = nn.Dropout(0.25)
+        self.dropout2 = nn.Dropout(0.5)
+        self.fc1 = nn.Linear(9216, 128)
+        self.fc2 = nn.Linear(128, 10)
+
     def forward(self, x, sample_weight=None):
-        # Forward pass through convolutional layers and first dropout
-        for layer in self.convs:
-            x = layer(x)
-        
-        # Apply global average pooling
-        x = self.global_pool(x)
-        
-        # Flatten the tensor
+        x = self.conv1(x)
+        x = F.relu(x)
+        x = self.conv2(x)
+        x = F.relu(x)
+        x = F.max_pool2d(x, 2)
+        x = self.dropout1(x)
         x = torch.flatten(x, 1)
-        
-        # Forward pass through MLP layers
-        x = self.feature_layer(x)
-        for layer in self.mlp:
-            x = layer(x)
+        x = self.fc1(x)
+        x = F.relu(x)
+        x = self.dropout2(x)
+        x = self.fc2(x)
 
-        # Apply log softmax to get log probabilities
-        logits = nn.LogSoftmax(dim=1)(x)
-
-        return logits
+        return x
 
 
 class ShallowMLP(nn.Module):
@@ -60,8 +43,9 @@ class ShallowMLP(nn.Module):
             nn.Dropout(0.5),
             nn.Linear(hidden_dim, n_classes)
         )
-    
+
     def forward(self, x, sample_weight=None):
         x = self.feature_layer(x)
         x = self.mlp(x)
-        return nn.LogSoftmax(dim=1)(x)
+
+        return x    # Return raw logits
