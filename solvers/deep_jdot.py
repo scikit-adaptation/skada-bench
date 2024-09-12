@@ -6,7 +6,7 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
     from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP
-    from skada.deep import DeepJDOT
+    from skada.deep import DeepJDOT, DeepJDOTLoss
     from torch.optim import Adadelta
     from skorch.callbacks import LRScheduler
     from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
@@ -24,8 +24,7 @@ class Solver(DASolver):
     default_param_grid = {
         'max_epochs': [14],
         'lr': [1e-3],
-        'reg_cl': [1e-4],
-        'reg_dist': [1e-3],
+        'criterion__adapt_criterion': [DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3)],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
