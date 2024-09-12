@@ -6,6 +6,7 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
     from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP, OfficeConvNet
+    from benchmark_utils.utils import get_model_batchsize_for_dataset
     from skada.deep import DeepCoral
     from torch.optim import Adadelta
     from skorch.callbacks import LRScheduler
@@ -36,16 +37,8 @@ class Solver(DASolver):
 
         dataset_name = dataset_name.split("[")[0].lower()
 
-        if dataset_name in ['mnist_usps']:
-            model = ShallowConvNet(n_classes=n_classes)
-        elif dataset_name in ['office31', 'officehome']:
-            # To change for a more suitable net
-            model = OfficeConvNet(n_classes=n_classes)
-        elif dataset_name in ['bci']:
-            # Use double precision for BCI data
-            model = ShallowMLP(input_dim=253, n_classes=n_classes).double()
-        else:
-            raise ValueError(f"Unsupported dataset: {dataset_name}")
+        model, batch_size = get_model_batchsize_for_dataset(
+            dataset_name, n_classes)
 
         lr_scheduler = LRScheduler(
             policy='StepLR',
@@ -58,7 +51,7 @@ class Solver(DASolver):
             model,
             optimizer=Adadelta,
             layer_name="fc1",
-            batch_size=256,
+            batch_size=batch_size,
             train_split=None,
             device=device,
             callbacks=[lr_scheduler],

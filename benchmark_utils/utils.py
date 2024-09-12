@@ -6,6 +6,7 @@ import zipfile
 from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
+from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP, OfficeConvNet
 
 
 def _download_file_with_progress(url, filename):
@@ -16,7 +17,7 @@ def _download_file_with_progress(url, filename):
     # is sometimes so long that it seems broken
     response = requests.get(url, stream=True, timeout=5)
     total_size_in_bytes = int(response.headers.get('content-length', 0))
-    block_size = 16384 #16 Kilobyte
+    block_size = 16384  # 16 Kilobyte
     downloaded_size = 0
     start_time = time.time()
 
@@ -27,7 +28,8 @@ def _download_file_with_progress(url, filename):
             percent = int(50 * downloaded_size / total_size_in_bytes)
             elapsed_time = time.time() - start_time
             avg_speed = downloaded_size / (elapsed_time * 1024 * 1024)  # MB/s
-            print(f"\rDownloading: [{'#' * percent}{' ' * (50-percent)}] {percent*2}% ({avg_speed:.2f} MB/s)", end='', flush=True)
+            print(
+                f"\rDownloading: [{'#' * percent}{' ' * (50-percent)}] {percent*2}% ({avg_speed:.2f} MB/s)", end='', flush=True)
 
     print("\nDownload completed.")
 
@@ -73,6 +75,7 @@ class ImageDataset(Dataset):
     """
     Custom dataset class to load images from a specific domain.
     """
+
     def __init__(self, dataset_dir, domain_select, transform=None):
         self.dataset_dir = Path(dataset_dir)
         self.image_paths = []
@@ -96,5 +99,38 @@ class ImageDataset(Dataset):
         image = Image.open(image_path).convert("RGB")
         if self.transform:
             image = self.transform(image)
-        
+
         return image, label
+
+
+def get_model_batchsize_for_dataset(dataset_name, n_classes):
+    """
+    Get the appropriate model and batch size for a given dataset.
+
+    Args:
+        dataset_name (str): Name of the dataset ('mnist_usps', 'office31', 'officehome', or 'bci').
+        n_classes (int): Number of classes in the dataset.
+
+    Returns:
+        tuple: A tuple containing:
+            - model: The appropriate neural network model for the dataset.
+            - batch_size (int): The recommended batch size for the dataset.
+
+    Raises:
+        ValueError: If an unsupported dataset name is provided.
+    """
+    if dataset_name in ['mnist_usps']:
+        batch_size = 256
+        model = ShallowConvNet(n_classes=n_classes)
+    elif dataset_name in ['office31', 'officehome']:
+        # To change for a more suitable net
+        batch_size = 128
+        model = OfficeConvNet(n_classes=n_classes)
+    elif dataset_name in ['bci']:
+        batch_size = 256
+        # Use double precision for BCI data
+        model = ShallowMLP(input_dim=253, n_classes=n_classes).double()
+    else:
+        raise ValueError(f"Unsupported dataset: {dataset_name}")
+
+    return model, batch_size
