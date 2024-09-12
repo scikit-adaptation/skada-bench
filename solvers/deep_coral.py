@@ -5,7 +5,6 @@ from benchopt import safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
-    from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP, OfficeConvNet
     from benchmark_utils.utils import get_model_and_batch_size
     from skada.deep import DeepCoral
     from torch.optim import Adadelta
