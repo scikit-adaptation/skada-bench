@@ -4,15 +4,8 @@ with safe_import_context() as import_ctx:
     from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
     import torchvision.transforms as transforms
-    import os
-    from torch.utils.data import Dataset, DataLoader
-    from PIL import Image
-    from pathlib import Path
-    import sys
-
-    PATH_skada_bench = Path(__file__).resolve().parents[1]
-    sys.path.extend([str(PATH_skada_bench)])
-    from utils import download_and_extract_zipfile, ImageDataset
+    from torch.utils.data import DataLoader
+    from benchmark_utils.utils import download_and_extract_zipfile, ImageDataset
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
@@ -39,19 +32,21 @@ class Dataset(BaseDataset):
     path_extract = "data/OFFICE31/"
     url_dataset = "https://wjdcloud.blob.core.windows.net/dataset/OFFICE31.zip"
 
-
     def _get_dataset(self, domain_select):
         # Define transformations to preprocess the images
         preprocess = transforms.Compose([
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
+                                 0.229, 0.224, 0.225]),
         ])
 
         # Create a DataLoader for the dataset
-        dataset = ImageDataset(self.path_extract, transform=preprocess, domain_select=domain_select)
-        dataloader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+        dataset = ImageDataset(
+            self.path_extract, transform=preprocess, domain_select=domain_select)
+        dataloader = DataLoader(
+            dataset, batch_size=len(dataset), shuffle=False)
 
         images, labels = next(iter(dataloader))
         images = images.numpy()
@@ -81,6 +76,9 @@ class Dataset(BaseDataset):
 
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target)
+
+        print(f'Office31 mean {X.mean()}')
+        print(f'Office31 std {X.std()}')
 
         return dict(
             X=X,
