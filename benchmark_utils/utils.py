@@ -103,7 +103,7 @@ class ImageDataset(Dataset):
         return image, label
 
 
-def get_model_batchsize_for_dataset(dataset_name, n_classes):
+def get_model_and_batch_size(dataset_name, n_classes):
     """
     Get the appropriate model and batch size for a given dataset.
 
@@ -119,18 +119,16 @@ def get_model_batchsize_for_dataset(dataset_name, n_classes):
     Raises:
         ValueError: If an unsupported dataset name is provided.
     """
-    if dataset_name in ['mnist_usps']:
-        batch_size = 256
-        model = ShallowConvNet(n_classes=n_classes)
-    elif dataset_name in ['office31', 'officehome']:
-        # To change for a more suitable net
-        batch_size = 128
-        model = OfficeConvNet(n_classes=n_classes)
-    elif dataset_name in ['bci']:
-        batch_size = 256
-        # Use double precision for BCI data
-        model = ShallowMLP(input_dim=253, n_classes=n_classes).double()
-    else:
+
+    dataset_configs = {
+        'mnist_usps': {'batch_size': 256, 'model': ShallowConvNet(n_classes=n_classes)},
+        'office31': {'batch_size': 128, 'model': OfficeConvNet(n_classes=n_classes)},
+        'officehome': {'batch_size': 128, 'model': OfficeConvNet(n_classes=n_classes)},
+        'bci': {'batch_size': 256, 'model': ShallowMLP(input_dim=253, n_classes=n_classes).double()}
+    }
+
+    if dataset_name not in dataset_configs:
         raise ValueError(f"Unsupported dataset: {dataset_name}")
 
-    return model, batch_size
+    config = dataset_configs[dataset_name]
+    return config['model'], config['batch_size']

@@ -6,7 +6,7 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
     from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP, OfficeConvNet
-    from benchmark_utils.utils import get_model_batchsize_for_dataset
+    from benchmark_utils.utils import get_model_and_batch_size
     from skada.deep import DeepCoral
     from torch.optim import Adadelta
     from skorch.callbacks import LRScheduler
@@ -37,7 +37,7 @@ class Solver(DASolver):
 
         dataset_name = dataset_name.split("[")[0].lower()
 
-        model, batch_size = get_model_batchsize_for_dataset(
+        model, batch_size = get_model_and_batch_size(
             dataset_name, n_classes)
 
         lr_scheduler = LRScheduler(
