@@ -6,11 +6,6 @@ from benchopt import BaseDataset, safe_import_context
 with safe_import_context() as import_ctx:
     from skada.utils import source_target_merge
     import numpy as np
-
-    from pyriemann.estimation import Covariances
-    from pyriemann.tangentspace import TangentSpace
-    from sklearn.pipeline import make_pipeline
-
     from braindecode.datasets import MOABBDataset
     from braindecode.preprocessing import (
         exponential_moving_standardize,
