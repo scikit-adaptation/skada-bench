@@ -49,7 +49,7 @@ class Solver(DASolver):
         net = DeepCoral(
             model,
             optimizer=Adadelta,
-            layer_name="fc1",
+            layer_name="feature_layer",
             batch_size=batch_size,
             train_split=None,
             device=device,
