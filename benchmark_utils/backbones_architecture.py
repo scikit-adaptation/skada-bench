@@ -81,19 +81,14 @@ class FBCSPNet(nn.Module):
 
         # Create the ShallowFBCSPNet
         self.feature_layer = ShallowFBCSPNet(
-            n_chans, n_classes, input_window_samples, add_log_softmax=False)
-
-        # Calculate the output shape of the feature layer
-        with torch.no_grad():
-            dummy_input = torch.zeros(1, n_chans, input_window_samples)
-            feature_output = self.feature_layer(dummy_input)
-            feature_output_size = feature_output.numel() // feature_output.size(0)
-
-        # Add a final layer
-        self.final_layer = nn.Sequential(
-            nn.Flatten(),
-            nn.Linear(feature_output_size, n_classes),
+            n_chans, n_classes, input_window_samples, add_log_softmax=False, final_conv_length='auto'
         )
+
+        # Take last layer from the ShallowFBCSPNet
+        self.final_layer = self.feature_layer.final_layer
+
+        # Replace ShallowFBCSPNet's last layer with an identity function
+        self.feature_layer.final_layer = nn.Identity()
 
     def forward(self, x, sample_weight=None):
         x = self.feature_layer(x)
