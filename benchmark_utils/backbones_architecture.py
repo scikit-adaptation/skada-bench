@@ -3,6 +3,7 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
+from torchvision.models import resnet18, ResNet18_Weights
 
 
 class ShallowConvNet(nn.Module):
@@ -15,7 +16,7 @@ class ShallowConvNet(nn.Module):
         self.conv2 = nn.Conv2d(32, 64, 3, 1)
         self.dropout1 = nn.Dropout(0.25)
         self.dropout2 = nn.Dropout(0.5)
-        self.fc1 = nn.Linear(9216, 128)
+        self.feature_layer = nn.Linear(9216, 128)
         self.fc2 = nn.Linear(128, 10)
 
     def forward(self, x, sample_weight=None):
@@ -26,11 +27,33 @@ class ShallowConvNet(nn.Module):
         x = F.max_pool2d(x, 2)
         x = self.dropout1(x)
         x = torch.flatten(x, 1)
-        x = self.fc1(x)
+        x = self.feature_layer(x)
         x = F.relu(x)
         x = self.dropout2(x)
         x = self.fc2(x)
 
+        return x
+
+
+class ResNet18Net(nn.Module):
+    def __init__(self, n_classes):
+        super().__init__()
+
+        # Load pretrained ResNet18 and rename it to feature_layer
+        self.feature_layer = resnet18(weights=ResNet18_Weights.DEFAULT)
+
+        # Get the number of features from the last layer
+        num_ftrs = self.feature_layer.fc.in_features
+
+        # Replace ResNet's fc layer with an identity function
+        self.feature_layer.fc = nn.Identity()
+
+        # Create a new fc layer
+        self.fc = nn.Linear(num_ftrs, n_classes)
+
+    def forward(self, x, sample_weight=None):
+        x = self.feature_layer(x)
+        x = self.fc(x)
         return x
 
 
