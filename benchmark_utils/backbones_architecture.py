@@ -4,6 +4,7 @@ import torch
 from torch import nn
 import torch.nn.functional as F
 from torchvision.models import resnet18, ResNet18_Weights
+from braindecode.models import ShallowFBCSPNet
 
 
 class ShallowConvNet(nn.Module):
@@ -72,3 +73,25 @@ class ShallowMLP(nn.Module):
         x = self.mlp(x)
 
         return x    # Return raw logits
+
+
+class FBCSPNet(nn.Module):
+    def __init__(self, n_chans, n_classes, input_window_samples):
+        super().__init__()
+
+        # Create the ShallowFBCSPNet
+        self.feature_layer = ShallowFBCSPNet(
+            n_chans, n_classes, input_window_samples, add_log_softmax=False, final_conv_length='auto'
+        )
+
+        # Take last layer from the ShallowFBCSPNet
+        self.final_layer = self.feature_layer.final_layer
+
+        # Replace ShallowFBCSPNet's last layer with an identity function
+        self.feature_layer.final_layer = nn.Identity()
+
+    def forward(self, x, sample_weight=None):
+        x = self.feature_layer(x)
+        x = self.final_layer(x)
+
+        return x
