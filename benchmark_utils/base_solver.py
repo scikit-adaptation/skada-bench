@@ -47,7 +47,7 @@ def get_estimator_grid():
     each new model.
     """
     global _BASE_ESTIMATOR_DICT
-    if _BASE_ESTIMATOR_DICT is None:
+    if _BASE_ESTIMATOR_DICT is not None:
         return _BASE_ESTIMATOR_DICT
 
     _BASE_ESTIMATOR_DICT = {
