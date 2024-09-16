@@ -23,7 +23,7 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
         'max_epochs': [14],
-        'lr': [1e-3],
+        'lr': [1],
         'criterion__adapt_criterion': [DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3)],
     }
 
@@ -38,6 +38,9 @@ class Solver(DASolver):
 
         model, batch_size = get_model_and_batch_size(
             dataset_name, n_classes)
+        
+        # For DeepJDOT, we override the default batch size
+        batch_size = 1000
 
         lr_scheduler = LRScheduler(
             policy='StepLR',

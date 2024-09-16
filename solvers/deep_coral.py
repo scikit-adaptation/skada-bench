@@ -24,7 +24,7 @@ class Solver(DASolver):
     default_param_grid = {
         'max_epochs': [14],
         'lr': [1],
-        'criterion__reg': [50, 20, 10, 5, 1],
+        'criterion__reg': [5, 1, 0.1, 0.01, 0.001],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
