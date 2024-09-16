@@ -6,7 +6,7 @@ import zipfile
 from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
-from benchmark_utils.backbones_architecture import ShallowConvNet, ShallowMLP, ResNet18Net
+from benchmark_utils.backbones_architecture import ShallowConvNet, FBCSPNet, ResNet18Net
 
 
 def _download_file_with_progress(url, filename):
@@ -124,7 +124,7 @@ def get_model_and_batch_size(dataset_name, n_classes):
         'mnist_usps': {'batch_size': 256, 'model': ShallowConvNet(n_classes=n_classes)},
         'office31': {'batch_size': 128, 'model': ResNet18Net(n_classes=n_classes)},
         'officehome': {'batch_size': 128, 'model': ResNet18Net(n_classes=n_classes)},
-        'bci': {'batch_size': 256, 'model': ShallowMLP(input_dim=253, n_classes=n_classes).double()}
+        'bci': {'batch_size': 256, 'model': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125)}
     }
 
     if dataset_name not in dataset_configs:
