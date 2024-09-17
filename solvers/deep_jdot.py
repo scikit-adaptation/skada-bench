@@ -40,7 +40,7 @@ class Solver(DASolver):
             dataset_name, n_classes)
         
         # For DeepJDOT, we override the default batch size
-        batch_size = 1000
+        batch_size = 512
 
         lr_scheduler = LRScheduler(
             policy='StepLR',
