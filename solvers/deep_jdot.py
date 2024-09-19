@@ -23,7 +23,7 @@ class Solver(DASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
         'max_epochs': [14],
-        'lr': [1e-3],
+        'lr': [1],
         'criterion__adapt_criterion': [DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3)],
     }
 
@@ -31,13 +31,15 @@ class Solver(DASolver):
         # For testing purposes, we use the following criterions:
         self.criterions = {
             'supervised': SupervisedScorer(),
-            'deep_embedded_validation': DeepEmbeddedValidation(),
+            # 'deep_embedded_validation': DeepEmbeddedValidation(),
         }
 
         dataset_name = dataset_name.split("[")[0].lower()
 
         model, batch_size = get_model_and_batch_size(
             dataset_name, n_classes)
+
+        batch_size = 1000
 
         lr_scheduler = LRScheduler(
             policy='StepLR',

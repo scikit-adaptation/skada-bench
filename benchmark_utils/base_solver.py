@@ -106,11 +106,13 @@ class DASolver(BaseSolver):
 
     # Random state
     random_state = 0
-    n_splits_cv = 5
+    # n_splits_cv = 5
+    n_splits_cv = 1
     test_size_cv = 0.2
 
     if 'SLURM_CPUS_PER_TASK' in os.environ:
-        n_jobs = int(os.environ['SLURM_CPUS_PER_TASK'])
+        # n_jobs = int(os.environ['SLURM_CPUS_PER_TASK'])
+        n_jobs = 1
     else:
         n_jobs = 1
 

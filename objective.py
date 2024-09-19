@@ -49,6 +49,7 @@ class Objective(BaseObjective):
     # Random state
     random_state = 0
     n_splits_data = 5
+    # n_splits_data = 1
     test_size_data = 0.2
 
     # Set random states
@@ -195,6 +196,7 @@ class Objective(BaseObjective):
                         f'{criterion}_test_target_{metric_name}':
                             metric(y_test_target, y_pred_test_target, **f1_args)
                     })
+                    print(f'All metrics: {all_metrics}')
                 except Exception as e:
                     print(e)
 

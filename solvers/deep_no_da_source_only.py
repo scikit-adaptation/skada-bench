@@ -30,7 +30,7 @@ class Solver(DASolver):
         # For testing purposes, we use the following criterions:
         self.criterions = {
             'supervised': SupervisedScorer(),
-            'deep_embedded_validation': DeepEmbeddedValidation(),
+            # 'deep_embedded_validation': DeepEmbeddedValidation(),
         }
 
         dataset_name = dataset_name.split("[")[0].lower()
