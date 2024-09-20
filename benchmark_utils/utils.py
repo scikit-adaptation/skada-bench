@@ -6,7 +6,10 @@ import zipfile
 from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
+from torch.optim import Adadelta, Adam
+
 from benchmark_utils.backbones_architecture import ShallowConvNet, FBCSPNet, ResNet18Net
+from skorch.callbacks import LRScheduler
 
 
 def _download_file_with_progress(url, filename):
@@ -103,7 +106,7 @@ class ImageDataset(Dataset):
         return image, label
 
 
-def get_model_and_batch_size(dataset_name, n_classes):
+def get_params_per_dataset(dataset_name, n_classes, n_epochs=1):
     """
     Get the appropriate model and batch size for a given dataset.
 
@@ -119,12 +122,37 @@ def get_model_and_batch_size(dataset_name, n_classes):
     Raises:
         ValueError: If an unsupported dataset name is provided.
     """
-
+    lr_scheduler = LRScheduler(
+        policy='StepLR',
+        step_every='epoch',
+        step_size=1,
+        gamma=0.7
+    )
     dataset_configs = {
-        'mnist_usps': {'batch_size': 256, 'model': ShallowConvNet(n_classes=n_classes)},
-        'office31': {'batch_size': 128, 'model': ResNet18Net(n_classes=n_classes)},
-        'officehome': {'batch_size': 128, 'model': ResNet18Net(n_classes=n_classes)},
-        'bci': {'batch_size': 256, 'model': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125)}
+        'mnist_usps': {
+            'batch_size': 256, 
+            'model': ShallowConvNet(n_classes=n_classes), 
+            'lr_scheduler': lr_scheduler, 
+            'optimizer': Adadelta
+        },
+        'office31': {
+            'batch_size': 128, 
+            'model': ResNet18Net(n_classes=n_classes), 
+            'lr_scheduler': lr_scheduler, 
+            'optimizer': Adadelta
+        },
+        'officehome': {
+            'batch_size': 128, 
+            'model': ResNet18Net(n_classes=n_classes), 
+            'lr_scheduler': lr_scheduler, 
+            'optimizer': Adadelta
+        },
+        'bci': {
+            'batch_size': 256, 
+            'model': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125,), 
+            'lr_scheduler': LRScheduler("CosineAnnealingLR", T_max=n_epochs - 1), 
+            'optimizer': Adam
+        },
     }
 
     if dataset_name not in dataset_configs:

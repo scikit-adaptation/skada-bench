@@ -5,10 +5,8 @@ from benchopt import safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
-    from benchmark_utils.utils import get_model_and_batch_size
+    from benchmark_utils.utils import get_params_per_dataset
     from skada.deep import DeepCoral
-    from torch.optim import Adadelta
-    from skorch.callbacks import LRScheduler
     from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
 
 
@@ -36,24 +34,18 @@ class Solver(DASolver):
 
         dataset_name = dataset_name.split("[")[0].lower()
 
-        model, batch_size = get_model_and_batch_size(
-            dataset_name, n_classes)
-
-        lr_scheduler = LRScheduler(
-            policy='StepLR',
-            step_every='epoch',
-            step_size=1,
-            gamma=0.7
+        params = get_params_per_dataset(
+            dataset_name, n_classes, n_epochs=self.default_param_grid['max_epochs'][0]
         )
 
         net = DeepCoral(
-            model,
-            optimizer=Adadelta,
+            params['model'],
+            optimizer=params['optimizer'],
             layer_name="feature_layer",
-            batch_size=batch_size,
+            batch_size=params['batch_size'],
             train_split=None,
             device=device,
-            callbacks=[lr_scheduler],
+            callbacks=[params['lr_scheduler']],
         )
 
         return net
