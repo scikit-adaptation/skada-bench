@@ -31,7 +31,7 @@ class Solver(DASolver):
         # For testing purposes, we use the following criterions:
         self.criterions = {
             'supervised': SupervisedScorer(),
-            'deep_embedded_validation': DeepEmbeddedValidation(),
+            #'deep_embedded_validation': DeepEmbeddedValidation(),
         }
 
         dataset_name = dataset_name.split("[")[0].lower()
@@ -40,7 +40,7 @@ class Solver(DASolver):
             dataset_name, n_classes)
         
         # For DeepJDOT, we override the default batch size
-        batch_size = 512
+        batch_size = 1000
 
         lr_scheduler = LRScheduler(
             policy='StepLR',
