@@ -28,12 +28,6 @@ class Solver(DASolver):
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
-        # For testing purposes, we use the following criterions:
-        self.criterions = {
-            'supervised': SupervisedScorer(),
-            #'deep_embedded_validation': DeepEmbeddedValidation(),
-        }
-
         dataset_name = dataset_name.split("[")[0].lower()
 
         model, batch_size = get_model_and_batch_size(
