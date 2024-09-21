@@ -38,9 +38,13 @@ class Solver(DASolver):
 
         model, batch_size = get_model_and_batch_size(
             dataset_name, n_classes)
-        
+
         # For DeepJDOT, we override the default batch size
-        batch_size = 1000
+        if dataset_name == 'office31' or dataset_name == 'officehome':
+            # With batch size 1000, we get a CUDA out of memory error
+            batch_size = 512
+        else:
+            batch_size = 1000
 
         lr_scheduler = LRScheduler(
             policy='StepLR',
