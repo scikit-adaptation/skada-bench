@@ -9,7 +9,11 @@ with safe_import_context() as import_ctx:
     from skada.deep import DeepCoral
     from torch.optim import Adadelta
     from skorch.callbacks import LRScheduler
-    from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
+    from skada.metrics import (
+        SupervisedScorer, DeepEmbeddedValidation,
+        PredictionEntropyScorer, ImportanceWeightedScorer,
+        SoftNeighborhoodDensity,
+    )
 
 
 # The benchmark solvers must be named `Solver` and
@@ -28,6 +32,14 @@ class Solver(DASolver):
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
+        self.criterions = {
+            'supervised': SupervisedScorer(),
+            'prediction_entropy': PredictionEntropyScorer(),
+            'importance_weighted': ImportanceWeightedScorer(),
+            'soft_neighborhood_density': SoftNeighborhoodDensity(),
+            'deep_embedded_validation': DeepEmbeddedValidation(),
+        }
+
         dataset_name = dataset_name.split("[")[0].lower()
 
         model, batch_size = get_model_and_batch_size(
