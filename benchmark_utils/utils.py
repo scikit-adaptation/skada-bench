@@ -114,7 +114,7 @@ def get_deep_model(dataset_name, n_classes):
 
     Returns:
         dict: A dictionary containing the following keys:
-            - 'model': The neural network model suited for the dataset.
+            - 'module': The neural network module suited for the dataset.
             - 'batch_size' (int): The recommended batch size for the dataset.
             - 'max_epochs' (int): The maximum number of training epochs.
             - 'lr' (float): The recommended learning rate.
@@ -126,25 +126,25 @@ def get_deep_model(dataset_name, n_classes):
     dataset_configs = {
         'mnist_usps': {
             'batch_size': 256,
-            'model': ShallowConvNet(n_classes=n_classes),
+            'module': ShallowConvNet(n_classes=n_classes),
             'max_epochs': 14,
             'lr': 1
         },
         'office31': {
             'batch_size': 128,
-            'model': ResNet(n_classes=n_classes, model_name='resnet18'),
+            'module': ResNet(n_classes=n_classes, model_name='resnet18'),
             'max_epochs': 14,
             'lr': 1
         },
         'officehome': {
             'batch_size': 128,
-            'model': ResNet(n_classes=n_classes, model_name='resnet50'),
+            'module': ResNet(n_classes=n_classes, model_name='resnet50'),
             'max_epochs': 20,
             'lr': 1
         },
         'bci': {
             'batch_size': 256,
-            'model': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125),
+            'module': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125),
             'max_epochs': 14,
             'lr': 1
         }
