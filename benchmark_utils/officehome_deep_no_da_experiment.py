@@ -1,0 +1,68 @@
+import sys
+import os
+from pathlib import Path
+
+path_root = Path(os.path.abspath(__file__)).parents[1]
+sys.path.append(str(path_root))
+
+from sklearn.metrics import accuracy_score
+import torch
+
+from datasets.officehome import Dataset
+from solvers.deep_no_da_source_only import Solver
+from objective import Objective
+
+import argparse
+
+cache_dir = Path('__cache__')
+cache_dir.mkdir(exist_ok=True)
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--debug', action='store_true', help='debug mode')
+
+args = parser.parse_args()
+debug = args.debug
+
+dataset = Dataset()
+dataset.source_target = ('art', 'clipart')
+solver = Solver()
+objective = Objective()
+
+# Load data
+data = dataset.get_data()
+
+# Set the data in the objective
+objective.set_data(**data)
+
+# Get a cross-validation fold
+cv_fold = next(objective.cv.split(objective.X, objective.y, objective.sample_domain))
+X_train, y_train, sample_domain_train, _ = objective.split(cv_fold, objective.X, objective.y, objective.sample_domain)
+X_test, y_test = objective.X_test, objective.y_test
+sample_domain_test = objective.sample_domain_test
+
+# Debug mode
+FACTOR = 100
+if debug:
+    X_train = X_train[::FACTOR]
+    y_train = y_train[::FACTOR]
+    sample_domain_train = sample_domain_train[::FACTOR]
+
+# Get the model from the Solver
+n_classes = len(set(objective.y))
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+print(f'device: {device}')
+dataset_name = dataset.name
+estimator = solver.get_estimator(n_classes=n_classes, device=device, dataset_name=dataset_name)
+
+# Train the model on the training data
+estimator.fit(X_train, y_train, sample_domain=sample_domain_train)
+
+# Predict on the test set
+y_pred_test = estimator.predict(X_test, sample_domain=sample_domain_test)
+
+# Compute the accuracy on the test set
+accuracy = accuracy_score(y_test, y_pred_test)
+
+print(f"Test Accuracy: {accuracy:.4f}")
+
+import ipdb; ipdb.set_trace()
