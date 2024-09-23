@@ -10,7 +10,8 @@ To add a new scorer to the script:
 1. **Import the Scorer**: Add the import statement for the new scorer class within the `safe_import_context` block.
 2. **Update `CRITERIONS` Dictionary**: Add a new entry in the `CRITERIONS` dictionary with the scorer's name and its initialized instance.
 
-This method ensures that all scorers are organized and easily accessible for evaluating domain adaptation methods.
+This method ensures that all scorers are organized and easily accessible
+for evaluating domain adaptation methods.
 """
 from benchopt import safe_import_context
 
@@ -25,6 +26,7 @@ with safe_import_context() as import_ctx:
         SoftNeighborhoodDensity,
         DeepEmbeddedValidation,
         CircularValidation,
+        MixValScorer,
     )
 
 CRITERIONS = {
@@ -33,5 +35,8 @@ CRITERIONS = {
     'importance_weighted': ImportanceWeightedScorer(),
     'soft_neighborhood_density': SoftNeighborhoodDensity(),
     'deep_embedded_validation': DeepEmbeddedValidation(),
-    'circular_validation': CircularValidation()
+    'circular_validation': CircularValidation(),
+    'mix_val_both': MixValScorer(ice_type='both'),
+    'mix_val_inter': MixValScorer(ice_type='inter'),
+    'mix_val_intra': MixValScorer(ice_type='intra'),
 }
