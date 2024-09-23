@@ -119,8 +119,13 @@ class DASolver(BaseSolver):
         device = torch.device("cuda")
     else:
         device = torch.device("cpu")
-    print(f"n_jobs: {n_jobs}")
-    print(f"device: {device}")
+
+    def __init__(self, print_infos=True, **kwargs):
+        super().__init__(**kwargs)
+
+        if print_infos:
+            print(f"n_jobs: {self.n_jobs}")
+            print(f"device: {self.device}")
 
     @abstractmethod
     def get_estimator(self, n_classes=None, device=None):
@@ -238,3 +243,13 @@ class DASolver(BaseSolver):
             cv_results=self.cv_results_,
             dict_estimators=self.dict_estimators_
         )
+
+
+class DeepDASolver(DASolver):
+    n_jobs = 1
+
+    def __init__(self, **kwargs):
+        super().__init__(print_infos=False, **kwargs)
+
+        print(f"n_jobs: {self.n_jobs}")
+        print(f"device: {self.device}")

@@ -4,7 +4,7 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    from benchmark_utils.base_solver import DASolver
+    from benchmark_utils.base_solver import DeepDASolver
     from benchmark_utils.utils import get_deep_model
     from torch.optim import Adadelta
     from skorch.callbacks import LRScheduler
@@ -14,7 +14,7 @@ with safe_import_context() as import_ctx:
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
-class Solver(DASolver):
+class Solver(DeepDASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'Deep_NO_DA_TARGET_ONLY'
 
