@@ -53,6 +53,11 @@ device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f'device: {device}')
 dataset_name = dataset.name
 estimator = solver.get_estimator(n_classes=n_classes, device=device, dataset_name=dataset_name)
+hp = {
+    'max_epochs': 20,
+    'lr': 1
+}
+estimator = estimator.set_params(**hp)
 
 # Train the model on the training data
 estimator.fit(X_train, y_train, sample_domain=sample_domain_train)
