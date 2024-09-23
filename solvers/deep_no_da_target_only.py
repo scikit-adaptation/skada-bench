@@ -18,6 +18,11 @@ class Solver(DASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'Deep_NO_DA_TARGET_ONLY'
 
+    # List of parameters for the solver. The benchmark will consider
+    # the cross product for each key in the dictionary.
+    # All parameters 'p' defined here are available as 'self.p'.
+    default_param_grid = {}
+
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
         # For testing purposes, we use the following criterions:
         self.criterions = {
