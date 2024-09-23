@@ -104,13 +104,13 @@ class ImageDataset(Dataset):
 
 
 def get_deep_model(dataset_name, n_classes):
-       """
+    """
     Returns the appropriate deep learning model for the specified dataset.
 
     Args:
         dataset_name (str): Name of the dataset. Must be one of:
             'mnist_usps', 'office31', 'officehome', or 'bci'.
-        n_classes (int): Number of output classes for the model.
+            n_classes (int): Number of output classes for the model.
 
     Returns:
         dict: A dictionary containing the following keys:
