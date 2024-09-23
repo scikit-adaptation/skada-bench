@@ -12,25 +12,31 @@ with safe_import_context() as import_ctx:
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "Office31"
+    name = "OfficeHome"
 
     # List of parameters to generate the datasets. The benchmark will consider
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
         'source_target': [
-            ('dslr', 'webcam'),
-            ('dslr', 'amazon'),
-            ('webcam', 'dslr'),
-            ('webcam', 'amazon'),
-            ('amazon', 'dslr'),
-            ('amazon', 'webcam')
+            ('art', 'clipart'),
+            ('art', 'product'),
+            ('art', 'realworld'),
+            ('clipart', 'art'),
+            ('clipart', 'product'),
+            ('clipart', 'realworld'),
+            ('product', 'art'),
+            ('product', 'clipart'),
+            ('product', 'realworld'),
+            ('realworld', 'art'),
+            ('realworld', 'clipart'),
+            ('realworld', 'product'),
         ],
     }
 
-    path_dataset = "data/OFFICE31.zip"
-    path_extract = "data/OFFICE31/"
-    url_dataset = "https://wjdcloud.blob.core.windows.net/dataset/OFFICE31.zip"
+    path_dataset = "data/OfficeHome.zip"
+    path_extract = "data/OfficeHome/"
+    url_dataset = "https://wjdcloud.blob.core.windows.net/dataset/OfficeHome.zip"
 
     def _get_dataset(self, domain_select):
         # Define transformations to preprocess the images
@@ -38,15 +44,19 @@ class Dataset(BaseDataset):
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
-            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[
-                                 0.229, 0.224, 0.225]),
+            transforms.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+            ),
         ])
 
         # Create a DataLoader for the dataset
         dataset = ImageDataset(
-            self.path_extract, transform=preprocess, domain_select=domain_select)
+            self.path_extract, transform=preprocess, domain_select=domain_select
+        )
         dataloader = DataLoader(
-            dataset, batch_size=len(dataset), shuffle=False)
+            dataset, batch_size=len(dataset), shuffle=False
+        )
 
         images, labels = next(iter(dataloader))
         images = images.numpy()
@@ -77,8 +87,8 @@ class Dataset(BaseDataset):
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target)
 
-        print(f'Office31 mean {X.mean()}')
-        print(f'Office31 std {X.std()}')
+        print(f'OfficeHome mean {X.mean()}')
+        print(f'OfficeHome std {X.std()}')
 
         return dict(
             X=X,

@@ -26,7 +26,7 @@ class Solver(DASolver):
     # Raise an error if n_components > min(n_samples, n_features)
     # and doesnt save the result in the benchmark results
 
-    def get_estimator(self):
+    def get_estimator(self, **kwargs):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             SelectSource(PCA()),
