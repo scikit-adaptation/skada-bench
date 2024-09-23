@@ -5,6 +5,7 @@ from pathlib import Path
 path_root = Path(os.path.abspath(__file__)).parents[1]
 sys.path.append(str(path_root))
 
+import itertools
 from sklearn.metrics import accuracy_score
 import torch
 
@@ -23,51 +24,67 @@ parser.add_argument('--debug', action='store_true', help='debug mode')
 args = parser.parse_args()
 debug = args.debug
 
-dataset = Dataset()
-dataset.source_target = ('art', 'clipart')
-solver = Solver()
-objective = Objective()
+TASKS = ['art', 'clipart', 'product', 'realworld']
 
-# Load data
-data = dataset.get_data()
+results = dict()
 
-# Set the data in the objective
-objective.set_data(**data)
-
-# Get a cross-validation fold
-cv_fold = next(objective.cv.split(objective.X, objective.y, objective.sample_domain))
-X_train, y_train, sample_domain_train, _ = objective.split(cv_fold, objective.X, objective.y, objective.sample_domain)
-X_test, y_test = objective.X_test, objective.y_test
-sample_domain_test = objective.sample_domain_test
-
-# Debug mode
-FACTOR = 100
+all_source_target_pairs = list(itertools.permutations(TASKS, 2))
 if debug:
-    X_train = X_train[::FACTOR]
-    y_train = y_train[::FACTOR]
-    sample_domain_train = sample_domain_train[::FACTOR]
+    all_source_target_pairs = all_source_target_pairs[:2]
 
-# Get the model from the Solver
-n_classes = len(set(objective.y))
-device = 'cuda' if torch.cuda.is_available() else 'cpu'
-print(f'device: {device}')
-dataset_name = dataset.name
-estimator = solver.get_estimator(n_classes=n_classes, device=device, dataset_name=dataset_name)
-hp = {
-    'max_epochs': 20,
-    'lr': 1
-}
-estimator = estimator.set_params(**hp)
+for source, target in all_source_target_pairs:
+    print(f'{source} -> {target}')
 
-# Train the model on the training data
-estimator.fit(X_train, y_train, sample_domain=sample_domain_train)
+    dataset = Dataset()
+    dataset.source_target = (source, target)
+    solver = Solver()
+    objective = Objective()
 
-# Predict on the test set
-y_pred_test = estimator.predict(X_test, sample_domain=sample_domain_test)
+    # Load data
+    data = dataset.get_data()
 
-# Compute the accuracy on the test set
-accuracy = accuracy_score(y_test, y_pred_test)
+    # Set the data in the objective
+    objective.set_data(**data)
 
-print(f"Test Accuracy: {accuracy:.4f}")
+    # Get a cross-validation fold
+    cv_fold = next(objective.cv.split(objective.X, objective.y, objective.sample_domain))
+    X_train, y_train, sample_domain_train, _ = objective.split(cv_fold, objective.X, objective.y, objective.sample_domain)
+    X_test, y_test = objective.X_test, objective.y_test
+    sample_domain_test = objective.sample_domain_test
+
+    # Debug mode
+    FACTOR = 100
+    if debug:
+        X_train = X_train[::FACTOR]
+        y_train = y_train[::FACTOR]
+        sample_domain_train = sample_domain_train[::FACTOR]
+
+    # Get the model from the Solver
+    n_classes = len(set(objective.y))
+    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    print(f'device: {device}')
+    dataset_name = dataset.name
+    estimator = solver.get_estimator(n_classes=n_classes, device=device, dataset_name=dataset_name)
+    hp = {
+        'max_epochs': 20,
+        'lr': 1,
+    }
+    estimator = estimator.set_params(**hp)
+
+    # Train the model on the training data
+    estimator.fit(X_train, y_train, sample_domain=sample_domain_train)
+
+    # Predict on the test set
+    y_pred_test = estimator.predict(X_test, sample_domain=sample_domain_test)
+
+    # Compute the accuracy on the test set
+    accuracy = accuracy_score(y_test, y_pred_test)
+    print(f"Test Accuracy: {accuracy:.4f}")
+
+    # Save the results
+    results[(source, target)] = accuracy
+
+overall_accuracy = sum(results.values()) / len(results)
+print(f'Overall Accuracy: {overall_accuracy:.4f}')
 
 import ipdb; ipdb.set_trace()
