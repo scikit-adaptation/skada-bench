@@ -5,7 +5,7 @@ from benchopt import safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver
-    from benchmark_utils.utils import get_model_and_batch_size
+    from benchmark_utils.utils import get_deep_model
     from torch.optim import Adadelta
     from skorch.callbacks import LRScheduler
     from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
@@ -18,14 +18,6 @@ class Solver(DASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'Deep_NO_DA_SOURCE_ONLY'
 
-    # List of parameters for the solver. The benchmark will consider
-    # the cross product for each key in the dictionary.
-    # All parameters 'p' defined here are available as 'self.p'.
-    default_param_grid = {
-        'max_epochs': [14],
-        'lr': [1],
-    }
-
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
         # For testing purposes, we use the following criterions:
         self.criterions = {
@@ -35,8 +27,9 @@ class Solver(DASolver):
 
         dataset_name = dataset_name.split("[")[0].lower()
 
-        model, batch_size = get_model_and_batch_size(
-            dataset_name, n_classes)
+        model = get_deep_model(
+            dataset_name, n_classes
+        )
 
         lr_scheduler = LRScheduler(
             policy='StepLR',
@@ -46,10 +39,9 @@ class Solver(DASolver):
         )
 
         net = SourceOnly(
-            module=model,
+            **model,
             optimizer=Adadelta,
             layer_name="feature_layer",
-            batch_size=batch_size,
             train_split=None,
             device=device,
             callbacks=[lr_scheduler],
