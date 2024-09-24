@@ -7,7 +7,6 @@ with safe_import_context() as import_ctx:
     from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.base_solver import DeepDASolver
     from skada.deep import DeepJDOT, DeepJDOTLoss
-    from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
 
 
 # The benchmark solvers must be named `Solver` and
@@ -24,12 +23,6 @@ class Solver(DeepDASolver):
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
-        # For testing purposes, we use the following criterions:
-        self.criterions = {
-            'supervised': SupervisedScorer(),
-            'deep_embedded_validation': DeepEmbeddedValidation(),
-        }
-
         dataset_name = dataset_name.split("[")[0].lower()
 
         params = get_params_per_dataset(
