@@ -6,7 +6,7 @@ import zipfile
 from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
-from torch.optim import Adadelta, Adam
+from torch.optim import Adadelta, AdamW
 
 from benchmark_utils.backbones_architecture import ShallowConvNet, FBCSPNet, ResNet18Net
 from skorch.callbacks import LRScheduler
@@ -106,7 +106,7 @@ class ImageDataset(Dataset):
         return image, label
 
 
-def get_params_per_dataset(dataset_name, n_classes, n_epochs=1):
+def get_params_per_dataset(dataset_name, n_classes):
     """
     Get the appropriate model and batch size for a given dataset.
 
@@ -130,28 +130,29 @@ def get_params_per_dataset(dataset_name, n_classes, n_epochs=1):
     )
     dataset_configs = {
         'mnist_usps': {
-            'batch_size': 256, 
-            'model': ShallowConvNet(n_classes=n_classes), 
-            'lr_scheduler': lr_scheduler, 
+            'batch_size': 256,
+            'model': ShallowConvNet(n_classes=n_classes),
+            'lr_scheduler': lr_scheduler,
             'optimizer': Adadelta
         },
         'office31': {
-            'batch_size': 128, 
-            'model': ResNet18Net(n_classes=n_classes), 
-            'lr_scheduler': lr_scheduler, 
+            'batch_size': 128,
+            'model': ResNet18Net(n_classes=n_classes),
+            'lr_scheduler': lr_scheduler,
             'optimizer': Adadelta
         },
         'officehome': {
-            'batch_size': 128, 
-            'model': ResNet18Net(n_classes=n_classes), 
-            'lr_scheduler': lr_scheduler, 
+            'batch_size': 128,
+            'model': ResNet18Net(n_classes=n_classes),
+            'lr_scheduler': lr_scheduler,
             'optimizer': Adadelta
         },
         'bci': {
-            'batch_size': 256, 
-            'model': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125,), 
-            'lr_scheduler': LRScheduler("CosineAnnealingLR", T_max=n_epochs - 1), 
-            'optimizer': Adam
+            'batch_size': 64,
+            'model': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125,),
+            'lr_scheduler': LRScheduler("CosineAnnealingLR", T_max=200 - 1),
+            'optimizer': AdamW,
+            'lr': 0.0625 * 0.01,
         },
     }
 
@@ -159,4 +160,4 @@ def get_params_per_dataset(dataset_name, n_classes, n_epochs=1):
         raise ValueError(f"Unsupported dataset: {dataset_name}")
 
     config = dataset_configs[dataset_name]
-    return config['model'], config['batch_size']
+    return config
