@@ -48,7 +48,6 @@ class Solver(DeepDASolver):
             train_split=None,
             device=device,
             warm_start=True,
-            callbacks=[lr_scheduler],
             callbacks=[params['lr_scheduler']],
             max_epochs=params['max_epochs'],
             lr=params['lr'],
