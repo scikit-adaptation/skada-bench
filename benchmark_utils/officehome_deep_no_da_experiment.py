@@ -86,5 +86,3 @@ for source, target in all_source_target_pairs:
 
 overall_accuracy = sum(results.values()) / len(results)
 print(f'Overall Accuracy: {overall_accuracy:.4f}')
-
-import ipdb; ipdb.set_trace()
