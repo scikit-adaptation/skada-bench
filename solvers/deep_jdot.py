@@ -4,8 +4,8 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    from benchmark_utils.base_solver import DASolver
-    from benchmark_utils.utils import get_model_and_batch_size
+    from benchmark_utils.base_solver import DeepDASolver
+    from benchmark_utils.utils import get_deep_model
     from skada.deep import DeepJDOT, DeepJDOTLoss
     from torch.optim import Adadelta
     from skorch.callbacks import LRScheduler
@@ -14,7 +14,7 @@ with safe_import_context() as import_ctx:
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
-class Solver(DASolver):
+class Solver(DeepDASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'DeepJDOT'
 
@@ -22,8 +22,6 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'max_epochs': [14],
-        'lr': [1e-3],
         'criterion__adapt_criterion': [DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3)],
     }
 
@@ -36,8 +34,9 @@ class Solver(DASolver):
 
         dataset_name = dataset_name.split("[")[0].lower()
 
-        model, batch_size = get_model_and_batch_size(
-            dataset_name, n_classes)
+        model = get_deep_model(
+            dataset_name, n_classes
+        )
 
         lr_scheduler = LRScheduler(
             policy='StepLR',
@@ -47,10 +46,9 @@ class Solver(DASolver):
         )
 
         net = DeepJDOT(
-            model,
+            **model,
             optimizer=Adadelta,
             layer_name="feature_layer",
-            batch_size=batch_size,
             train_split=None,
             device=device,
             callbacks=[lr_scheduler],
