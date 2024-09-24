@@ -152,8 +152,8 @@ def get_params_per_dataset(dataset_name, n_classes):
         },
         'officehome': {
             'batch_size': 128,
+            'model': ResNet(n_classes=n_classes, model_name='resnet50'),
             'lr_scheduler': lr_scheduler,
-            'module': ResNet(n_classes=n_classes, model_name='resnet50'),
             'optimizer': Adadelta,
             'max_epochs': 20,
             'lr': 1,
