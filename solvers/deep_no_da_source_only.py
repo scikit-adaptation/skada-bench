@@ -6,8 +6,12 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.base_solver import DeepDASolver
-    from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
     from skada.deep import SourceOnly
+    from skada.metrics import (
+        SupervisedScorer, DeepEmbeddedValidation,
+        PredictionEntropyScorer, ImportanceWeightedScorer,
+        SoftNeighborhoodDensity,
+    )
 
 
 # The benchmark solvers must be named `Solver` and
