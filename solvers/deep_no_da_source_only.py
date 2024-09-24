@@ -31,7 +31,7 @@ class Solver(DeepDASolver):
         dataset_name = dataset_name.split("[")[0].lower()
 
         params = get_params_per_dataset(
-            dataset_name, n_classes, n_epochs=self.default_param_grid['max_epochs'][0]
+            dataset_name, n_classes,
         )
 
         net = SourceOnly(
