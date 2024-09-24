@@ -4,10 +4,8 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.base_solver import DeepDASolver
-    from benchmark_utils.utils import get_deep_model
-    from torch.optim import Adadelta
-    from skorch.callbacks import LRScheduler
     from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
     from skada.deep import TargetOnly
 
@@ -32,24 +30,20 @@ class Solver(DeepDASolver):
 
         dataset_name = dataset_name.split("[")[0].lower()
 
-        model = get_deep_model(
-            dataset_name, n_classes
-        )
-
-        lr_scheduler = LRScheduler(
-            policy='StepLR',
-            step_every='epoch',
-            step_size=1,
-            gamma=0.7
+        params = get_params_per_dataset(
+            dataset_name, n_classes,
         )
 
         net = TargetOnly(
-            **model,
-            optimizer=Adadelta,
+            params['model'],
+            optimizer=params['optimizer'],
             layer_name="feature_layer",
+            batch_size=params['batch_size'],
             train_split=None,
             device=device,
-            callbacks=[lr_scheduler],
+            callbacks=[params['lr_scheduler']],
+            max_epochs=params['max_epochs'],
+            lr=params['lr'],
         )
 
         return net

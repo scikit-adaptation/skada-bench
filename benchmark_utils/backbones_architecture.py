@@ -99,5 +99,5 @@ class FBCSPNet(nn.Module):
     def forward(self, x, sample_weight=None):
         x = self.feature_layer(x)
         x = self.final_layer(x)
-
+    
         return x

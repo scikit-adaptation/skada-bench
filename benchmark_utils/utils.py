@@ -6,7 +6,10 @@ import zipfile
 from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
+from torch.optim import Adadelta, AdamW
+
 from benchmark_utils.backbones_architecture import ShallowConvNet, FBCSPNet, ResNet
+from skorch.callbacks import LRScheduler
 
 
 def _download_file_with_progress(url, filename):
@@ -103,7 +106,7 @@ class ImageDataset(Dataset):
         return image, label
 
 
-def get_deep_model(dataset_name, n_classes):
+def get_params_per_dataset(dataset_name, n_classes):
     """
     Returns the appropriate deep learning model for the specified dataset.
 
@@ -122,32 +125,45 @@ def get_deep_model(dataset_name, n_classes):
     Raises:
         ValueError: If an unsupported dataset name is provided.
     """
-
+    lr_scheduler = LRScheduler(
+        policy='StepLR',
+        step_every='epoch',
+        step_size=1,
+        gamma=0.7
+    )
     dataset_configs = {
         'mnist_usps': {
             'batch_size': 256,
-            'module': ShallowConvNet(n_classes=n_classes),
+            'model': ShallowConvNet(n_classes=n_classes),
+            'lr_scheduler': lr_scheduler,
+            'optimizer': Adadelta,
             'max_epochs': 14,
-            'lr': 1
+            'lr': 1,
         },
         'office31': {
             'batch_size': 128,
-            'module': ResNet(n_classes=n_classes, model_name='resnet18'),
+            'model': ResNet(n_classes=n_classes, model_name='resnet18'),
+            'lr_scheduler': lr_scheduler,
+            'optimizer': Adadelta,
             'max_epochs': 14,
             'lr': 1
         },
         'officehome': {
             'batch_size': 128,
+            'lr_scheduler': lr_scheduler,
             'module': ResNet(n_classes=n_classes, model_name='resnet50'),
+            'optimizer': Adadelta,
             'max_epochs': 20,
             'lr': 1
         },
         'bci': {
-            'batch_size': 256,
-            'module': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125),
-            'max_epochs': 14,
-            'lr': 1
-        }
+            'batch_size': 64,
+            'model': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125,),
+            'lr_scheduler': LRScheduler("CosineAnnealingLR", T_max=200 - 1),
+            'optimizer': AdamW,
+            'lr': 0.0625 * 0.01,
+            'max_epochs': 200,
+        },
     }
 
     if dataset_name not in dataset_configs:
