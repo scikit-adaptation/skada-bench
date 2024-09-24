@@ -7,6 +7,11 @@ with safe_import_context() as import_ctx:
     from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.base_solver import DeepDASolver
     from skada.deep import DANN
+    from skada.metrics import (
+        SupervisedScorer, DeepEmbeddedValidation,
+        PredictionEntropyScorer, ImportanceWeightedScorer,
+        SoftNeighborhoodDensity,
+    )
 
 
 # The benchmark solvers must be named `Solver` and
@@ -23,6 +28,14 @@ class Solver(DeepDASolver):
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
+        self.criterions = {
+            'supervised': SupervisedScorer(),
+            'prediction_entropy': PredictionEntropyScorer(),
+            'importance_weighted': ImportanceWeightedScorer(),
+            'soft_neighborhood_density': SoftNeighborhoodDensity(),
+            'deep_embedded_validation': DeepEmbeddedValidation(),
+        }
+
         dataset_name = dataset_name.split("[")[0].lower()
 
         params = get_params_per_dataset(
