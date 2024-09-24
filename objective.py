@@ -67,6 +67,8 @@ class Objective(BaseObjective):
         # API to pass data. This is customizable for each benchmark.
         self.X, self.y, self.sample_domain = X, y, sample_domain
 
+        print(f"X whole dataset shape: {self.X.shape}")
+
         # check y is discrete or continuous
         self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
 

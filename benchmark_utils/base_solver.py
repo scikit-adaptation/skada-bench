@@ -192,6 +192,8 @@ class DASolver(BaseSolver):
         )
 
     def run(self, n_iter):
+        print(f"X train outer shape: {self.X.shape}")
+        print(f"In theory, X train inner shape should be: {int(self.X.shape[0] * (1 - self.test_size_cv))}")
         if self.name in ('NO_DA_TARGET_ONLY', 'Deep_NO_DA_TARGET_ONLY'):
             # We are in a case of no domain adaptation
             # We dont need to use masked targets
