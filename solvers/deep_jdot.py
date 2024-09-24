@@ -24,7 +24,11 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__adapt_criterion': [DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3)],
+        'criterion__adapt_criterion': [
+            DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-2),
+            DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3),
+            DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-4),
+            ],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
