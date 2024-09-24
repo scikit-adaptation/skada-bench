@@ -6,20 +6,20 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.base_solver import DeepDASolver
-    from skada.deep import DeepJDOT, DeepJDOTLoss
+    from skada.deep import DANN
 
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
 class Solver(DeepDASolver):
     # Name to select the solver in the CLI and to display the results.
-    name = 'DeepJDOT'
+    name = 'DANN'
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__adapt_criterion': [DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3)],
+        'criterion__reg': [0.01],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -29,7 +29,7 @@ class Solver(DeepDASolver):
             dataset_name, n_classes,
         )
 
-        net = DeepJDOT(
+        net = DANN(
             params['model'],
             optimizer=params['optimizer'],
             layer_name="feature_layer",
@@ -39,6 +39,7 @@ class Solver(DeepDASolver):
             callbacks=[params['lr_scheduler']],
             max_epochs=params['max_epochs'],
             lr=params['lr'],
+            num_features=params['num_features'],
         )
 
         return net
