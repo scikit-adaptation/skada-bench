@@ -51,7 +51,6 @@ class ResNet(nn.Module):
 
         # Get the number of features from the last layer
         num_ftrs = self.feature_layer.fc.in_features
-
         # Replace ResNet's fc layer with an identity function
         self.feature_layer.fc = nn.Identity()
 
