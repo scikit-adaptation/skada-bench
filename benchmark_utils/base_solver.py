@@ -114,11 +114,8 @@ class DASolver(BaseSolver):
     else:
         n_jobs = 1
 
-    # Set device depending on the gpu/cpu available
-    if torch.cuda.is_available():
-        device = torch.device("cuda")
-    else:
-        device = torch.device("cpu")
+    # Set device to cpu
+    device = torch.device("cpu")
 
     def __init__(self, print_infos=True, **kwargs):
         super().__init__(**kwargs)
@@ -247,6 +244,12 @@ class DASolver(BaseSolver):
 
 class DeepDASolver(DASolver):
     n_jobs = 1
+
+    # Set device depending on the gpu/cpu available
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    else:
+        device = torch.device("cpu")
 
     def __init__(self, **kwargs):
         super().__init__(print_infos=False, **kwargs)
