@@ -8,7 +8,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torch.optim import Adadelta, AdamW
 
-from benchmark_utils.backbones_architecture import ShallowConvNet, FBCSPNet, ResNet18Net
+from benchmark_utils.backbones_architecture import ShallowConvNet, FBCSPNet, ResNet
 from skorch.callbacks import LRScheduler
 
 
@@ -108,16 +108,19 @@ class ImageDataset(Dataset):
 
 def get_params_per_dataset(dataset_name, n_classes):
     """
-    Get the appropriate model and batch size for a given dataset.
+    Returns the appropriate deep learning model for the specified dataset.
 
     Args:
-        dataset_name (str): Name of the dataset ('mnist_usps', 'office31', 'officehome', or 'bci').
-        n_classes (int): Number of classes in the dataset.
+        dataset_name (str): Name of the dataset. Must be one of:
+            'mnist_usps', 'office31', 'officehome', or 'bci'.
+            n_classes (int): Number of output classes for the model.
 
     Returns:
-        tuple: A tuple containing:
-            - model: The appropriate neural network model for the dataset.
-            - batch_size (int): The recommended batch size for the dataset.
+        dict: A dictionary containing the following keys:
+            - 'module': The neural network module suited for the dataset.
+            - 'batch_size' (int): The recommended batch size for the dataset.
+            - 'max_epochs' (int): The maximum number of training epochs.
+            - 'lr' (float): The recommended learning rate.
 
     Raises:
         ValueError: If an unsupported dataset name is provided.
@@ -133,19 +136,25 @@ def get_params_per_dataset(dataset_name, n_classes):
             'batch_size': 256,
             'model': ShallowConvNet(n_classes=n_classes),
             'lr_scheduler': lr_scheduler,
-            'optimizer': Adadelta
+            'optimizer': Adadelta,
+            'max_epochs': 14,
+            'lr': 1,
         },
         'office31': {
             'batch_size': 128,
-            'model': ResNet18Net(n_classes=n_classes),
+            'model': ResNet(n_classes=n_classes, model_name='resnet18'),
             'lr_scheduler': lr_scheduler,
-            'optimizer': Adadelta
+            'optimizer': Adadelta,
+            'max_epochs': 14,
+            'lr': 1
         },
         'officehome': {
             'batch_size': 128,
-            'model': ResNet18Net(n_classes=n_classes),
             'lr_scheduler': lr_scheduler,
-            'optimizer': Adadelta
+            'module': ResNet(n_classes=n_classes, model_name='resnet50'),
+            'optimizer': Adadelta,
+            'max_epochs': 20,
+            'lr': 1
         },
         'bci': {
             'batch_size': 64,
@@ -153,6 +162,7 @@ def get_params_per_dataset(dataset_name, n_classes):
             'lr_scheduler': LRScheduler("CosineAnnealingLR", T_max=200 - 1),
             'optimizer': AdamW,
             'lr': 0.0625 * 0.01,
+            'max_epochs': 200,
         },
     }
 

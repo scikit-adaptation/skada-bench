@@ -4,15 +4,15 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    from benchmark_utils.base_solver import DASolver
     from benchmark_utils.utils import get_params_per_dataset
+    from benchmark_utils.base_solver import DeepDASolver
     from skada.deep import DeepCoral
     from skada.metrics import SupervisedScorer, DeepEmbeddedValidation
 
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
-class Solver(DASolver):
+class Solver(DeepDASolver):
     # Name to select the solver in the CLI and to display the results.
     name = 'DeepCORAL'
 
@@ -20,8 +20,6 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'max_epochs': [14],
-        'lr': [1],
         'criterion__reg': [50, 20, 10, 5, 1],
     }
 
@@ -46,6 +44,8 @@ class Solver(DASolver):
             train_split=None,
             device=device,
             callbacks=[params['lr_scheduler']],
+            max_epochs=params['max_epochs'],
+            lr=params['lr'],
         )
 
         return net

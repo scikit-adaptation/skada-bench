@@ -3,7 +3,10 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
-from torchvision.models import resnet18, ResNet18_Weights
+from torchvision.models import (
+    resnet18, ResNet18_Weights,
+    resnet50, ResNet50_Weights
+)
 from braindecode.models import ShallowFBCSPNet
 
 
@@ -36,12 +39,15 @@ class ShallowConvNet(nn.Module):
         return x
 
 
-class ResNet18Net(nn.Module):
-    def __init__(self, n_classes):
+class ResNet(nn.Module):
+    def __init__(self, n_classes, model_name='resnet18'):
         super().__init__()
 
-        # Load pretrained ResNet18 and rename it to feature_layer
-        self.feature_layer = resnet18(weights=ResNet18_Weights.DEFAULT)
+        # Load pretrained ResNet and rename it to feature_layer
+        if model_name == 'resnet18':
+            self.feature_layer = resnet18(weights=ResNet18_Weights.DEFAULT)
+        elif model_name == 'resnet50':
+            self.feature_layer = resnet50(weights=ResNet50_Weights.DEFAULT)
 
         # Get the number of features from the last layer
         num_ftrs = self.feature_layer.fc.in_features
