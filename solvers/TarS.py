@@ -7,6 +7,11 @@ with safe_import_context() as import_ctx:
     from skada import MMDTarSReweightAdapter, make_da_pipeline
     from benchmark_utils.base_solver import DASolver, FinalEstimator
 
+    from benchmark_utils.base_solver import import_ctx as base_import_ctx
+    if base_import_ctx.failed_import:
+        exc, val, tb = base_import_ctx.import_error
+        raise exc(val).with_traceback(tb)
+
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
@@ -18,7 +23,9 @@ class Solver(DASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'mmdtarsreweightadapter__gamma': [0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100., 1000., None],
+        'mmdtarsreweightadapter__gamma': [
+            0.0001, 0.001, 0.01, 0.1, 1.0, 10.0, 100., 1000., None
+        ],
         'mmdtarsreweightadapter__reg': [1e-6],
         'mmdtarsreweightadapter__tol': [1e-6],
         'mmdtarsreweightadapter__max_iter': [1000],

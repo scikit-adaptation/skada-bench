@@ -27,7 +27,9 @@ class Dataset(BaseDataset):
     # Name to select the dataset in the CLI and to display the results.
     name = "BCI"
 
-    requirements = ['mne==1.6.1', 'braindecode==0.8.1', 'moabb==0.5', 'pyriemann==0.3']
+    requirements = [
+        'mne==1.6.1', 'braindecode==0.8.1', 'moabb==0.5', 'pyriemann==0.3'
+    ]
 
     parameters = {
         'subject_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],

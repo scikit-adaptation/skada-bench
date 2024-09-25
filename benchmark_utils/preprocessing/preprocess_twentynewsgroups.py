@@ -30,13 +30,17 @@ if __name__ == "__main__":
 
     # MinHashEncoder
     print("Encoding text data using MinHashEncoder...")
-    vectorizer = MinHashEncoder(n_components=N_COMPONENTS, ngram_range=NGRAM_RANGE, n_jobs=-1)
+    vectorizer = MinHashEncoder(
+        n_components=N_COMPONENTS, ngram_range=NGRAM_RANGE, n_jobs=-1
+    )
     X_min_hash = vectorizer.fit_transform([[d] for d in data.data])
 
     # Sentence Transformers
     print("Encoding text data using Sentence Transformers...")
     model = SentenceTransformer(MODEL_NAME, device=DEVICE)
-    X_sentence_transformers = model.encode(data.data, batch_size=BATCH_SIZE, show_progress_bar=True)
+    X_sentence_transformers = model.encode(
+        data.data, batch_size=BATCH_SIZE, show_progress_bar=True
+    )
     X_sentence_transformers = X_sentence_transformers.astype("float64")
 
     # Apply PCA to reduce the dimensionality of the embeddings

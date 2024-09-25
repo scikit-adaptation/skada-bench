@@ -4,7 +4,8 @@ with safe_import_context() as import_ctx:
     from sklearn.decomposition import PCA
     from sklearn.preprocessing import LabelEncoder
     from skada.utils import source_target_merge
-    from skada.datasets import fetch_office31_decaf_all, Office31CategoriesPreset
+    from skada.datasets import fetch_office31_decaf_all
+    from skada.datasets import Office31CategoriesPreset  # noqa: F401
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`

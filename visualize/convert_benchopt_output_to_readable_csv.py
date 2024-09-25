@@ -1,8 +1,8 @@
 """
 This script processes and cleans output files from Benchopt, converting them
 into a more readable CSV format.
-Note: The rows with 'best_scorer' as the scorer are the best unsupervised scorers,
-except for the NO_DA methods, which use the supervised scorer.
+Note: The rows with 'best_scorer' as the scorer are the best unsupervised
+scorers, except for the NO_DA methods, which use the supervised scorer.
 
 The script performs the following steps:
 1. Loads data from a specified directory containing CSV or Parquet files.
@@ -10,18 +10,22 @@ The script performs the following steps:
 3. Exports the cleaned dataframe to a specified output directory.
 
 Usage:
-    python clean_benchopt_output_to_readable_format.py --directory <input_directory> --domain <target-source> --output <output_directory>
+    python clean_benchopt_output_to_readable_format.py \
+        --directory <input_directory> --domain <target-source> \
+        --output <output_directory>
 
 Arguments:
     --directory: Path to the directory containing the CSV or Parquet files.
                  Default is '../outputs'.
-    --domain:    Specify whether to output the results of the 'target' or 'source' domains.
-    --output:    Path to the directory where the cleaned CSV file will be saved.
-                 Default is './cleaned_outputs'.
+    --domain:    Specify whether to output the results of the 'target'
+                 or 'source' domains.
+    --output:    Path to the directory where the cleaned CSV file will be
+                 saved. Default is './cleaned_outputs'.
     --file_name: Name of the output file
 
 Example:
-    python clean_benchopt_output_to_readable_format.py --directory ../outputs --domain target --output ./cleaned_outputs
+    python clean_benchopt_output_to_readable_format.py --directory ../outputs \
+        --domain target --output ./cleaned_outputs
 """
 
 import os
@@ -39,6 +43,7 @@ from _utils import (
     keep_only_best_scorer_per_estimator,
     regex_match,
 )
+
 
 def clean_benchopt_df(df, domain, dataset_params):
     # We remove '[param_grid=...]' from the dataset name
@@ -69,7 +74,7 @@ def clean_benchopt_df(df, domain, dataset_params):
 
     if 'params' in df.columns:
         filtered_columns.append('params')
-    
+
     if 'cv_score' in df.columns:
         filtered_columns.append('cv_score')
 
@@ -80,9 +85,8 @@ def clean_benchopt_df(df, domain, dataset_params):
     best_unsupervised = df[df['scorer'] != 'supervised']
     best_unsupervised = keep_only_best_scorer_per_estimator(
         best_unsupervised,
-        specific_col = (domain + '_accuracy', 'test', 'mean'),
+        specific_col=(domain + '_accuracy', 'test', 'mean'),
     )
-    
 
     # Remove NO_DA methods from the best_unsupervised df
     no_da_methods = [solver for solver in DA_TECHNIQUES['NO DA']]
@@ -101,9 +105,9 @@ def clean_benchopt_df(df, domain, dataset_params):
 
     # Add the best scores to the original df
     df = pd.concat([df, best_scores_df])
-    
 
-    # Rename the columns by concatenating the tuples with a hyphen, except 'scorer'
+    # Rename the columns by concatenating the tuples with a hyphen,
+    # except 'scorer'
     df.columns = [
         '-'.join([col[0], col[1], col[2]])
         if isinstance(col, tuple) and len(col) > 2
@@ -112,17 +116,20 @@ def clean_benchopt_df(df, domain, dataset_params):
     ]
 
     # Remove the domain in col names since here its implied
-    #df.columns = [col.replace(domain + '_', '') for col in df.columns]
+    # df.columns = [col.replace(domain + '_', '') for col in df.columns]
 
     # Move dataset name and estimator from index
     df['dataset'] = [index_tuple[0] for index_tuple in df.index]
     df['estimator'] = [index_tuple[1] for index_tuple in df.index]
 
     df = df.reset_index(drop=True)
-    
+
     # Add type column
     # Create a reverse lookup dictionary
-    reverse_lookup = {solver: technique for technique, solvers in DA_TECHNIQUES.items() for solver in solvers}
+    reverse_lookup = {
+        solver: technique for technique, solvers in DA_TECHNIQUES.items()
+        for solver in solvers
+    }
     df['type'] = df['estimator'].map(reverse_lookup)
 
     # Set to 'Unknown' for the rest
@@ -136,12 +143,12 @@ def clean_benchopt_df(df, domain, dataset_params):
         if 'shift' in dataset:
             return dataset.split('shift=')[1].strip(']')
         elif 'source_target' in dataset:
-            regex = ".*source_target=\('([^']+)', '([^']+)'\).*"
+            regex = r".*source_target=\('([^']+)', '([^']+)'\).*"
             return regex_match(regex, dataset)
         elif 'subject_id' in dataset:
             return dataset.split('subject_id=')[1].strip(']')
         return None
-    
+
     # Add shift as a new column
     df['shift'] = df['dataset'].apply(extract_shift)
 
@@ -149,9 +156,9 @@ def clean_benchopt_df(df, domain, dataset_params):
     df['dataset'] = df['dataset'].apply(lambda x: x.split('[')[0])
 
     # Reorganize df
+    selected_cols = ['dataset', 'shift', 'estimator', 'scorer', 'type']
     df = df[
-        ['dataset', 'shift', 'estimator', 'scorer', 'type'] +
-        [col for col in df.columns if col not in ['dataset', 'shift', 'estimator', 'scorer', 'type']]
+        selected_cols + [col for col in df.columns if col not in selected_cols]
     ]
 
     return df
@@ -174,7 +181,8 @@ if __name__ == "__main__":
         "--domain",
         type=str,
         choices=['target', 'source'],
-        help="Specify whether to output the results of the 'target' or 'source' domains.",
+        help="Specify whether to output the results of the 'target' "
+        "or 'source' domains.",
         default='target',
     )
 
@@ -214,4 +222,4 @@ if __name__ == "__main__":
 
     os.makedirs(output_directory, exist_ok=True)
 
-    df.to_csv(output_directory + '/%s.csv'%args.file_name, index=False)
+    df.to_csv(f'{output_directory}/{args.file_name}.csv', index=False)

@@ -8,8 +8,12 @@ import argparse
 
 def generate_boxplot(csv_file):
     df = pd.read_csv(csv_file)
-    df_rm_supervised = df.query("scorer != 'supervised' & scorer != 'best_scorer'")
-    df_rm_supervised = df_rm_supervised.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
+    df_rm_supervised = df.query(
+        "scorer != 'supervised' & scorer != 'best_scorer'"
+    )
+    df_rm_supervised = df_rm_supervised.query(
+        "estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'"
+    )
 
     df_best_scorer = (
         df_rm_supervised.groupby(["estimator", "scorer"])[
@@ -27,25 +31,33 @@ def generate_boxplot(csv_file):
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
     df_source = df.query('estimator == "Train Src" & scorer == "best_scorer"')
     df = df.merge(
-        df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
-        on="shift",
-        suffixes=("", "_target"),
+        df_target[[
+            "shift", "target_accuracy-test-mean", "target_accuracy-test-std"
+        ]], on="shift", suffixes=("", "_target"),
     )
     df = df.merge(
-        df_source[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
-        on="shift",
-        suffixes=("", "_source"),
+        df_source[[
+            "shift", "target_accuracy-test-mean", "target_accuracy-test-std"
+        ]], on="shift", suffixes=("", "_source"),
     )
     df["accn"] = (
-        df["target_accuracy-test-mean"] - df["target_accuracy-test-mean_source"]
-    ) / (df["target_accuracy-test-mean_target"] - df["target_accuracy-test-mean_source"])
+        (
+            df["target_accuracy-test-mean"]
+            - df["target_accuracy-test-mean_source"]
+        ) / (
+            df["target_accuracy-test-mean_target"]
+            - df["target_accuracy-test-mean_source"]
+        )
+    )
 
     df["stdn"] = df["target_accuracy-test-std"] / np.abs(
-        (df["target_accuracy-test-mean_target"] - df["target_accuracy-test-mean_source"])
+        df["target_accuracy-test-mean_target"]
+        - df["target_accuracy-test-mean_source"]
     )
     # remove rows where the source is better than the target
     df = df[
-        df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]
+        df["target_accuracy-test-mean_source"]
+        < df["target_accuracy-test-mean_target"]
     ].reset_index()
 
     # filtering
@@ -66,7 +78,8 @@ def generate_boxplot(csv_file):
     )
 
     df_tot["Delta"] = (
-        df_tot["target_accuracy-test-mean"] - df_tot["target_accuracy-test-mean_supervised"]
+        df_tot["target_accuracy-test-mean"]
+        - df_tot["target_accuracy-test-mean_supervised"]
     )
 
     df_tot = df_tot.merge(

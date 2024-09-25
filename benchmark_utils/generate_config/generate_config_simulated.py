@@ -13,7 +13,10 @@ if __name__ == "__main__":
     datasets_path = PATH_skada_bench / "datasets"
     config_path = PATH_skada_bench / "config"
 
-    filenames = [f for f in solvers_path.iterdir() if f.is_file() and not f.name.startswith('.') and f.suffix == '.py']
+    filenames = [
+        f for f in solvers_path.iterdir()
+        if f.is_file() and not f.name.startswith('.') and f.suffix == '.py'
+    ]
 
     with open(config_path / "best_base_estimators.yml") as stream:
         best_base_estimators = yaml.safe_load(stream)
@@ -33,15 +36,17 @@ if __name__ == "__main__":
                 sys.modules[name] = foo
                 spec.loader.exec_module(foo)
 
-                if foo.Solver.name != "JDOT_SVC" and foo.Solver.name != "DASVM":
+                if foo.Solver.name not in ["JDOT_SVC", "DASVM"]:
                     param_grid = foo.Solver.default_param_grid
                     if isinstance(param_grid, list):
                         for i in range(len(param_grid)):
-                            param_grid[i]['finalestimator__estimator_name'] = [best]
+                            param_grid[i]['finalestimator__estimator_name'] = [best]  # noqa: E501
                     else:
                         param_grid['finalestimator__estimator_name'] = [best]
 
-                    DD["solver"].append({foo.Solver.name: {"param_grid": [param_grid]}})
+                    DD["solver"].append({
+                        foo.Solver.name: {"param_grid": [param_grid]}
+                    })
 
             with open(config_path / f"{dataset}_{best}.yml", 'w+') as ff:
                 yaml.dump(DD, ff, default_flow_style=False)

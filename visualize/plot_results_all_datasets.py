@@ -1,10 +1,10 @@
 # %%
-import numpy as np
-import glob
-import pandas as pd
 import json
-import scipy.stats as stats
 import argparse
+
+import numpy as np
+import pandas as pd
+import scipy.stats as stats
 
 
 def shade_of_color_pvalue(
@@ -55,7 +55,9 @@ def shade_of_color_pvalue(
             return df_value
 
 
-def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"):
+def generate_table(
+    csv_file, csv_file_simulated, scorer_selection="unsupervised"
+):
     df = pd.read_csv(csv_file)
 
     df_simulated = pd.read_csv(csv_file_simulated)
@@ -66,15 +68,18 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
 
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 
-    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
-        lambda x: json.loads(x)
+    df["target_accuracy-test-identity"] = (
+        df["target_accuracy-test-identity"].apply(lambda x: json.loads(x))
     )
 
-    df["nb_splits"] = df["target_accuracy-test-identity"].apply(lambda x: len(x))
+    df["nb_splits"] = (
+        df["target_accuracy-test-identity"].apply(lambda x: len(x))
+    )
 
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
     df_source = df.query(
-        'estimator == "Train Src" & scorer != "supervised" & scorer != "best_scorer"'
+        'estimator == "Train Src" & scorer != "supervised" '
+        '& scorer != "best_scorer"'
     )
     idx_source_best_scorer = df_source.groupby(["shift"])[
         "target_accuracy-test-mean"
@@ -82,9 +87,9 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
     df_source = df_source.loc[idx_source_best_scorer]
 
     df = df.merge(
-        df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
-        on="shift",
-        suffixes=("", "_target"),
+        df_target[[
+            "shift", "target_accuracy-test-mean", "target_accuracy-test-std"
+        ]], on="shift", suffixes=("", "_target"),
     )
     df = df.merge(
         df_source[
@@ -100,7 +105,8 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
     )
     # remove rows where the source is better than the target
     df = df[
-        df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]
+        df["target_accuracy-test-mean_source"]
+        < df["target_accuracy-test-mean_target"]
     ].reset_index()
     df = df.query("nb_splits == 5 | nb_splits == 25")
 
@@ -131,8 +137,9 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
     )
 
     df = df.merge(
-        df_shift[["dataset", "scorer", "estimator", "nb_shift", "nb_shift_max"]],
-        on=["dataset", "scorer", "estimator"],
+        df_shift[[
+            "dataset", "scorer", "estimator", "nb_shift", "nb_shift_max"
+        ]], on=["dataset", "scorer", "estimator"],
     )
     df = df[df["nb_shift"] >= df["nb_shift_max"]]
 
@@ -146,7 +153,9 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
     for idx, df_ in df_grouped:
         # test de wilcoxon
         acc_da = np.concatenate(df_["target_accuracy-test-identity"].values)
-        acc_source = np.concatenate(df_["target_accuracy-test-identity_source"].values)
+        acc_source = np.concatenate(
+            df_["target_accuracy-test-identity_source"].values
+        )
         try:
             wilco.append(
                 stats.wilcoxon(
@@ -188,17 +197,24 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
         .reset_index()
     )
 
-    df_source_mean = df_mean.query("estimator == 'Train Src' & scorer == 'best_scorer'")
-    df_target_mean = df_mean.query("estimator == 'Train Tgt' & scorer == 'supervised'")
+    df_source_mean = df_mean.query(
+        "estimator == 'Train Src' & scorer == 'best_scorer'"
+    )
+    df_target_mean = df_mean.query(
+        "estimator == 'Train Tgt' & scorer == 'supervised'"
+    )
 
     if scorer_selection == "supervised":
         df_tot = df_mean.query("scorer == 'supervised'")
         df_wilco = df_wilco.query("scorer == 'supervised'")
 
     elif scorer_selection == "unsupervised":
-        df_mean = df_mean.query("scorer != 'supervised' & scorer != 'best_scorer'")
+        df_mean = df_mean.query(
+            "scorer != 'supervised' & scorer != 'best_scorer'"
+        )
         df_mean_dataset = df_mean.query(
-            "dataset != 'covariate_shift' & dataset != 'target_shift' & dataset != 'concept_drift' & dataset != 'subspace'"
+            "dataset != 'covariate_shift' & dataset != 'target_shift' "
+            "& dataset != 'concept_drift' & dataset != 'subspace'"
         )
         df_mean_dataset = (
             df_mean_dataset.groupby(["estimator", "scorer"])[
@@ -226,26 +242,29 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
             suffixes=("", "_best"),
         )
 
-        df_tot = df_tot[df_tot["scorer"] == df_tot["scorer_best"]].reset_index()
+        df_tot = df_tot.query("scorer == scorer_best").reset_index()
 
-        df_wilco = df_wilco[["dataset", "estimator", "scorer", "pvalue"]].merge(
-            df_mean_dataset[["estimator", "scorer"]],
-            on=[
-                "estimator",
-            ],
-            suffixes=("", "_best"),
+        df_wilco = (
+            df_wilco[["dataset", "estimator", "scorer", "pvalue"]]
+            .merge(
+                df_mean_dataset[["estimator", "scorer"]],
+                on=["estimator",], suffixes=("", "_best"),
+            )
         )
 
-        df_wilco = df_wilco[df_wilco["scorer"] == df_wilco["scorer_best"]].reset_index()
+        df_wilco = df_wilco.query("scorer == scorer_best").reset_index()
 
     df_tot_ = df_tot.query(
-        "dataset != 'covariate_shift' & dataset != 'target_shift' & dataset != 'concept_drift' & dataset != 'subspace'"
+        "dataset != 'covariate_shift' & dataset != 'target_shift' & "
+        "dataset != 'concept_drift' & dataset != 'subspace'"
     )
     df_rank = df_tot_.groupby(["estimator"])["rank"].mean().reset_index()
     # %%
     df_tot = df_tot.query("estimator != 'Train Tgt'")
     df_tot = df_tot.query("estimator != 'Train Src'")
-    df_tot = pd.concat([df_tot, df_source_mean, df_target_mean], axis=0).reset_index()
+    df_tot = pd.concat([
+        df_tot, df_source_mean, df_target_mean
+    ], axis=0).reset_index()
 
     df_tab = df_tot.pivot(
         index="dataset",
@@ -254,7 +273,8 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
     )
 
     df_tab = df_tab.reindex(
-        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
+        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"],
+        level=0
     )
 
     df_tab = df_tab.reindex(
@@ -315,9 +335,9 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
                 continue
             value = df_tab.loc[idx, col]
             # get the color
-            pvalue = df_wilco.query(f"estimator == '{idx[1]}' & dataset == '{col}'")[
-                "pvalue"
-            ].values[0]
+            pvalue = df_wilco.query(
+                f"estimator == '{idx[1]}' & dataset == '{col}'"
+            )["pvalue"].values[0]
             color = shade_of_color_pvalue(
                 value,
                 pvalue,
@@ -370,20 +390,20 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
         )
     df_tab = df_tab.rename(
         columns={
-            "covariate_shift": "\mcrot{1}{l}{45}{\\underline{Cov. shift}}",
-            "target_shift": "\mcrot{1}{l}{45}{\\underline{Tar. shift}}",
-            "concept_drift": "\mcrot{1}{l}{45}{\\underline{Cond. shift}}",
-            "subspace": "\mcrot{1}{l}{45}{\\underline{Sub. shift}}",
-            "Office31": "\mcrot{1}{l}{45}{Office31}",
-            "OfficeHomeResnet": "\mcrot{1}{l}{45}{OfficeHome}",
-            "mnist_usps": "\mcrot{1}{l}{45}{MNIST/USPS}",
-            "20NewsGroups": "\mcrot{1}{l}{45}{20NewsGroups}",
-            "AmazonReview": "\mcrot{1}{l}{45}{AmazonReview}",
-            "Mushrooms": "\mcrot{1}{l}{45}{Mushrooms}",
-            "Phishing": "\mcrot{1}{l}{45}{Phishing}",
-            "BCI": "\mcrot{1}{l}{45}{BCI}",
-            "scorer": "\mcrot{1}{l}{45}{Selected Scorer}",
-            "rank": "\mcrot{1}{l}{45}{Rank}",
+            "covariate_shift": "\\mcrot{1}{l}{45}{\\underline{Cov. shift}}",
+            "target_shift": "\\mcrot{1}{l}{45}{\\underline{Tar. shift}}",
+            "concept_drift": "\\mcrot{1}{l}{45}{\\underline{Cond. shift}}",
+            "subspace": "\\mcrot{1}{l}{45}{\\underline{Sub. shift}}",
+            "Office31": "\\mcrot{1}{l}{45}{Office31}",
+            "OfficeHomeResnet": "\\mcrot{1}{l}{45}{OfficeHome}",
+            "mnist_usps": "\\mcrot{1}{l}{45}{MNIST/USPS}",
+            "20NewsGroups": "\\mcrot{1}{l}{45}{20NewsGroups}",
+            "AmazonReview": "\\mcrot{1}{l}{45}{AmazonReview}",
+            "Mushrooms": "\\mcrot{1}{l}{45}{Mushrooms}",
+            "Phishing": "\\mcrot{1}{l}{45}{Phishing}",
+            "BCI": "\\mcrot{1}{l}{45}{BCI}",
+            "scorer": "\\mcrot{1}{l}{45}{Selected Scorer}",
+            "rank": "\\mcrot{1}{l}{45}{Rank}",
         }
     )
 
@@ -400,10 +420,10 @@ def generate_table(csv_file, csv_file_simulated, scorer_selection="unsupervised"
     lat_tab = lat_tab.replace("toprule", "hline")
     lat_tab = lat_tab.replace("midrule", "hline")
     if scorer == "supervised":
-        lat_tab = lat_tab.replace("cline{1-15}", "hline\hline")
+        lat_tab = lat_tab.replace("cline{1-15}", "hline\\hline")
     else:
-        lat_tab = lat_tab.replace("cline{1-16}", "hline\hline")
-    lat_tab = lat_tab.replace("\multirow[t]", "\multirow")
+        lat_tab = lat_tab.replace("cline{1-16}", "hline\\hline")
+    lat_tab = lat_tab.replace("\\multirow[t]", "\\multirow")
     lat_tab = lat_tab.replace("bottomrule", "hline")
     lat_tab = lat_tab.replace("mnist_usps", "MNIST/USPS")
     lat_tab = lat_tab.replace("OfficeHomeResnet", "OfficeHome")
@@ -444,4 +464,6 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    df = generate_table(args.csv_file, args.csv_file_simulated, args.scorer_selection)
+    df = generate_table(
+        args.csv_file, args.csv_file_simulated, args.scorer_selection
+    )

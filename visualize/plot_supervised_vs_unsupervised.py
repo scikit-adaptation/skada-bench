@@ -12,31 +12,40 @@ def generate_scatter(csv_file):
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
     df_source = df.query('estimator == "Train Src" & scorer == "best_scorer"')
     df = df.merge(
-        df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
-        on="shift",
-        suffixes=("", "_target"),
+        df_target[[
+            "shift", "target_accuracy-test-mean", "target_accuracy-test-std"
+        ]], on="shift", suffixes=("", "_target"),
     )
     df = df.merge(
-        df_source[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
-        on="shift",
-        suffixes=("", "_source"),
+        df_source[[
+            "shift", "target_accuracy-test-mean", "target_accuracy-test-std"
+        ]], on="shift", suffixes=("", "_source"),
     )
-    df["accn"] = (df["target_accuracy-test-mean"] - df["target_accuracy-test-mean_source"]) / (
-        df["target_accuracy-test-mean_target"] - df["target_accuracy-test-mean_source"]
+    df["accn"] = (
+        (
+            df["target_accuracy-test-mean"]
+            - df["target_accuracy-test-mean_source"]
+        ) / (
+            df["target_accuracy-test-mean_target"]
+            - df["target_accuracy-test-mean_source"]
+        )
     )
 
     df["stdn"] = df["target_accuracy-test-std"] / np.abs(
-        (df["target_accuracy-test-mean_target"] - df["target_accuracy-test-mean_source"])
+        df["target_accuracy-test-mean_target"]
+        - df["target_accuracy-test-mean_source"]
     )
     # remove rows where the source is better than the target
-    df = df[df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]].reset_index()
+    df = df[df["target_accuracy-test-mean_source"]
+            < df["target_accuracy-test-mean_target"]].reset_index()
 
     # filtering
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 
     df_mean = (
-        df.groupby(["dataset", "type", "scorer", "estimator"])["target_accuracy-test-mean",]
-        .mean()
+        df.groupby(
+            ["dataset", "type", "scorer", "estimator"]
+        )["target_accuracy-test-mean",].mean()
         .reset_index()
     )
     # remove estimators
@@ -63,7 +72,9 @@ def generate_scatter(csv_file):
 
     for i, scorer in enumerate(scorers):
         df_scorer = df_tot.query(f'scorer == "{scorer}"')
-        df_scorer.rename(columns={"type": "Method type", "dataset": "Dataset"}, inplace=True)
+        df_scorer.rename(
+            columns={"type": "Method type", "dataset": "Dataset"}, inplace=True
+        )
         if i < 4:
             sns.scatterplot(
                 data=df_scorer,
@@ -91,7 +102,9 @@ def generate_scatter(csv_file):
                 edgecolor="gray",
             )
             # change legend position,
-            axes[i].legend(loc="upper left", bbox_to_anchor=(1.1, 1.), fontsize=8)
+            axes[i].legend(
+                loc="upper left", bbox_to_anchor=(1.1, 1.), fontsize=8
+            )
         # get lims of the plot
         lims = [
             np.min([axes[i].get_xlim(), axes[i].get_ylim()]),
@@ -126,7 +139,9 @@ def generate_scatter(csv_file):
 
     for i, scorer in enumerate(scorers):
         for j, type in enumerate(types):
-            df_scorer_type = df_tot.query(f'scorer == "{scorer}" & type == "{type}"')
+            df_scorer_type = df_tot.query(
+                f'scorer == "{scorer}" & type == "{type}"'
+            )
             if i < 4 or j < 3:
                 sns.scatterplot(
                     data=df_scorer_type,
@@ -167,7 +182,9 @@ def generate_scatter(csv_file):
             axes[j, i].set_ylim(0, 1)
             axes[j, i].set_aspect("equal")
             axes[j, i].set_xlabel("Supervised Scorer")
-    fig.savefig("supervised_vs_unsupervised_big_table.pdf", bbox_inches="tight")
+    fig.savefig(
+        "supervised_vs_unsupervised_big_table.pdf", bbox_inches="tight"
+    )
 
 
 if __name__ == "__main__":
