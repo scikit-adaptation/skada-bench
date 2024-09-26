@@ -48,7 +48,7 @@ class Objective(BaseObjective):
 
     # Random state
     random_state = 0
-    n_splits_data = 5
+    n_splits_data = 1
     test_size_data = 0.2
 
     # Set random states
