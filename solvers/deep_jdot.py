@@ -28,6 +28,14 @@ class Solver(DeepDASolver):
             DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-2),
             DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3),
             DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-4),
+
+            DeepJDOTLoss(reg_cl=1e-3, reg_dist=1e-2),
+            DeepJDOTLoss(reg_cl=1e-3, reg_dist=1e-3),
+            DeepJDOTLoss(reg_cl=1e-3, reg_dist=1e-4),
+
+            DeepJDOTLoss(reg_cl=1e-2, reg_dist=1e-2),
+            DeepJDOTLoss(reg_cl=1e-2, reg_dist=1e-3),
+            DeepJDOTLoss(reg_cl=1e-2, reg_dist=1e-4),
             ],
     }
 
