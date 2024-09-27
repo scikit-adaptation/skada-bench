@@ -14,6 +14,7 @@ with safe_import_context() as import_ctx:
         PredictionEntropyScorer, ImportanceWeightedScorer,
         SoftNeighborhoodDensity,
     )
+    import numpy as np
 
 
 # The benchmark solvers must be named `Solver` and
