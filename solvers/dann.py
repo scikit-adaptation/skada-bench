@@ -46,7 +46,7 @@ class Solver(DeepDASolver):
 
         net = DANN(
             params['model'],
-            optimizer=params['optimizer'],
+            optimizer=SGD,
             layer_name="feature_layer",
             batch_size=params['batch_size'],
             train_split=None,
