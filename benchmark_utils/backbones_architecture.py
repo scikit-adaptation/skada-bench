@@ -7,6 +7,7 @@ from torchvision.models import (
     resnet18, ResNet18_Weights,
     resnet50, ResNet50_Weights
 )
+from torch.autograd import Function
 from braindecode.models import ShallowFBCSPNet
 
 
@@ -100,3 +101,70 @@ class FBCSPNet(nn.Module):
         x = self.final_layer(x)
     
         return x
+
+
+class GradientReversalLayer(Function):
+    """Leaves the input unchanged during forward propagation
+    and reverses the gradient by multiplying it by a
+    negative scalar during the backpropagation.
+    """
+
+    @staticmethod
+    def forward(ctx, x, alpha, sample_weight=None):
+        """XXX add docstring here."""
+        ctx.alpha = alpha
+
+        return x.view_as(x)
+
+    @staticmethod
+    def backward(ctx, grad_output):
+        """XXX add docstring here."""
+        output = grad_output.neg() * ctx.alpha
+        return output, None
+
+
+class DomainClassifier(nn.Module):
+    """Classifier Architecture from DANN paper [15]_.
+
+    Parameters
+    ----------
+    num_features : int
+        Size of the input, e.g size of the last layer of
+        the feature extractor
+    n_classes : int, default=1
+        Number of classes
+
+    References
+    ----------
+    .. [15]  Yaroslav Ganin et. al. Domain-Adversarial Training
+            of Neural Networks  In Journal of Machine Learning
+            Research, 2016.
+    """
+
+    def __init__(self, num_features, hidden_size=1024, n_classes=1, alpha=1):
+        super().__init__()
+        self.classifier = nn.Sequential(
+            nn.Linear(num_features, hidden_size),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(hidden_size, hidden_size),
+            nn.ReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(hidden_size, n_classes),
+            nn.Sigmoid(),
+        )
+        self.alpha = alpha
+
+    def forward(self, x, sample_weight=None):
+        """Forward pass.
+
+        Parameters
+        ----------
+        x: torch.Tensor
+            Batch of EEG windows of shape (batch_size, n_channels, n_times).
+        alpha: float
+            Parameter for the reverse layer.
+        """
+        reverse_x = GradientReversalLayer.apply(x, self.alpha)
+        return self.classifier(reverse_x).flatten()
+

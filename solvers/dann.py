@@ -6,7 +6,9 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.base_solver import DeepDASolver
+    from benchmark_utils.backbones_architecture import DomainClassifier
     from skada.deep import DANN
+    from torch.optim import SGD
     from skada.metrics import (
         SupervisedScorer, DeepEmbeddedValidation,
         PredictionEntropyScorer, ImportanceWeightedScorer,
@@ -51,8 +53,12 @@ class Solver(DeepDASolver):
             device=device,
             callbacks=[params['lr_scheduler']],
             max_epochs=params['max_epochs'],
-            lr=params['lr'],
             num_features=params['num_features'],
+            domain_classifier=DomainClassifier(num_features=params['num_features']),
+            optimizer__param_groups=[
+                ('domain_classifier_*', {'lr': 10*params['lr'],}),
+                ('base_module_*', {'lr': params['lr']}),
+            ]
         )
 
         return net
