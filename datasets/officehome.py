@@ -20,17 +20,17 @@ class Dataset(BaseDataset):
     parameters = {
         'source_target': [
             ('art', 'clipart'),
-            ('art', 'product'),
-            ('art', 'realworld'),
-            ('clipart', 'art'),
+            # ('art', 'product'),
+            # ('art', 'realworld'),
+            # ('clipart', 'art'),
             ('clipart', 'product'),
-            ('clipart', 'realworld'),
-            ('product', 'art'),
-            ('product', 'clipart'),
+            # ('clipart', 'realworld'),
+            # ('product', 'art'),
+            # ('product', 'clipart'),
             ('product', 'realworld'),
             ('realworld', 'art'),
-            ('realworld', 'clipart'),
-            ('realworld', 'product'),
+            # ('realworld', 'clipart'),
+            # ('realworld', 'product'),
         ],
     }
 
