@@ -74,12 +74,17 @@ for source, target in all_source_target_pairs:
     # Train the model on the training data
     estimator.fit(X_train, y_train, sample_domain=sample_domain_train)
 
-    # Predict on the test set
-    y_pred_test = estimator.predict(X_test, sample_domain=sample_domain_test)
+    # Get the test target set
+    X_test_target = X_test[sample_domain_test < 0]
+    y_test_target = y_test[sample_domain_test < 0]
+    sample_domain_test_target = sample_domain_test[sample_domain_test < 0]
+
+    # Predict on the test target set
+    y_pred_test_target = estimator.predict(X_test_target, sample_domain=sample_domain_test_target)
 
     # Compute the accuracy on the test set
-    accuracy = accuracy_score(y_test, y_pred_test)
-    print(f"Test Accuracy: {accuracy:.4f}")
+    accuracy = accuracy_score(y_test_target, y_pred_test_target)
+    print(f"Test Target Accuracy: {accuracy:.4f}")
 
     # Save the results
     results[(source, target)] = accuracy
