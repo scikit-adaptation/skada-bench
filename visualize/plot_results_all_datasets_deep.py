@@ -56,9 +56,11 @@ def shade_of_color_pvalue(
 
 
 # %%
-def generate_table(csv_file, scorer_selection="unsupervised"):
+def generate_table(csv_folder, scorer_selection="unsupervised"):
     scorer_selection = "unsupervised"
-    df = pd.read_csv(csv_file)
+    # Load the data
+    csv_files = glob.glob(f"{csv_folder}/*.csv")
+    df = pd.concat([pd.read_csv(f) for f in csv_files])
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 
     df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
@@ -94,7 +96,7 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
     df = df[
         df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]
     ].reset_index()
-    df = df.query("nb_splits == 5")
+    # df = df.query("nb_splits == 5")
 
 
     # remove duplicates
@@ -370,17 +372,18 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--csv-file",
+        "--csv-folder",
         type=str,
-        help="Path to the csv file containing results for real data",
-        default='./readable_csv/results_all_datasets_experiments.csv'
+        help="Path to the csv folder containing results for real data",
+        required=True,
     )
 
     parser.add_argument(
         "--scorer-selection",
         type=str,
-        default="unsupervised"
+        choices=["unsupervised", "supervised"],
+        required=True
     )
 
     args = parser.parse_args()
-    df = generate_table(args.csv_file, args.csv_file_simulated, args.scorer_selection)
+    df = generate_table(args.csv_folder, args.scorer_selection)
