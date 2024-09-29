@@ -132,12 +132,14 @@ def get_params_per_dataset(dataset_name, n_classes):
             'callbacks': [LRScheduler(
                 policy='StepLR',
                 step_every='epoch',
-                step_size=1,
-                gamma=0.7
+                step_size=10,
+                gamma=0.2
             )],
-            'optimizer': Adadelta,
-            'max_epochs': 14,
-            'lr': 1,
+            'optimizer': SGD,
+            'optimizer__momentum': 0.6,
+            'optimizer__weight_decay': 1e-5,
+            'max_epochs': 20,
+            'lr': 0.1
         },
         'office31': {
             'batch_size': 128,
