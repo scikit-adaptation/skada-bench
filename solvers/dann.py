@@ -27,7 +27,7 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': np.logspace(-5, 3, 9),
+        'criterion__reg': np.logspace(-2, 1, 4),
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -44,21 +44,21 @@ class Solver(DeepDASolver):
         params = get_params_per_dataset(
             dataset_name, n_classes,
         )
-        params.pop('optimizer')
-        n_features = params['module'].n_features
+        # Reduce learning rate and increase momentum
+        params['lr'] = params['lr'] * 0.1
+        params['optimizer__momentum'] = 0.9
 
         net = DANN(
             **params,
-            optimizer=SGD,
             layer_name="feature_layer",
             train_split=None,
             device=device,
-            domain_classifier=DomainClassifier(num_features=n_features),
-            optimizer__param_groups=[
-                ('base_module_.feature_layer*', {'lr': params['lr']}),
-                ('base_module_.final_layer*', {'lr': params['lr']}),
-                ('domain_classifier_*', {'lr': params['lr'],}),
-            ]
+            domain_classifier=DomainClassifier(num_features=params['module'].n_features),
+            # optimizer__param_groups=[
+            #     ('base_module_.feature_layer*', {'lr': params['lr']}),
+            #     ('base_module_.final_layer*', {'lr': params['lr']}),
+            #     ('domain_classifier_*', {'lr': params['lr'],}),
+            # ]
         )
 
         return net
