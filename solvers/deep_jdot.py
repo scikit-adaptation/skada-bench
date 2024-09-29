@@ -49,16 +49,11 @@ class Solver(DeepDASolver):
         )
 
         net = DeepJDOT(
-            params['model'],
-            optimizer=params['optimizer'],
+            **params,
             layer_name="feature_layer",
-            batch_size=params['batch_size'],
             train_split=None,
             device=device,
             warm_start=True,
-            callbacks=[params['lr_scheduler']],
-            max_epochs=params['max_epochs'],
-            lr=params['lr'],
         )
 
         return net

@@ -6,7 +6,7 @@ import zipfile
 from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
-from torch.optim import Adadelta, AdamW
+from torch.optim import Adadelta, AdamW, SGD
 
 from benchmark_utils.backbones_architecture import ShallowConvNet, FBCSPNet, ResNet
 from skorch.callbacks import LRScheduler
@@ -125,48 +125,57 @@ def get_params_per_dataset(dataset_name, n_classes):
     Raises:
         ValueError: If an unsupported dataset name is provided.
     """
-    lr_scheduler = LRScheduler(
-        policy='StepLR',
-        step_every='epoch',
-        step_size=1,
-        gamma=0.7
-    )
     dataset_configs = {
         'mnist_usps': {
             'batch_size': 256,
-            'model': ShallowConvNet(n_classes=n_classes),
-            'lr_scheduler': lr_scheduler,
+            'module': ShallowConvNet(n_classes=n_classes),
+            'callbacks': [LRScheduler(
+                policy='StepLR',
+                step_every='epoch',
+                step_size=1,
+                gamma=0.7
+            )],
             'optimizer': Adadelta,
             'max_epochs': 14,
             'lr': 1,
-            'num_features': 128,
         },
         'office31': {
             'batch_size': 128,
-            'model': ResNet(n_classes=n_classes, model_name='resnet50'),
-            'lr_scheduler': lr_scheduler,
-            'optimizer': Adadelta,
-            'max_epochs': 14,
-            'lr': 1,
-            'num_features': 2048,
+            'module': ResNet(n_classes=n_classes, model_name='resnet50'),
+            'callbacks': [LRScheduler(
+                policy='StepLR',
+                step_every='epoch',
+                step_size=10,
+                gamma=0.2
+            )],
+            'optimizer': SGD,
+            'optimizer__momentum': 0.2,
+            'optimizer__weight_decay': 1e-5,
+            'max_epochs': 30,
+            'lr': 0.5,
         },
         'officehome': {
             'batch_size': 128,
-            'model': ResNet(n_classes=n_classes, model_name='resnet50'),
-            'lr_scheduler': lr_scheduler,
-            'optimizer': Adadelta,
+            'module': ResNet(n_classes=n_classes, model_name='resnet50'),
+            'callbacks': [LRScheduler(
+                policy='StepLR',
+                step_every='epoch',
+                step_size=10,
+                gamma=0.2
+            )],
+            'optimizer': SGD,
+            'optimizer__momentum': 0.6,
+            'optimizer__weight_decay': 1e-5,
             'max_epochs': 20,
-            'lr': 1,
-            'num_features': 2048,
+            'lr': 0.05,
         },
         'bci': {
             'batch_size': 64,
-            'model': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125,),
-            'lr_scheduler': LRScheduler("CosineAnnealingLR", T_max=200 - 1),
+            'module': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125,),
+            'callbacks': [LRScheduler("CosineAnnealingLR", T_max=200 - 1)],
             'optimizer': AdamW,
             'lr': 0.0625 * 0.01,
             'max_epochs': 200,
-            'num_features': 40 * 69,
         },
     }
 

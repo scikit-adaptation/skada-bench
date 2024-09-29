@@ -44,18 +44,16 @@ class Solver(DeepDASolver):
         params = get_params_per_dataset(
             dataset_name, n_classes,
         )
+        params.pop('optimizer')
+        n_features = params['module'].n_features
 
         net = DANN(
-            params['model'],
+            **params,
             optimizer=SGD,
             layer_name="feature_layer",
-            batch_size=params['batch_size'],
             train_split=None,
             device=device,
-            callbacks=[params['lr_scheduler']],
-            max_epochs=params['max_epochs'],
-            num_features=params['num_features'],
-            domain_classifier=DomainClassifier(num_features=params['num_features']),
+            domain_classifier=DomainClassifier(num_features=n_features),
             optimizer__param_groups=[
                 ('base_module_.feature_layer*', {'lr': params['lr']}),
                 ('base_module_.final_layer*', {'lr': params['lr']}),
