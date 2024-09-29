@@ -50,7 +50,8 @@ class ResNet(nn.Module):
             self.feature_layer = resnet50(weights=ResNet50_Weights.DEFAULT)
 
         # Get the number of features from the last layer
-        num_ftrs = self.feature_layer.fc.in_features
+        self.n_features = num_ftrs = self.feature_layer.fc.in_features
+
         # Replace ResNet's fc layer with an identity function
         self.feature_layer.fc = nn.Identity()
 
@@ -99,7 +100,7 @@ class FBCSPNet(nn.Module):
         # Replace ShallowFBCSPNet's last layer with an identity function
         self.feature_layer.final_layer = nn.Identity()
 
-        self.n_features = self.feature_layer.n_features
+        self.n_features = 40 * 69
 
     def forward(self, x, sample_weight=None):
         x = self.feature_layer(x)
