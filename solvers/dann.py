@@ -46,7 +46,8 @@ class Solver(DeepDASolver):
         )
         # Reduce learning rate and increase momentum
         params['lr'] = params['lr'] * 0.1
-        params['optimizer__momentum'] = 0.9
+        if 'optimizer__momentum' in params:
+            params['optimizer__momentum'] = 0.9
 
         net = DANN(
             **params,
