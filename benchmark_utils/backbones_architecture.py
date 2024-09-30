@@ -30,6 +30,8 @@ class ShallowConvNet(nn.Module):
         )
         self.final_layer = nn.Linear(128, n_classes)
 
+        self.n_features = 128
+
     def forward(self, x, sample_weight=None):
         x = self.feature_layer(x)
         x = self.final_layer(x)
@@ -48,12 +50,15 @@ class ResNet(nn.Module):
             self.feature_layer = resnet50(weights=ResNet50_Weights.DEFAULT)
 
         # Get the number of features from the last layer
-        num_ftrs = self.feature_layer.fc.in_features
+        self.n_features = num_ftrs = self.feature_layer.fc.in_features
+
         # Replace ResNet's fc layer with an identity function
         self.feature_layer.fc = nn.Identity()
 
         # Create a new fc layer
         self.final_layer = nn.Linear(num_ftrs, n_classes)
+
+        self.n_features = num_ftrs
 
     def forward(self, x, sample_weight=None):
         x = self.feature_layer(x)
@@ -70,6 +75,8 @@ class ShallowMLP(nn.Module):
             nn.Dropout(0.5),
             nn.Linear(hidden_dim, n_classes)
         )
+
+        self.n_features = hidden_dim
 
     def forward(self, x, sample_weight=None):
         x = self.feature_layer(x)
@@ -92,6 +99,8 @@ class FBCSPNet(nn.Module):
 
         # Replace ShallowFBCSPNet's last layer with an identity function
         self.feature_layer.final_layer = nn.Identity()
+
+        self.n_features = 40 * 69
 
     def forward(self, x, sample_weight=None):
         x = self.feature_layer(x)

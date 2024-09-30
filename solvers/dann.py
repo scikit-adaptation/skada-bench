@@ -14,6 +14,7 @@ with safe_import_context() as import_ctx:
         PredictionEntropyScorer, ImportanceWeightedScorer,
         SoftNeighborhoodDensity,
     )
+    import numpy as np
 
 
 # The benchmark solvers must be named `Solver` and
@@ -26,7 +27,7 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': [0.1, 0.01, 0.001],
+        'criterion__reg': np.logspace(-2, 1, 4),
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -43,23 +44,21 @@ class Solver(DeepDASolver):
         params = get_params_per_dataset(
             dataset_name, n_classes,
         )
+        # Reduce learning rate and increase momentum
+        params['lr'] = params['lr'] * 0.1
+        params['optimizer__momentum'] = 0.9
 
         net = DANN(
-            params['model'],
-            optimizer=SGD,
+            **params,
             layer_name="feature_layer",
-            batch_size=params['batch_size'],
             train_split=None,
             device=device,
-            callbacks=[params['lr_scheduler']],
-            max_epochs=params['max_epochs'],
-            num_features=params['num_features'],
-            domain_classifier=DomainClassifier(num_features=params['num_features']),
-            optimizer__param_groups=[
-                ('base_module_.feature_layer*', {'lr': params['lr']}),
-                ('base_module_.final_layer*', {'lr': 10*params['lr']}),
-                ('domain_classifier_*', {'lr': 10*params['lr'],}),
-            ]
+            domain_classifier=DomainClassifier(num_features=params['module'].n_features),
+            # optimizer__param_groups=[
+            #     ('base_module_.feature_layer*', {'lr': params['lr']}),
+            #     ('base_module_.final_layer*', {'lr': params['lr']}),
+            #     ('domain_classifier_*', {'lr': params['lr'],}),
+            # ]
         )
 
         return net

@@ -12,6 +12,7 @@ with safe_import_context() as import_ctx:
         PredictionEntropyScorer, ImportanceWeightedScorer,
         SoftNeighborhoodDensity,
     )
+    import numpy as np
 
 
 # The benchmark solvers must be named `Solver` and
@@ -24,7 +25,7 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': [1, 0.1, 0.01],
+        'criterion__reg': np.logspace(-5, 3, 9),
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -43,16 +44,11 @@ class Solver(DeepDASolver):
         )
 
         net = DeepCoral(
-            params['model'],
-            optimizer=params['optimizer'],
+            **params,
             layer_name="feature_layer",
-            batch_size=params['batch_size'],
             train_split=None,
             device=device,
             warm_start=True,
-            callbacks=[params['lr_scheduler']],
-            max_epochs=params['max_epochs'],
-            lr=params['lr'],
         )
 
         return net

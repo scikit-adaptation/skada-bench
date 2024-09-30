@@ -12,6 +12,7 @@ with safe_import_context() as import_ctx:
         PredictionEntropyScorer, ImportanceWeightedScorer,
         SoftNeighborhoodDensity,
     )
+    import itertools
 
 
 # The benchmark solvers must be named `Solver` and
@@ -25,10 +26,11 @@ class Solver(DeepDASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
         'criterion__adapt_criterion': [
-            DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-2),
-            DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-3),
-            DeepJDOTLoss(reg_cl=1e-4, reg_dist=1e-4),
-            ],
+            DeepJDOTLoss(reg_cl=r_cl, reg_dist=r_dist)
+            for r_cl, r_dist in itertools.product(
+                [1e-4, 1e-3, 1e-2], [1e-4, 1e-3, 1e-2]
+            )
+        ],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -47,16 +49,11 @@ class Solver(DeepDASolver):
         )
 
         net = DeepJDOT(
-            params['model'],
-            optimizer=params['optimizer'],
+            **params,
             layer_name="feature_layer",
-            batch_size=params['batch_size'],
             train_split=None,
             device=device,
             warm_start=True,
-            callbacks=[params['lr_scheduler']],
-            max_epochs=params['max_epochs'],
-            lr=params['lr'],
         )
 
         return net
