@@ -27,7 +27,7 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': np.logspace(-2, 1, 4),
+        'criterion__reg': np.logspace(-3, 0, 4),
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
