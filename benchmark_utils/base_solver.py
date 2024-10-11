@@ -160,6 +160,9 @@ class DASolver(BaseSolver):
     # Set device to cpu
     device = torch.device("cpu")
 
+    # Set default criterions
+    criterions = CRITERIONS
+
     def __init__(self, print_infos=True, param_grid="test", **kwargs):
         super().__init__(**kwargs)
 
@@ -187,13 +190,6 @@ class DASolver(BaseSolver):
         """
         pass
 
-    def get_criterions(self):
-        """Returns the criterions to use for the gridsearch.
-
-        We make this overwrittable as some solvers might not want
-        to use all criterions.
-        """
-        return CRITERIONS
 
     # def get_base_estimator(self):
     #     # The estimator passed should have a 'predict_proba' method.

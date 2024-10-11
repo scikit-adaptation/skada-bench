@@ -8,7 +8,7 @@ from PIL import Image
 from torch.utils.data import Dataset
 from torch.optim import AdamW, SGD
 from benchmark_utils.backbones_architecture import (
-    ShallowConvNet, FBCSPNet, ResNet
+    ShallowConvNet, FBCSPNet, ResNet, ShallowMLP,
 )
 from skorch.callbacks import LRScheduler
 
@@ -196,6 +196,15 @@ def get_params_per_dataset(dataset_name, n_classes):
             "lr": 0.0625 * 0.01,
             "max_epochs": 200,
         },
+        "simulated": {
+            "batch_size": 128,
+            "module": ShallowMLP(input_dim=2, n_classes=n_classes),
+            "callbacks": [LRScheduler("CosineAnnealingLR", T_max=200 - 1)],
+            "optimizer": AdamW,
+            "lr": 0.0625 * 0.01,
+            "max_epochs": 200,
+
+        }
     }
 
     if dataset_name not in dataset_configs:
