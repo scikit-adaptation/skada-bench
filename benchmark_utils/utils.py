@@ -138,7 +138,10 @@ def get_params_per_dataset(dataset_name, n_classes):
             "module": ShallowConvNet(n_classes=n_classes),
             "callbacks": [
                 LRScheduler(
-                    policy="StepLR", step_every="epoch", step_size=10, gamma=0.2
+                    policy="StepLR",
+                    step_every="epoch",
+                    step_size=10,
+                    gamma=0.2,
                 )
             ],
             "optimizer": SGD,

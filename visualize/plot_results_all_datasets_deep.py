@@ -60,8 +60,9 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
     df = pd.read_csv(csv_file)
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 
-    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
-        lambda x: json.loads(x)
+    df["target_accuracy-test-identity"] = (
+        df["target_accuracy-test-identity"]
+        .apply(lambda x: json.loads(x))
     )
     df["nb_splits"] = df["target_accuracy-test-identity"].apply(
         lambda x: len(x))
@@ -94,7 +95,8 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
     )
     # remove rows where the source is better than the target
     df = df[
-        df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]
+        df["target_accuracy-test-mean_source"]
+        < df["target_accuracy-test-mean_target"]
     ].reset_index()
     df = df.query("nb_splits == 5")
 
@@ -126,7 +128,15 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
     # )
 
     # df = df.merge(
-    #     df_shift[["dataset", "scorer", "estimator", "nb_shift", "nb_shift_max"]],
+    #     df_shift[
+    #         [
+    #             "dataset",
+    #             "scorer",
+    #             "estimator",
+    #             "nb_shift",
+    #             "nb_shift_max",
+    #         ]
+    #     ],
     #     on=["dataset", "scorer", "estimator"],
     # )
     # df = df[df["nb_shift"] >= df["nb_shift_max"]]
@@ -227,7 +237,9 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
         df_tot = df_tot[df_tot["scorer"] ==
                         df_tot["scorer_best"]].reset_index()
 
-        df_wilco = df_wilco[["dataset", "estimator", "scorer", "pvalue"]].merge(
+        df_wilco = df_wilco[
+            ["dataset", "estimator", "scorer", "pvalue"]
+        ].merge(
             df_mean_dataset[["estimator", "scorer"]],
             on=[
                 "estimator",
@@ -253,7 +265,10 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
     )
 
     # df_tab = df_tab.reindex(
-    #     columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
+    #         columns=["NO DA", "Reweighting",
+    #             "Mapping", "Subspace", "Other"
+    #         ],
+    #     level=0,
     # )
     # %%
     df_tab = df_tab.reindex(
@@ -290,9 +305,9 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
                 continue
             value = df_tab.loc[idx, col]
             # get the color
-            pvalue = df_wilco.query(f"estimator == '{idx}' & dataset == '{col}'")[
-                "pvalue"
-            ].values[0]
+            pvalue = df_wilco.query(
+                f"estimator == '{idx}' & dataset == '{col}'"
+            )["pvalue"].values[0]
             color = shade_of_color_pvalue(
                 value,
                 pvalue,
@@ -328,11 +343,11 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
         )
     df_tab = df_tab.rename(
         columns={
-            "OfficeHome": "\mcrot{1}{l}{45}{OfficeHome}",
-            "mnist_usps": "\mcrot{1}{l}{45}{MNIST/USPS}",
-            "BCI": "\mcrot{1}{l}{45}{BCI}",
-            "scorer": "\mcrot{1}{l}{45}{Selected Scorer}",
-            "rank": "\mcrot{1}{l}{45}{Rank}",
+            "OfficeHome": r"\mcrot{1}{l}{45}{OfficeHome}",
+            "mnist_usps": r"\mcrot{1}{l}{45}{MNIST/USPS}",
+            "BCI": r"\mcrot{1}{l}{45}{BCI}",
+            "scorer": r"\mcrot{1}{l}{45}{Selected Scorer}",
+            "rank": r"\mcrot{1}{l}{45}{Rank}",
         },
         index={
             "Deep_NO_DA_SOURCE_ONLY": "Train Src",
@@ -349,14 +364,14 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
         multirow=True,
         column_format="|l||rr||r||rr|",
     )
-    lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
+    lat_tab = lat_tab.replace(r"\type & estimator &  &  &  &  \\", "")
     lat_tab = lat_tab.replace("toprule", "hline")
     lat_tab = lat_tab.replace("midrule", "hline")
     if scorer == "supervised":
-        lat_tab = lat_tab.replace("cline{1-15}", "hline\hline")
+        lat_tab = lat_tab.replace("cline{1-15}", r"hline\hline")
     else:
-        lat_tab = lat_tab.replace("cline{1-16}", "hline\hline")
-    lat_tab = lat_tab.replace("\multirow[t]", "\multirow")
+        lat_tab = lat_tab.replace("cline{1-16}", r"hline\hline")
+    lat_tab = lat_tab.replace(r"\multirow[t]", r"\multirow")
     lat_tab = lat_tab.replace("bottomrule", "hline")
     lat_tab = lat_tab.replace("mnist_usps", "MNIST/USPS")
     lat_tab = lat_tab.replace("OfficeHomeResnet", "OfficeHome")

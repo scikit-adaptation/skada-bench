@@ -38,7 +38,9 @@ class Dataset(BaseDataset):
 
     path_dataset = "data/OfficeHome.zip"
     path_extract = "data/OfficeHome/"
-    url_dataset = "https://wjdcloud.blob.core.windows.net/dataset/OfficeHome.zip"
+    url_dataset = (
+        "https://wjdcloud.blob.core.windows.net/dataset/OfficeHome.zip"
+    )
 
     def _get_dataset(self, domain_select):
         # Define transformations to preprocess the images
