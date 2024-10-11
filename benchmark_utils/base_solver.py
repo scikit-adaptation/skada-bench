@@ -158,7 +158,12 @@ class DASolver(BaseSolver):
         n_jobs = 1
 
     # Set device to cpu
-    device = torch.device("cpu")
+    try:
+        import torch
+
+        device = torch.device("cpu")
+    except ImportError:
+        pass
 
     # Set default criterions
     criterions = CRITERIONS
