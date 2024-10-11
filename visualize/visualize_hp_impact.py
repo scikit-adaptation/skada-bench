@@ -261,7 +261,6 @@ def extract_from_str_params(string):
     pattern = r'XGBClassifier\([^()]*\)'
     desired_part = re.sub(pattern, "'XGBClassifier'", desired_part)
 
-    
     try:
         params = ast.literal_eval(desired_part)
     except SyntaxError:

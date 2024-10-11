@@ -64,15 +64,18 @@ def generate_table_results(
 
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
 
-    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
-        lambda x: json.loads(x)
+    df["target_accuracy-test-identity"] = (
+        df["target_accuracy-test-identity"].apply(lambda x: json.loads(x))
     )
 
-    df["nb_splits"] = df["target_accuracy-test-identity"].apply(lambda x: len(x))
+    df["nb_splits"] = df["target_accuracy-test-identity"].apply(
+        lambda x: len(x)
+    )
 
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
     df_source = df.query(
-        'estimator == "Train Src" & scorer !=' '"supervised" & scorer != "best_scorer"'
+        'estimator == "Train Src" & scorer !='
+        '"supervised" & scorer != "best_scorer"'
     )
     idx_source_best_scorer = df_source.groupby(["shift"])[
         "target_accuracy-test-mean"
@@ -80,8 +83,9 @@ def generate_table_results(
     df_source = df_source.loc[idx_source_best_scorer]
 
     df = df.merge(
-        df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
-        on="shift",
+        df_target[[
+            "shift", "target_accuracy-test-mean", "target_accuracy-test-std"
+        ]], on="shift",
         suffixes=("", "_target"),
     )
     df = df.merge(
@@ -98,7 +102,8 @@ def generate_table_results(
     )
     # remove rows where the source is better than the target
     df = df[
-        df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]
+        df["target_accuracy-test-mean_source"] <
+        df["target_accuracy-test-mean_target"]
     ].reset_index()
     # check if nb_splits is 5 and 25 for the simulated dataset
     df = df.query("nb_splits == 5 | nb_splits == 25")
@@ -129,22 +134,25 @@ def generate_table_results(
     # add mean \pm std column
     df_dataset["acc_std"] = (
         df_dataset["target_accuracy-test-mean"].round(2).astype(str)
-        + " $\pm$ "
+        + " $\\pm$ "
         + df_dataset["target_accuracy-test-std"].round(2).astype(str)
     )
 
     # create the table
     df_tab = df_dataset.pivot(
-        index="shift", columns=["type", "estimator"], values="target_accuracy-test-mean"
+        index="shift", columns=["type", "estimator"],
+        values="target_accuracy-test-mean"
     )
     df_tab_acc_std = df_dataset.pivot(
         index="shift", columns=["type", "estimator"], values="acc_std"
     )
     df_tab = df_tab.reindex(
-        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
+        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"],
+        level=0
     )
     df_tab_acc_std = df_tab_acc_std.reindex(
-        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"], level=0
+        columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"],
+        level=0
     )
 
     df_tab = df_tab.reindex(
@@ -268,7 +276,7 @@ def generate_table_results(
     )
     df_mean_dataset["Mean"] = (
         df_mean_dataset["target_accuracy-test-mean"].round(2).astype(str)
-        + " $\pm$ "
+        + " $\\pm$ "
         + df_mean_dataset["target_accuracy-test-std"].round(2).astype(str)
     )
     df_tab_acc_std = df_tab_acc_std.reset_index().merge(
@@ -299,21 +307,21 @@ def generate_table_results(
                 max_value=max_value,
             )
             df_tab.loc[idx, col] = color
-        df_tab.loc[df_tab.index[1], col] = "\\cellcolor{green_color!%d}{%s}" % (
-            70,
-            df_tab_acc_std.loc[df_tab.index[1], col],
+        i0, i1 = df_tab.index[:2]
+        df_tab.loc[i1, col] = "\\cellcolor{green_color!%d}{%s}" % (
+            70, df_tab_acc_std.loc[i1, col],
         )
-        df_tab.loc[df_tab.index[0], col] = df_tab_acc_std.loc[df_tab.index[0], col]
+        df_tab.loc[i0, col] = df_tab_acc_std.loc[i0, col]
 
         # apply mcrot on the columns
         df_tab = df_tab.rename(
             columns={
-                col: "\mcrot{1}{l}{45}{" + str(col) + "}",
+                col: "\\mcrot{1}{l}{45}{" + str(col) + "}",
             }
         )
     df_tab = df_tab.rename(
         columns={
-            "rank": "\mcrot{1}{l}{45}{Rank}",
+            "rank": "\\mcrot{1}{l}{45}{Rank}",
         }
     )
 
@@ -333,9 +341,9 @@ def generate_table_results(
     lat_tab = lat_tab.replace("toprule", "hline")
     lat_tab = lat_tab.replace("midrule", "hline")
     lat_tab = lat_tab.replace(
-        "cline{1-" + f"{2 + len(df_tab.columns)}" + "}", "hline\hline"
+        "cline{1-" + f"{2 + len(df_tab.columns)}" + "}", "hline\\hline"
     )
-    lat_tab = lat_tab.replace("\multirow[t]", "\multirow")
+    lat_tab = lat_tab.replace("\\multirow[t]", "\\multirow")
     lat_tab = lat_tab.replace("bottomrule", "hline")
 
     # save in txt file
@@ -344,9 +352,16 @@ def generate_table_results(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Generate table results per dataset")
+    parser = argparse.ArgumentParser(
+        description="Generate table results per dataset"
+    )
 
-    parser.add_argument("--dataset", type=str, help="dataset name", default="simulated")
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        help="dataset name",
+        default="simulated"
+    )
 
     parser.add_argument(
         "--csv-file",

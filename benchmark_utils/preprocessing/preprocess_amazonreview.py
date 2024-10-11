@@ -25,11 +25,13 @@ def download_amazon(path):
     # If not, download it
     if not (path / "kitchen.txt").exists():
         urllib.request.urlretrieve(
-            "https://www.cs.jhu.edu/~mdredze/datasets/sentiment/domain_sentiment_data.tar.gz",
+            "https://www.cs.jhu.edu/~mdredze/datasets/"
+            "sentiment/domain_sentiment_data.tar.gz",
             path / "domain_sentiment_data.tar.gz",
         )
         urllib.request.urlretrieve(
-            "https://www.cs.jhu.edu/~mdredze/datasets/sentiment/book.unlabeled.gz",
+            "https://www.cs.jhu.edu/~mdredze/datasets/"
+            "sentiment/book.unlabeled.gz",
             path / "book.unlabeled.gz",
         )
         tar = tarfile.open(path / "domain_sentiment_data.tar.gz", "r:gz")
@@ -40,16 +42,18 @@ def download_amazon(path):
                 shutil.copyfileobj(f_in, f_out)
 
         shutil.move(
-            path / "domain_sentiment_data/sorted_data_acl/dvd/unlabeled.review",
+            path / "domain_sentiment_data/sorted_data_acl/"
+            "dvd/unlabeled.review",
             path / "dvd.txt",
         )
         shutil.move(
-            path / "domain_sentiment_data/sorted_data_acl/electronics/unlabeled.review",
+            path / "domain_sentiment_data/sorted_data_acl/"
+            "electronics/unlabeled.review",
             path / "electronics.txt",
         )
         shutil.move(
-            path
-            / "domain_sentiment_data/sorted_data_acl/kitchen_&_housewares/unlabeled.review",
+            path / "domain_sentiment_data/sorted_data_acl/"
+            "kitchen_&_housewares/unlabeled.review",
             path / "kitchen.txt",
         )
 
@@ -92,7 +96,7 @@ def preprocess_labels(labels):
     """
     # Check if the labels are in [1, 2, 4, 5]
     assert np.all(np.isin(labels, [1, 2, 4, 5]))
-    # Use Label 
+    # Use Label
     labels[labels == 1] = 0
     labels[labels == 2] = 1
     labels[labels == 4] = 2
@@ -126,7 +130,9 @@ if __name__ == "__main__":
         print(f"{k}: {len(v['X'])} reviews, {len(v['y'])} labels")
 
     # Sentence Transformers
-    print("Encoding text data using Sentence Transformers and merging labels...")
+    print(
+        "Encoding text data using Sentence Transformers and merging labels..."
+    )
     model = SentenceTransformer(MODEL_NAME, device=DEVICE)
     preprocessed_data = dict()
     for k in data_raw.keys():
@@ -148,7 +154,9 @@ if __name__ == "__main__":
     print("Saving preprocessed data...")
     # Change X key to sentence_transformers
     for k in preprocessed_data.keys():
-        preprocessed_data[k]['sentence_transformers'] = preprocessed_data[k].pop('X')
+        preprocessed_data[k]['sentence_transformers'] = (
+            preprocessed_data[k].pop('X')
+        )
     PATH.mkdir(exist_ok=True)
     with open(PATH / "amazon_review_preprocessed.pkl", "wb") as f:
         pickle.dump(preprocessed_data, f)

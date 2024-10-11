@@ -39,24 +39,33 @@ def process_files_in_directory(directory):
         total_time = all_df['time'].sum()
         hours, minutes, remaining_seconds = convert_seconds(total_time)
         print('Computational time:')
-        print(f"Hours: {hours}, Minutes: {minutes}, Seconds: {remaining_seconds:.2f}")
+        print(
+            f"Hours: {hours}, Minutes: {minutes}, "
+            f"Seconds: {remaining_seconds:.2f}"
+        )
 
-        ### Plotting part ###
-        all_df['solver_name'] = all_df['solver_name'].map(lambda x: (x.split('[param_grid=')[0]))
+        # Plotting part
+        all_df['solver_name'] = all_df['solver_name'].map(
+            lambda x: (x.split('[param_grid=')[0])
+        )
 
         # Add Type column
         # Create a reverse lookup dictionary
-        reverse_lookup = {solver: technique for technique, solvers in DA_TECHNIQUES.items() for solver in solvers}
+        reverse_lookup = {
+            solver: technique
+            for technique, solvers in DA_TECHNIQUES.items()
+            for solver in solvers
+        }
         all_df['Type'] = all_df['solver_name'].map(reverse_lookup)
-
 
         # Set to 'Unknown' for the rest
         all_df['Type'].fillna('Unknown', inplace=True)
 
         all_df = all_df[all_df['Type'] != 'Unknown']
 
-
-        all_df['Estimator'] = all_df['solver_name'].map(lambda x: ESTIMATOR_DICT.get(x, x))
+        all_df['Estimator'] = all_df['solver_name'].map(
+            lambda x: ESTIMATOR_DICT.get(x, x)
+        )
 
         all_df = all_df[['Estimator', 'Type', 'time']]
 
@@ -64,28 +73,32 @@ def process_files_in_directory(directory):
         groupby_df = all_df.groupby(['Estimator', 'Type']).mean()
         groupby_df = groupby_df.reset_index()
 
-        order = groupby_df.groupby('Type', group_keys=False).apply(lambda x: x.sort_values(by='time'))
+        order = groupby_df.groupby('Type', group_keys=False).apply(
+            lambda x: x.sort_values(by='time')
+        )
         order = order.set_index('Type').loc[
             ['NO DA', 'Reweighting', 'Mapping', 'Subspace', 'Other']
         ].reset_index()
 
-
-        plt.grid(True, which='both', linestyle='--', linewidth=0.5, color='gray', zorder=-1)
+        plt.grid(
+            True, which='both', linestyle='--', linewidth=0.5,
+            color='gray', zorder=-1
+        )
 
         g = sns.barplot(
-            x = 'Estimator',
-            y = 'time',
-            hue = 'Type',
-            data = order,
-            palette = 'colorblind',
+            x='Estimator',
+            y='time',
+            hue='Type',
+            data=order,
+            palette='colorblind',
             dodge=False,
         )
 
         g.set_yscale("log")
 
         g.set_xticklabels(
-            g.get_xticklabels(), 
-            rotation=45, 
+            g.get_xticklabels(),
+            rotation=45,
             horizontalalignment='right'
         )
 
@@ -96,9 +109,8 @@ def process_files_in_directory(directory):
         plt.legend(loc='upper left')
         plt.ylabel("Mean computational time (in sec)")
         plt.xlabel("")
-        
-        fig.savefig('estimator_VS_time_barplot.png', dpi=100)
 
+        fig.savefig('estimator_VS_time_barplot.png', dpi=100)
 
 
 def convert_seconds(seconds):
@@ -106,7 +118,6 @@ def convert_seconds(seconds):
     minutes = int((seconds % 3600) // 60)
     remaining_seconds = seconds % 60
     return hours, minutes, remaining_seconds
-
 
 
 if __name__ == "__main__":
@@ -125,4 +136,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     df = process_files_in_directory(args.directory)
-

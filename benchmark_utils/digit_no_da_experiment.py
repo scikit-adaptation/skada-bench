@@ -6,7 +6,7 @@
 """
 
 import pickle
-from sklearn.decomposition import PCA
+from sklearn.decomposition import PCA  # noqa: F401
 from sklearn.model_selection import GridSearchCV, train_test_split
 from sklearn.pipeline import make_pipeline
 from sklearn.svm import SVC

@@ -46,7 +46,7 @@ To add a new domain adaptation method or scorer:
 3. Dataset: Add the new dataset to the appropriate category in the `DATASET_DICT` dictionary.
 
 This centralized approach ensures that all domain adaptation methods, scorers, and datasets are consistently organized and easily accessible.
-"""
+"""  # noqa: E501
 
 DA_TECHNIQUES = {
     'NO DA': [

@@ -1,14 +1,15 @@
 """
-This script imports and initializes various scoring metrics used for evaluating domain adaptation techniques.
-It utilizes `benchopt`'s `safe_import_context` to ensure smooth importing and handling of dependencies.
+This script imports and initializes various scoring metrics used for
+evaluating domain adaptation techniques.
 
 Adding a New Scorer
 -------------------
 
 To add a new scorer to the script:
 
-1. **Import the Scorer**: Add the import statement for the new scorer class within the `safe_import_context` block.
-2. **Update `CRITERIONS` Dictionary**: Add a new entry in the `CRITERIONS` dictionary with the scorer's name and its initialized instance.
+1. **Import the Scorer**: Add the import statement for the new scorer class.
+2. **Update `CRITERIONS` Dictionary**: Add a new entry in the `CRITERIONS`
+   dictionary with the scorer's name and its initialized instance.
 
 This method ensures that all scorers are organized and easily accessible
 for evaluating domain adaptation methods.
@@ -28,6 +29,7 @@ with safe_import_context() as import_ctx:
         CircularValidation,
         MixValScorer,
     )
+
 
 CRITERIONS = {
     'supervised': SupervisedScorer(),

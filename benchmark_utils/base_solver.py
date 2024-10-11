@@ -19,10 +19,12 @@ with safe_import_context() as import_ctx:
     from xgboost import XGBClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
-    from .scorers import CRITERIONS
     import torch
+    from sklearn.dummy import DummyClassifier
+    from benchmark_utils.scorers import CRITERIONS
 
 
+# Parameters' grid for LR, SVC and XGBoost models
 LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
              0.2, 0.5, 1., 2., 5., 10., 20.,
              50., 100., 200., 500., 1000.]
@@ -34,33 +36,53 @@ XGB_SUBSAMPLE_GRID = [0.5, 0.65, 0.8]
 XGB_COLSAMPLE_GRID = [0.5, 0.65, 0.8]
 XGB_MAXDEPTH_GRID = [3, 6, 10, 20]
 
+# Global variable to hold all the estimator configurations
+_BASE_ESTIMATOR_DICT = None
 
-BASE_ESTIMATOR_DICT = {
-    "LR": LogisticRegression(),
-    "SVC": SVC(probability=True),
-    "XGB": XGBClassifier(),
-}
 
-for c in LR_C_GRID:
-    k = "LR_C%s"%str(c)
-    BASE_ESTIMATOR_DICT[k] = LogisticRegression(C=c)
+def get_estimator_grid():
+    """Factory to construct a dictionary with all estimator's configuration.
 
-for c in SVC_C_GRID:
-    for gamma in SVC_GAMMA_GRID:
-        k = "SVC_C%s_Gamma%s"%(str(c), str(gamma))
-        BASE_ESTIMATOR_DICT[k] = SVC(probability=True, kernel="rbf", C=c, gamma=gamma)
+    The dictionary is saved in a global variable to avoid recomputing it for
+    each new model.
+    """
+    global _BASE_ESTIMATOR_DICT
+    if _BASE_ESTIMATOR_DICT is not None:
+        return _BASE_ESTIMATOR_DICT
 
-for subsample in XGB_SUBSAMPLE_GRID:
-    for colsample in XGB_COLSAMPLE_GRID:
-        for maxdepth in XGB_MAXDEPTH_GRID:
-            k = "XGB_subsample%s_colsample%s_maxdepth%s"%(str(subsample),
-                                                          str(colsample),
-                                                          str(maxdepth))
-            BASE_ESTIMATOR_DICT[k] = XGBClassifier(max_depth=maxdepth,
-                                 subsample=subsample,
-                                 colsample_bytree=colsample,
-                                 colsample_bylevel=colsample,
-                                 colsample_bynode=colsample)
+    _BASE_ESTIMATOR_DICT = {
+        "LR": LogisticRegression(),
+        "SVC": SVC(probability=True),
+        "XGB": XGBClassifier(),
+        "test": DummyClassifier(),
+    }
+
+    for c in LR_C_GRID:
+        k = f"LR_C{c}"
+        _BASE_ESTIMATOR_DICT[k] = LogisticRegression(C=c)
+
+    for c in SVC_C_GRID:
+        for gamma in SVC_GAMMA_GRID:
+            k = f"SVC_C{c}_Gamma{gamma}"
+            _BASE_ESTIMATOR_DICT[k] = SVC(
+                probability=True, kernel="rbf", C=c, gamma=gamma
+            )
+
+    for subsample in XGB_SUBSAMPLE_GRID:
+        for colsample in XGB_COLSAMPLE_GRID:
+            for maxdepth in XGB_MAXDEPTH_GRID:
+                k = (
+                    f"XGB_subsample{subsample}_colsample{colsample}"
+                    f"_maxdepth{maxdepth}"
+                )
+                _BASE_ESTIMATOR_DICT[k] = XGBClassifier(
+                    max_depth=maxdepth,
+                    subsample=subsample,
+                    colsample_bytree=colsample,
+                    colsample_bylevel=colsample,
+                    colsample_bynode=colsample
+                )
+    return _BASE_ESTIMATOR_DICT
 
 
 class FinalEstimator(BaseEstimator):
@@ -71,7 +93,8 @@ class FinalEstimator(BaseEstimator):
         self.estimator_name = estimator_name
 
     def fit(self, X, y, sample_weight=None, **fit_params):
-        self.estimator_ = clone(BASE_ESTIMATOR_DICT[self.estimator_name])
+        estimator_grid = get_estimator_grid()
+        self.estimator_ = clone(estimator_grid[self.estimator_name])
         self.estimator_.fit(X, y, sample_weight=sample_weight, **fit_params)
         return self
 
@@ -95,13 +118,15 @@ class DASolver(BaseSolver):
         "pip:xgboost==2.0.3",
     ]
 
-    criterions = CRITERIONS
-
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     parameters = {
         "param_grid": ["default"],
+    }
+
+    test_param_grid = {
+        'finalestimator__estimator_name': ["test"],
     }
 
     # Random state
@@ -117,12 +142,15 @@ class DASolver(BaseSolver):
     # Set device to cpu
     device = torch.device("cpu")
 
-    def __init__(self, print_infos=True, **kwargs):
+    def __init__(self, print_infos=True, param_grid="test", **kwargs):
         super().__init__(**kwargs)
+
+        self.param_grid = param_grid
 
         if print_infos:
             print(f"n_jobs: {self.n_jobs}")
             print(f"device: {self.device}")
+
 
     @abstractmethod
     def get_estimator(self, n_classes=None, device=None):
@@ -141,6 +169,14 @@ class DASolver(BaseSolver):
             An estimator compatible with sklearn.GridSearchCV.
         """
         pass
+
+    def get_criterions(self):
+        """Returns the criterions to use for the gridsearch.
+
+        We make this overwrittable as some solvers might not want
+        to use all criterions.
+        """
+        return CRITERIONS
 
     # def get_base_estimator(self):
     #     # The estimator passed should have a 'predict_proba' method.
@@ -181,8 +217,10 @@ class DASolver(BaseSolver):
             )
 
         if self.param_grid == "default":
-            self.param_grid = self.default_param_grid
-        
+            self.param_grid = self.default_param_grid        
+        elif self.param_grid == "test":
+            self.param_grid = self.test_param_grid
+
         print("Param Grid", self.param_grid)
 
         self.clf = GridSearchCV(
