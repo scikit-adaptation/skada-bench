@@ -15,16 +15,16 @@ from objective import Objective
 
 import argparse
 
-cache_dir = Path('__cache__')
+cache_dir = Path("__cache__")
 cache_dir.mkdir(exist_ok=True)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--debug', action='store_true', help='debug mode')
+parser.add_argument("--debug", action="store_true", help="debug mode")
 
 args = parser.parse_args()
 debug = args.debug
 
-TASKS = ['art', 'clipart', 'product', 'realworld']
+TASKS = ["art", "clipart", "product", "realworld"]
 
 results = dict()
 
@@ -33,7 +33,7 @@ if debug:
     all_source_target_pairs = all_source_target_pairs[:2]
 
 for source, target in all_source_target_pairs:
-    print(f'{source} -> {target}')
+    print(f"{source} -> {target}")
 
     dataset = Dataset()
     dataset.source_target = (source, target)
@@ -47,8 +47,12 @@ for source, target in all_source_target_pairs:
     objective.set_data(**data)
 
     # Get a cross-validation fold
-    cv_fold = next(objective.cv.split(objective.X, objective.y, objective.sample_domain))
-    X_train, y_train, sample_domain_train, _ = objective.split(cv_fold, objective.X, objective.y, objective.sample_domain)
+    cv_fold = next(
+        objective.cv.split(objective.X, objective.y, objective.sample_domain)
+    )
+    X_train, y_train, sample_domain_train, _ = objective.split(
+        cv_fold, objective.X, objective.y, objective.sample_domain
+    )
     X_test, y_test = objective.X_test, objective.y_test
     sample_domain_test = objective.sample_domain_test
 
@@ -61,13 +65,15 @@ for source, target in all_source_target_pairs:
 
     # Get the model from the Solver
     n_classes = len(set(objective.y))
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
-    print(f'device: {device}')
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"device: {device}")
     dataset_name = dataset.name
-    estimator = solver.get_estimator(n_classes=n_classes, device=device, dataset_name=dataset_name)
+    estimator = solver.get_estimator(
+        n_classes=n_classes, device=device, dataset_name=dataset_name
+    )
     hp = {
-        'max_epochs': 20,
-        'lr': 1,
+        "max_epochs": 20,
+        "lr": 1,
     }
     estimator = estimator.set_params(**hp)
 
@@ -80,7 +86,9 @@ for source, target in all_source_target_pairs:
     sample_domain_test_target = sample_domain_test[sample_domain_test < 0]
 
     # Predict on the test target set
-    y_pred_test_target = estimator.predict(X_test_target, sample_domain=sample_domain_test_target)
+    y_pred_test_target = estimator.predict(
+        X_test_target, sample_domain=sample_domain_test_target
+    )
 
     # Compute the accuracy on the test set
     accuracy = accuracy_score(y_test_target, y_pred_test_target)
@@ -90,4 +98,4 @@ for source, target in all_source_target_pairs:
     results[(source, target)] = accuracy
 
 overall_accuracy = sum(results.values()) / len(results)
-print(f'Overall Accuracy: {overall_accuracy:.4f}')
+print(f"Overall Accuracy: {overall_accuracy:.4f}")

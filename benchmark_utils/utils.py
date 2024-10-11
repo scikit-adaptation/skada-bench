@@ -6,7 +6,7 @@ import zipfile
 from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
-from torch.optim import Adadelta, AdamW, SGD
+from torch.optim import AdamW, SGD
 
 from benchmark_utils.backbones_architecture import ShallowConvNet, FBCSPNet, ResNet
 from skorch.callbacks import LRScheduler
@@ -19,12 +19,12 @@ def _download_file_with_progress(url, filename):
     # Streaming download because the download
     # is sometimes so long that it seems broken
     response = requests.get(url, stream=True, timeout=5)
-    total_size_in_bytes = int(response.headers.get('content-length', 0))
+    total_size_in_bytes = int(response.headers.get("content-length", 0))
     block_size = 16384  # 16 Kilobyte
     downloaded_size = 0
     start_time = time.time()
 
-    with open(filename, 'wb') as file:
+    with open(filename, "wb") as file:
         for data in response.iter_content(block_size):
             size = file.write(data)
             downloaded_size += size
@@ -32,7 +32,10 @@ def _download_file_with_progress(url, filename):
             elapsed_time = time.time() - start_time
             avg_speed = downloaded_size / (elapsed_time * 1024 * 1024)  # MB/s
             print(
-                f"\rDownloading: [{'#' * percent}{' ' * (50-percent)}] {percent*2}% ({avg_speed:.2f} MB/s)", end='', flush=True)
+                f"\rDownloading: [{'#' * percent}{' ' * (50-percent)}] {percent*2}% ({avg_speed:.2f} MB/s)",
+                end="",
+                flush=True,
+            )
 
     print("\nDownload completed.")
 
@@ -61,7 +64,9 @@ def download_and_extract_zipfile(url_dataset, path_dataset, path_extract):
                 zip_ref.extractall(path_extract)
             print("Extraction complete")
         except zipfile.BadZipFile:
-            print("The file is still not a valid zip file after re-downloading. Please check the URL or your internet connection.")
+            print(
+                "The file is still not a valid zip file after re-downloading. Please check the URL or your internet connection."
+            )
             return
         except Exception as e:
             print(f"Error extracting the zip file: {e}")
@@ -82,7 +87,7 @@ class ImageDataset(Dataset):
     def __init__(self, dataset_dir, domain_select, transform=None):
         self.dataset_dir = Path(dataset_dir)
         self.image_paths = []
-        for image_path in self.dataset_dir.rglob('*.jpg'):
+        for image_path in self.dataset_dir.rglob("*.jpg"):
             domain = image_path.parent.parent.name
             if domain.lower() == domain_select:
                 self.image_paths.append(image_path)
@@ -126,58 +131,59 @@ def get_params_per_dataset(dataset_name, n_classes):
         ValueError: If an unsupported dataset name is provided.
     """
     dataset_configs = {
-        'mnist_usps': {
-            'batch_size': 256,
-            'module': ShallowConvNet(n_classes=n_classes),
-            'callbacks': [LRScheduler(
-                policy='StepLR',
-                step_every='epoch',
-                step_size=10,
-                gamma=0.2
-            )],
-            'optimizer': SGD,
-            'optimizer__momentum': 0.6,
-            'optimizer__weight_decay': 1e-5,
-            'max_epochs': 20,
-            'lr': 0.1
+        "mnist_usps": {
+            "batch_size": 256,
+            "module": ShallowConvNet(n_classes=n_classes),
+            "callbacks": [
+                LRScheduler(
+                    policy="StepLR", step_every="epoch", step_size=10, gamma=0.2
+                )
+            ],
+            "optimizer": SGD,
+            "optimizer__momentum": 0.6,
+            "optimizer__weight_decay": 1e-5,
+            "max_epochs": 20,
+            "lr": 0.1,
         },
-        'office31': {
-            'batch_size': 128,
-            'module': ResNet(n_classes=n_classes, model_name='resnet50'),
-            'callbacks': [LRScheduler(
-                policy='StepLR',
-                step_every='epoch',
-                step_size=10,
-                gamma=0.2
-            )],
-            'optimizer': SGD,
-            'optimizer__momentum': 0.2,
-            'optimizer__weight_decay': 1e-5,
-            'max_epochs': 30,
-            'lr': 0.5,
+        "office31": {
+            "batch_size": 128,
+            "module": ResNet(n_classes=n_classes, model_name="resnet50"),
+            "callbacks": [
+                LRScheduler(
+                    policy="StepLR", step_every="epoch", step_size=10, gamma=0.2
+                )
+            ],
+            "optimizer": SGD,
+            "optimizer__momentum": 0.2,
+            "optimizer__weight_decay": 1e-5,
+            "max_epochs": 30,
+            "lr": 0.5,
         },
-        'officehome': {
-            'batch_size': 128,
-            'module': ResNet(n_classes=n_classes, model_name='resnet50'),
-            'callbacks': [LRScheduler(
-                policy='StepLR',
-                step_every='epoch',
-                step_size=10,
-                gamma=0.2
-            )],
-            'optimizer': SGD,
-            'optimizer__momentum': 0.6,
-            'optimizer__weight_decay': 1e-5,
-            'max_epochs': 20,
-            'lr': 0.05,
+        "officehome": {
+            "batch_size": 128,
+            "module": ResNet(n_classes=n_classes, model_name="resnet50"),
+            "callbacks": [
+                LRScheduler(
+                    policy="StepLR", step_every="epoch", step_size=10, gamma=0.2
+                )
+            ],
+            "optimizer": SGD,
+            "optimizer__momentum": 0.6,
+            "optimizer__weight_decay": 1e-5,
+            "max_epochs": 20,
+            "lr": 0.05,
         },
-        'bci': {
-            'batch_size': 64,
-            'module': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125,),
-            'callbacks': [LRScheduler("CosineAnnealingLR", T_max=200 - 1)],
-            'optimizer': AdamW,
-            'lr': 0.0625 * 0.01,
-            'max_epochs': 200,
+        "bci": {
+            "batch_size": 64,
+            "module": FBCSPNet(
+                n_chans=22,
+                n_classes=n_classes,
+                input_window_samples=1125,
+            ),
+            "callbacks": [LRScheduler("CosineAnnealingLR", T_max=200 - 1)],
+            "optimizer": AdamW,
+            "lr": 0.0625 * 0.01,
+            "max_epochs": 200,
         },
     }
 

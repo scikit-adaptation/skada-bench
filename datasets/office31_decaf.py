@@ -1,4 +1,5 @@
 from benchopt import BaseDataset, safe_import_context
+
 with safe_import_context() as import_ctx:
     import numpy as np
     from sklearn.decomposition import PCA
@@ -9,7 +10,6 @@ with safe_import_context() as import_ctx:
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
 class Dataset(BaseDataset):
-
     # Name to select the dataset in the CLI and to display the results.
     name = "Office31Decaf"
 
@@ -17,15 +17,15 @@ class Dataset(BaseDataset):
     # the cross product for each key in the dictionary.
     # Any parameters 'param' defined here is available as `self.param`.
     parameters = {
-        'source_target': [
-            ('dslr', 'webcam'),
-            ('dslr', 'amazon'),
-            ('webcam', 'dslr'),
-            ('webcam', 'amazon'),
-            ('amazon', 'dslr'),
-            ('amazon', 'webcam')
+        "source_target": [
+            ("dslr", "webcam"),
+            ("dslr", "amazon"),
+            ("webcam", "dslr"),
+            ("webcam", "amazon"),
+            ("amazon", "dslr"),
+            ("amazon", "webcam"),
         ],
-        'n_components': [100]
+        "n_components": [100],
     }
 
     def get_data(self):
@@ -33,7 +33,7 @@ class Dataset(BaseDataset):
         # to `Objective.set_data`. This defines the benchmark's
         # API to pass data. It is customizable for each benchmark.
 
-        tmp_folder = './data/OFFICE_31_DECAF_DATASET/'
+        tmp_folder = "./data/OFFICE_31_DECAF_DATASET/"
         dataset = fetch_office31_decaf_all(
             # categories=Office31CategoriesPreset.CALTECH256,
             data_home=tmp_folder
@@ -60,7 +60,8 @@ class Dataset(BaseDataset):
         y_target = le.transform(y_target)
 
         X, y, sample_domain = source_target_merge(
-            X_source, X_target, y_source, y_target)
+            X_source, X_target, y_source, y_target
+        )
 
         return dict(
             X=X,

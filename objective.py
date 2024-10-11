@@ -5,19 +5,19 @@ from benchopt import BaseObjective, safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     import random
-    from skada.model_selection import (StratifiedDomainShuffleSplit,
-                                       DomainShuffleSplit
-                                       )
+    from skada.model_selection import StratifiedDomainShuffleSplit, DomainShuffleSplit
     from skada.utils import extract_source_indices, source_target_split
     from skada._utils import Y_Type, _find_y_type
-    from skada._utils import (_DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL,
-                              _DEFAULT_MASKED_TARGET_REGRESSION_LABEL
-                              )
-    from sklearn.metrics import (accuracy_score,
-                                 balanced_accuracy_score,
-                                 f1_score,
-                                 roc_auc_score
-                                 )
+    from skada._utils import (
+        _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL,
+        _DEFAULT_MASKED_TARGET_REGRESSION_LABEL,
+    )
+    from sklearn.metrics import (
+        accuracy_score,
+        balanced_accuracy_score,
+        f1_score,
+        roc_auc_score,
+    )
     import numpy as np
 
 # The benchmark objective must be named `Objective` and
@@ -25,7 +25,6 @@ with safe_import_context() as import_ctx:
 
 
 class Objective(BaseObjective):
-
     # Name to select the objective in the CLI and to display the results.
     name = "SKADA Domain Adaptation Benchmark"
 
@@ -39,8 +38,8 @@ class Objective(BaseObjective):
 
     # List of packages needed to run the benchmark.
     requirements = [
-        'pip:scikit-learn==1.4.0',
-        'pip:git+https://github.com/scikit-adaptation/skada.git',
+        "pip:scikit-learn==1.4.0",
+        "pip:git+https://github.com/scikit-adaptation/skada.git",
     ]
     # Minimal version of benchopt required to run this benchmark.
     # Bump it up if the benchmark depends on a new feature of benchopt.
@@ -57,8 +56,9 @@ class Objective(BaseObjective):
 
     try:
         import torch
+
         torch.manual_seed(random_state)
-    except:
+    except ImportError:
         pass
 
     def set_data(self, X, y, sample_domain):
@@ -96,113 +96,137 @@ class Objective(BaseObjective):
         # metrics needs to be `value` for convergence detection purposes.
 
         metrics = {
-            'accuracy': accuracy_score,
-            'balanced_accuracy': balanced_accuracy_score,
-            'f1_score': f1_score,
-            'roc_auc_score': roc_auc_score,
+            "accuracy": accuracy_score,
+            "balanced_accuracy": balanced_accuracy_score,
+            "f1_score": f1_score,
+            "roc_auc_score": roc_auc_score,
         }
 
         # Train target-source split
-        (X_train_source, X_train_target,
-         y_train_source, y_train_target
-         ) = source_target_split(self.X_train,
-                                 self.y_train,
-                                 sample_domain=self.sample_domain_train
-                                 )
-        sample_domain_train_source = self.sample_domain_train[extract_source_indices(self.sample_domain_train)]
-        sample_domain_train_target = self.sample_domain_train[~extract_source_indices(self.sample_domain_train)]
+        (X_train_source, X_train_target, y_train_source, y_train_target) = (
+            source_target_split(
+                self.X_train, self.y_train, sample_domain=self.sample_domain_train
+            )
+        )
+        sample_domain_train_source = self.sample_domain_train[
+            extract_source_indices(self.sample_domain_train)
+        ]
+        sample_domain_train_target = self.sample_domain_train[
+            ~extract_source_indices(self.sample_domain_train)
+        ]
 
         # Test target-source split
-        (X_test_source, X_test_target,
-         y_test_source, y_test_target
-         ) = source_target_split(self.X_test,
-                                 self.y_test,
-                                 sample_domain=self.sample_domain_test
-                                 )
+        (X_test_source, X_test_target, y_test_source, y_test_target) = (
+            source_target_split(
+                self.X_test, self.y_test, sample_domain=self.sample_domain_test
+            )
+        )
 
-        sample_domain_test_source = self.sample_domain_test[extract_source_indices(self.sample_domain_test)]
-        sample_domain_test_target = self.sample_domain_test[~extract_source_indices(self.sample_domain_test)]
+        sample_domain_test_source = self.sample_domain_test[
+            extract_source_indices(self.sample_domain_test)
+        ]
+        sample_domain_test_target = self.sample_domain_test[
+            ~extract_source_indices(self.sample_domain_test)
+        ]
 
         all_metrics = {}
 
         for criterion, estimator in dict_estimators.items():
             # TRAIN metrics
             # Source accuracy
-            y_pred_train_source = estimator.predict(X_train_source, sample_domain = sample_domain_train_source)
-            y_pred_train_source_proba = estimator.predict_proba(X_train_source, sample_domain = sample_domain_train_source)
+            y_pred_train_source = estimator.predict(
+                X_train_source, sample_domain=sample_domain_train_source
+            )
+            y_pred_train_source_proba = estimator.predict_proba(
+                X_train_source, sample_domain=sample_domain_train_source
+            )
 
             # Target accuracy
-            y_pred_train_target = estimator.predict(X_train_target, sample_domain = sample_domain_train_target)
-            y_pred_train_target_proba = estimator.predict_proba(X_train_target, sample_domain = sample_domain_train_target)
+            y_pred_train_target = estimator.predict(
+                X_train_target, sample_domain=sample_domain_train_target
+            )
+            y_pred_train_target_proba = estimator.predict_proba(
+                X_train_target, sample_domain=sample_domain_train_target
+            )
 
             # TEST metrics
             # Source accuracy
-            y_pred_test_source = estimator.predict(X_test_source, sample_domain = sample_domain_test_source)
-            y_pred_test_source_proba = estimator.predict_proba(X_test_source, sample_domain = sample_domain_test_source)
+            y_pred_test_source = estimator.predict(
+                X_test_source, sample_domain=sample_domain_test_source
+            )
+            y_pred_test_source_proba = estimator.predict_proba(
+                X_test_source, sample_domain=sample_domain_test_source
+            )
 
             # Target accuracy
-            y_pred_test_target = estimator.predict(X_test_target, sample_domain = sample_domain_test_target)
-            y_pred_test_target_proba = estimator.predict_proba(X_test_target, sample_domain = sample_domain_test_target)
+            y_pred_test_target = estimator.predict(
+                X_test_target, sample_domain=sample_domain_test_target
+            )
+            y_pred_test_target_proba = estimator.predict_proba(
+                X_test_target, sample_domain=sample_domain_test_target
+            )
 
             for metric_name, metric in metrics.items():
-                if metric_name == 'roc_auc_score':
-                    if len(
-                        np.unique(np.concatenate((self.y_train, self.y_test)))
-                    ) > 2:
-                        roc_args = {'multi_class': 'ovo', 'labels': np.unique(
-                            np.concatenate((self.y_train, self.y_test)))}
+                if metric_name == "roc_auc_score":
+                    if len(np.unique(np.concatenate((self.y_train, self.y_test)))) > 2:
+                        roc_args = {
+                            "multi_class": "ovo",
+                            "labels": np.unique(
+                                np.concatenate((self.y_train, self.y_test))
+                            ),
+                        }
 
                         try:
-                            all_metrics.update({
-                                f'{criterion}_train_source_{metric_name}':
-                                    metric(
+                            all_metrics.update(
+                                {
+                                    f"{criterion}_train_source_{metric_name}": metric(
                                         y_train_source,
                                         y_pred_train_source_proba,
-                                        **roc_args
+                                        **roc_args,
                                     ),
-                                f'{criterion}_train_target_{metric_name}':
-                                    metric(
+                                    f"{criterion}_train_target_{metric_name}": metric(
                                         y_train_target,
                                         y_pred_train_target_proba,
-                                        **roc_args
+                                        **roc_args,
                                     ),
-                                f'{criterion}_test_source_{metric_name}':
-                                    metric(y_test_source,
-                                           y_pred_test_source_proba,
-                                           **roc_args),
-                                f'{criterion}_test_target_{metric_name}':
-                                    metric(y_test_target,
-                                           y_pred_test_target_proba,
-                                           **roc_args),
-                            })
+                                    f"{criterion}_test_source_{metric_name}": metric(
+                                        y_test_source,
+                                        y_pred_test_source_proba,
+                                        **roc_args,
+                                    ),
+                                    f"{criterion}_test_target_{metric_name}": metric(
+                                        y_test_target,
+                                        y_pred_test_target_proba,
+                                        **roc_args,
+                                    ),
+                                }
+                            )
                         except Exception as e:
                             print(e)
 
                         continue
 
                 f1_args = {}
-                if metric_name == 'f1_score':
-                    f1_args = {'average': 'weighted'}
+                if metric_name == "f1_score":
+                    f1_args = {"average": "weighted"}
 
                 try:
-                    all_metrics.update({
-                        f'{criterion}_train_source_{metric_name}':
-                            metric(
+                    all_metrics.update(
+                        {
+                            f"{criterion}_train_source_{metric_name}": metric(
                                 y_train_source, y_pred_train_source, **f1_args
                             ),
-                        f'{criterion}_train_target_{metric_name}':
-                            metric(
+                            f"{criterion}_train_target_{metric_name}": metric(
                                 y_train_target, y_pred_train_target, **f1_args
                             ),
-                        f'{criterion}_test_source_{metric_name}':
-                            metric(
+                            f"{criterion}_test_source_{metric_name}": metric(
                                 y_test_source, y_pred_test_source, **f1_args
                             ),
-                        f'{criterion}_test_target_{metric_name}':
-                            metric(
+                            f"{criterion}_test_target_{metric_name}": metric(
                                 y_test_target, y_pred_test_target, **f1_args
-                            )
-                    })
+                            ),
+                        }
+                    )
                 except Exception as e:
                     print(e)
 
@@ -235,19 +259,16 @@ class Objective(BaseObjective):
 
         # Mask the target in the train to pass to the solver
         y_train = self.y_train.copy()
-        id_train_source = extract_source_indices(
-            self.sample_domain_train
-        )
+        id_train_source = extract_source_indices(self.sample_domain_train)
 
         y_train[~id_train_source] = (
             _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL
-            if self.is_discrete else
-            _DEFAULT_MASKED_TARGET_REGRESSION_LABEL
+            if self.is_discrete
+            else _DEFAULT_MASKED_TARGET_REGRESSION_LABEL
         )
 
         unmasked_y_train = self.y_train
-        return (self.X_train, y_train,
-                self.sample_domain_train, unmasked_y_train)
+        return (self.X_train, y_train, self.sample_domain_train, unmasked_y_train)
 
     def get_objective(self):
         # Define the information to pass to each solver to run the benchmark.
@@ -257,7 +278,6 @@ class Objective(BaseObjective):
         # It is customizable for each benchmark.
         X, y, sample_domain, unmasked_y_train = self.get_split(
             self.X, self.y, self.sample_domain
-
         )
 
         return dict(

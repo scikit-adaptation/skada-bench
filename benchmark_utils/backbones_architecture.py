@@ -3,10 +3,7 @@
 import torch
 from torch import nn
 import torch.nn.functional as F
-from torchvision.models import (
-    resnet18, ResNet18_Weights,
-    resnet50, ResNet50_Weights
-)
+from torchvision.models import resnet18, ResNet18_Weights, resnet50, ResNet50_Weights
 from torch.autograd import Function
 from braindecode.models import ShallowFBCSPNet
 
@@ -40,13 +37,13 @@ class ShallowConvNet(nn.Module):
 
 
 class ResNet(nn.Module):
-    def __init__(self, n_classes, model_name='resnet18'):
+    def __init__(self, n_classes, model_name="resnet18"):
         super().__init__()
 
         # Load pretrained ResNet and rename it to feature_layer
-        if model_name == 'resnet18':
+        if model_name == "resnet18":
             self.feature_layer = resnet18(weights=ResNet18_Weights.DEFAULT)
-        elif model_name == 'resnet50':
+        elif model_name == "resnet50":
             self.feature_layer = resnet50(weights=ResNet50_Weights.DEFAULT)
 
         # Get the number of features from the last layer
@@ -71,9 +68,7 @@ class ShallowMLP(nn.Module):
         super().__init__()
         self.feature_layer = nn.Linear(input_dim, hidden_dim)
         self.mlp = nn.Sequential(
-            nn.ReLU(),
-            nn.Dropout(0.5),
-            nn.Linear(hidden_dim, n_classes)
+            nn.ReLU(), nn.Dropout(0.5), nn.Linear(hidden_dim, n_classes)
         )
 
         self.n_features = hidden_dim
@@ -82,7 +77,7 @@ class ShallowMLP(nn.Module):
         x = self.feature_layer(x)
         x = self.mlp(x)
 
-        return x    # Return raw logits
+        return x  # Return raw logits
 
 
 class FBCSPNet(nn.Module):
@@ -91,7 +86,11 @@ class FBCSPNet(nn.Module):
 
         # Create the ShallowFBCSPNet
         self.feature_layer = ShallowFBCSPNet(
-            n_chans, n_classes, input_window_samples, add_log_softmax=False, final_conv_length='auto'
+            n_chans,
+            n_classes,
+            input_window_samples,
+            add_log_softmax=False,
+            final_conv_length="auto",
         )
 
         # Take last layer from the ShallowFBCSPNet
@@ -173,4 +172,3 @@ class DomainClassifier(nn.Module):
         """
         reverse_x = GradientReversalLayer.apply(x, self.alpha)
         return self.classifier(reverse_x).flatten()
-
