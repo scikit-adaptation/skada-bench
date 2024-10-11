@@ -1,9 +1,10 @@
-# This file contains backbone architectures for deep models used in domain adaptation tasks.
+# This file contains backbone architectures for deep models
+# used in domain adaptation tasks.
 
-import torch
 from torch import nn
-import torch.nn.functional as F
-from torchvision.models import resnet18, ResNet18_Weights, resnet50, ResNet50_Weights
+from torchvision.models import (
+    resnet18, ResNet18_Weights, resnet50, ResNet50_Weights
+)
 from torch.autograd import Function
 from braindecode.models import ShallowFBCSPNet
 

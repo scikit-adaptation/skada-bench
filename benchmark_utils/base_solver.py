@@ -9,7 +9,10 @@ with safe_import_context() as import_ctx:
     import os
     from sklearn.base import clone
     from sklearn.model_selection import GridSearchCV
-    from skada.model_selection import StratifiedDomainShuffleSplit, DomainShuffleSplit
+    from skada.model_selection import (
+        StratifiedDomainShuffleSplit,
+        DomainShuffleSplit,
+    )
     from skada._utils import Y_Type, _find_y_type
 
     from sklearn.base import BaseEstimator
@@ -252,7 +255,8 @@ class DASolver(BaseSolver):
     def run(self, n_iter):
         print(f"X train outer shape: {self.X.shape}")
         print(
-            f"In theory, X train inner shape should be: {int(self.X.shape[0] * (1 - self.test_size_cv))}"
+            f"In theory, X train inner shape should be: "
+            f"{int(self.X.shape[0] * (1 - self.test_size_cv))}"
         )
         if self.name in ("NO_DA_TARGET_ONLY", "Deep_NO_DA_TARGET_ONLY"):
             # We are in a case of no domain adaptation
@@ -275,26 +279,39 @@ class DASolver(BaseSolver):
         self.cv_results_ = self.clf.cv_results_
         self.dict_estimators_ = {}
         for criterion in self.criterions:
-            best_index = np.argmax(self.clf.cv_results_["mean_test_" + criterion])
+            best_index = np.argmax(
+                self.clf.cv_results_["mean_test_" + criterion]
+            )
             best_params = self.clf.cv_results_["params"][best_index]
             refit_estimator = clone(self.da_estimator)
             refit_estimator.set_params(**best_params)
 
             try:
-                if self.name in ("NO_DA_TARGET_ONLY", "Deep_NO_DA_TARGET_ONLY"):
+                if self.name in (
+                    "NO_DA_TARGET_ONLY",
+                    "Deep_NO_DA_TARGET_ONLY",
+                ):
                     refit_estimator.fit(
-                        self.X, self.unmasked_y_train, sample_domain=self.sample_domain
+                        self.X,
+                        self.unmasked_y_train,
+                        sample_domain=self.sample_domain,
                     )
                 else:
                     refit_estimator.fit(
-                        self.X, self.y, sample_domain=self.sample_domain
+                        self.X,
+                        self.y,
+                        sample_domain=self.sample_domain,
+                        target_labels=self.unmasked_y_train,
                     )
                 self.dict_estimators_[criterion] = refit_estimator
             except Exception as e:
                 print(f"Error while fitting estimator: {e}")
 
     def get_result(self):
-        return dict(cv_results=self.cv_results_, dict_estimators=self.dict_estimators_)
+        return dict(
+            cv_results=self.cv_results_,
+            dict_estimators=self.dict_estimators_,
+        )
 
 
 class DeepDASolver(DASolver):

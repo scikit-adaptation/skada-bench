@@ -6,7 +6,9 @@ with safe_import_context() as import_ctx:
     from skada.utils import source_target_merge
     import torchvision.transforms as transforms
     from torch.utils.data import DataLoader
-    from benchmark_utils.utils import download_and_extract_zipfile, ImageDataset
+    from benchmark_utils.utils import (
+        download_and_extract_zipfile, ImageDataset
+    )
 
 
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
@@ -54,9 +56,12 @@ class Dataset(BaseDataset):
 
         # Create a DataLoader for the dataset
         dataset = ImageDataset(
-            self.path_extract, transform=preprocess, domain_select=domain_select
+            self.path_extract, transform=preprocess,
+            domain_select=domain_select,
         )
-        dataloader = DataLoader(dataset, batch_size=len(dataset), shuffle=False)
+        dataloader = DataLoader(
+            dataset, batch_size=len(dataset), shuffle=False
+        )
 
         images, labels = next(iter(dataloader))
         images = images.numpy()

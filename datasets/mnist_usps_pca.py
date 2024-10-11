@@ -28,7 +28,10 @@ class Dataset(BaseDataset):
     }
 
     path_preprocessed_data = "data/digit_preprocessed.pkl"
-    url_preprocessed_data = "https://figshare.com/ndownloader/files/46363525?private_link=f15a4a7c81084815114b"
+    url_preprocessed_data = (
+        "https://figshare.com/ndownloader/files/46363525"
+        "?private_link=f15a4a7c81084815114b"
+    )
 
     def _get_dataset(self, dataset_name, n_samples=None):
         rng = np.random.RandomState(self.random_state)

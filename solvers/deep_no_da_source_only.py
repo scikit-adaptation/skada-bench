@@ -49,4 +49,3 @@ class Solver(DeepDASolver):
         )
 
         return net
-

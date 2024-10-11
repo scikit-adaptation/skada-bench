@@ -63,8 +63,10 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
     df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
         lambda x: json.loads(x)
     )
-    df["nb_splits"] = df["target_accuracy-test-identity"].apply(lambda x: len(x))
-    df_target = df.query('estimator == "Deep_NO_DA_TARGET_ONLY" & scorer == "supervised"')
+    df["nb_splits"] = df["target_accuracy-test-identity"].apply(
+        lambda x: len(x))
+    df_target = df.query(
+        'estimator == "Deep_NO_DA_TARGET_ONLY" & scorer == "supervised"')
     df_source = df.query(
         'estimator == "Deep_NO_DA_SOURCE_ONLY" & scorer == "supervised"'
     )
@@ -73,7 +75,8 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
     # ].idxmax()
     # df_source = df_source.loc[idx_source_best_scorer]
     df = df.merge(
-        df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
+        df_target[["shift", "target_accuracy-test-mean",
+                   "target_accuracy-test-std"]],
         on="shift",
         suffixes=("", "_target"),
     )
@@ -94,7 +97,6 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
         df["target_accuracy-test-mean_source"] < df["target_accuracy-test-mean_target"]
     ].reset_index()
     df = df.query("nb_splits == 5")
-
 
     # remove duplicates
     df = df.drop_duplicates(subset=["dataset", "scorer", "estimator", "shift"])
@@ -140,7 +142,8 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
     for idx, df_ in df_grouped:
         # test de wilcoxon
         acc_da = np.concatenate(df_["target_accuracy-test-identity"].values)
-        acc_source = np.concatenate(df_["target_accuracy-test-identity_source"].values)
+        acc_source = np.concatenate(
+            df_["target_accuracy-test-identity_source"].values)
         try:
             wilco.append(
                 stats.wilcoxon(
@@ -182,15 +185,18 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
         .reset_index()
     )
 
-    df_source_mean = df_mean.query("estimator == 'Deep_NO_DA_SOURCE_ONLY' & scorer == 'supervised'")
-    df_target_mean = df_mean.query("estimator == 'Deep_NO_DA_TARGET_ONLY' & scorer == 'supervised'")
+    df_source_mean = df_mean.query(
+        "estimator == 'Deep_NO_DA_SOURCE_ONLY' & scorer == 'supervised'")
+    df_target_mean = df_mean.query(
+        "estimator == 'Deep_NO_DA_TARGET_ONLY' & scorer == 'supervised'")
 
     if scorer_selection == "supervised":
         df_tot = df_mean.query("scorer == 'supervised'")
         df_wilco = df_wilco.query("scorer == 'supervised'")
 
     elif scorer_selection == "unsupervised":
-        df_mean = df_mean.query("scorer != 'supervised' & scorer != 'best_scorer'")
+        df_mean = df_mean.query(
+            "scorer != 'supervised' & scorer != 'best_scorer'")
 
         df_mean_dataset = (
             df_mean.groupby(["estimator", "scorer"])[
@@ -218,7 +224,8 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
             suffixes=("", "_best"),
         )
 
-        df_tot = df_tot[df_tot["scorer"] == df_tot["scorer_best"]].reset_index()
+        df_tot = df_tot[df_tot["scorer"] ==
+                        df_tot["scorer_best"]].reset_index()
 
         df_wilco = df_wilco[["dataset", "estimator", "scorer", "pvalue"]].merge(
             df_mean_dataset[["estimator", "scorer"]],
@@ -228,15 +235,17 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
             suffixes=("", "_best"),
         )
 
-        df_wilco = df_wilco[df_wilco["scorer"] == df_wilco["scorer_best"]].reset_index()
+        df_wilco = df_wilco[df_wilco["scorer"] ==
+                            df_wilco["scorer_best"]].reset_index()
 
     df_rank = df_tot.groupby(["estimator"])["rank"].mean().reset_index()
     # %%
     df_tot = df_tot.query("estimator != 'Deep_NO_DA_SOURCE_ONLY'")
     df_tot = df_tot.query("estimator != 'Deep_NO_DA_TARGET_ONLY'")
-    df_tot = pd.concat([df_tot, df_source_mean, df_target_mean], axis=0).reset_index()
+    df_tot = pd.concat(
+        [df_tot, df_source_mean, df_target_mean], axis=0).reset_index()
 
-    #%%
+    # %%
     df_tab = df_tot.pivot(
         index="dataset",
         columns=["estimator"],
@@ -382,4 +391,5 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    df = generate_table(args.csv_file, args.csv_file_simulated, args.scorer_selection)
+    df = generate_table(
+        args.csv_file, args.csv_file_simulated, args.scorer_selection)

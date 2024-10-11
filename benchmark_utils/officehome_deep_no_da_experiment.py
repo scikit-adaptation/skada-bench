@@ -1,3 +1,10 @@
+import argparse
+from objective import Objective
+from solvers.deep_no_da_source_only import Solver
+from datasets.officehome import Dataset
+import torch
+from sklearn.metrics import accuracy_score
+import itertools
 import sys
 import os
 from pathlib import Path
@@ -5,15 +12,6 @@ from pathlib import Path
 path_root = Path(os.path.abspath(__file__)).parents[1]
 sys.path.append(str(path_root))
 
-import itertools
-from sklearn.metrics import accuracy_score
-import torch
-
-from datasets.officehome import Dataset
-from solvers.deep_no_da_source_only import Solver
-from objective import Objective
-
-import argparse
 
 cache_dir = Path("__cache__")
 cache_dir.mkdir(exist_ok=True)

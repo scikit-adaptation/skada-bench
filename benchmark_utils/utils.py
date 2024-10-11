@@ -7,8 +7,9 @@ from pathlib import Path
 from PIL import Image
 from torch.utils.data import Dataset
 from torch.optim import AdamW, SGD
-
-from benchmark_utils.backbones_architecture import ShallowConvNet, FBCSPNet, ResNet
+from benchmark_utils.backbones_architecture import (
+    ShallowConvNet, FBCSPNet, ResNet
+)
 from skorch.callbacks import LRScheduler
 
 
@@ -32,7 +33,8 @@ def _download_file_with_progress(url, filename):
             elapsed_time = time.time() - start_time
             avg_speed = downloaded_size / (elapsed_time * 1024 * 1024)  # MB/s
             print(
-                f"\rDownloading: [{'#' * percent}{' ' * (50-percent)}] {percent*2}% ({avg_speed:.2f} MB/s)",
+                f"\rDownloading: [{'#' * percent}{' ' * (50-percent)}] "
+                f"{percent*2}% ({avg_speed:.2f} MB/s)",
                 end="",
                 flush=True,
             )
@@ -65,7 +67,8 @@ def download_and_extract_zipfile(url_dataset, path_dataset, path_extract):
             print("Extraction complete")
         except zipfile.BadZipFile:
             print(
-                "The file is still not a valid zip file after re-downloading. Please check the URL or your internet connection."
+                "The file is still not a valid zip file after re-downloading. "
+                "Please check the URL or your internet connection."
             )
             return
         except Exception as e:
@@ -102,7 +105,6 @@ class ImageDataset(Dataset):
 
         # Extract label and domain from the image path
         label = image_path.parent.name
-        domain = image_path.parent.parent.name
 
         image = Image.open(image_path).convert("RGB")
         if self.transform:
@@ -150,7 +152,10 @@ def get_params_per_dataset(dataset_name, n_classes):
             "module": ResNet(n_classes=n_classes, model_name="resnet50"),
             "callbacks": [
                 LRScheduler(
-                    policy="StepLR", step_every="epoch", step_size=10, gamma=0.2
+                    policy="StepLR",
+                    step_every="epoch",
+                    step_size=10,
+                    gamma=0.2,
                 )
             ],
             "optimizer": SGD,
@@ -164,7 +169,10 @@ def get_params_per_dataset(dataset_name, n_classes):
             "module": ResNet(n_classes=n_classes, model_name="resnet50"),
             "callbacks": [
                 LRScheduler(
-                    policy="StepLR", step_every="epoch", step_size=10, gamma=0.2
+                    policy="StepLR",
+                    step_every="epoch",
+                    step_size=10,
+                    gamma=0.2,
                 )
             ],
             "optimizer": SGD,
