@@ -190,7 +190,6 @@ class DASolver(BaseSolver):
         """
         pass
 
-
     # def get_base_estimator(self):
     #     # The estimator passed should have a 'predict_proba' method.
     #     estimator = self.base_estimators_dict[self.base_estimator]
@@ -312,6 +311,8 @@ class DASolver(BaseSolver):
 
 class DeepDASolver(DASolver):
     n_jobs = 1
+
+    requirements = ['pip:torch']
 
     # Set device depending on the gpu/cpu available
     if torch.cuda.is_available():

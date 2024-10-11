@@ -13,6 +13,11 @@ with safe_import_context() as import_ctx:
         SoftNeighborhoodDensity,
     )
 
+    from benchmark_utils.base_solver import import_ctx as base_import_ctx
+    if base_import_ctx.failed_import:
+        exc, val, tb = base_import_ctx.import_error
+        raise exc(val).with_traceback(tb)
+
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
