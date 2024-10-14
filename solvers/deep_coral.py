@@ -40,6 +40,9 @@ class Solver(DeepDASolver):
             'importance_weighted': ImportanceWeightedScorer(),
             'soft_neighborhood_density': SoftNeighborhoodDensity(),
             'deep_embedded_validation': DeepEmbeddedValidation(),
+            'mix_val_both': MixValScorer(ice_type='both'),
+            'mix_val_inter': MixValScorer(ice_type='inter'),
+            'mix_val_intra': MixValScorer(ice_type='intra'),
         }
 
         dataset_name = dataset_name.split("[")[0].lower()
