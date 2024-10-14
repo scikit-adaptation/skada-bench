@@ -27,7 +27,7 @@ class Solver(DASolver):
 
     def get_estimator(self, **kwargs):
         self.criterions = {
-          'supervised': SupervisedScorer(),
+            'supervised': SupervisedScorer(),
         }
 
         # The estimator passed should have a 'predict_proba' method.

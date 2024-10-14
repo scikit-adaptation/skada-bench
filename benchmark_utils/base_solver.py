@@ -319,6 +319,9 @@ class DeepDASolver(DASolver):
 
     requirements = ['pip:torch']
 
+    # For DeepDA solvers, empty test_param_grid
+    test_param_grid = {}
+
     # Set device depending on the gpu/cpu available
     if torch.cuda.is_available():
         device = torch.device("cuda")

@@ -8,6 +8,7 @@ with safe_import_context() as import_ctx:
     from skada.base import SelectSource
     from skada import make_da_pipeline
 
+    from benchmark_utils.scorers import SupervisedScorer
     from benchmark_utils.base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
         exc, val, tb = base_import_ctx.import_error
@@ -28,6 +29,9 @@ class Solver(DASolver):
     }
 
     def get_estimator(self, **kwargs):
+        self.criterions = {
+            'supervised': SupervisedScorer(),
+        }
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             ('finalestimator', SelectSource(FinalEstimator())),

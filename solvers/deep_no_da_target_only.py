@@ -33,10 +33,6 @@ class Solver(DeepDASolver):
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
         self.criterions = {
             'supervised': SupervisedScorer(),
-            'prediction_entropy': PredictionEntropyScorer(),
-            'importance_weighted': ImportanceWeightedScorer(),
-            'soft_neighborhood_density': SoftNeighborhoodDensity(),
-            'deep_embedded_validation': DeepEmbeddedValidation(),
         }
 
         dataset_name = dataset_name.split("[")[0].lower()
