@@ -25,6 +25,10 @@ class Dataset(BaseDataset):
         'random_state': list(range(5))
     }
 
+    # Dataset classification variables
+    is_multiclass = False
+    compatible_model_types = ["shallow", "deep"]
+
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
         # to `Objective.set_data`. This defines the benchmark's

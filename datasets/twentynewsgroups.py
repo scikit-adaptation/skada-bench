@@ -39,6 +39,10 @@ class Dataset(BaseDataset):
         ]
     }
 
+    # Dataset classification variables
+    is_multiclass = False
+    compatible_model_types = ["shallow"]
+
     path_preprocessed_data = "data/20newsgroups_preprocessed.pkl"
     url_preprocessed_data = (
         "https://figshare.com/ndownloader/files/"

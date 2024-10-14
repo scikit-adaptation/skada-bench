@@ -27,6 +27,10 @@ class Dataset(BaseDataset):
         "random_state": [27],
     }
 
+    # Dataset classification variables
+    is_multiclass = True
+    compatible_model_types = ["shallow"]
+
     path_preprocessed_data = "data/digit_preprocessed.pkl"
     url_preprocessed_data = (
         "https://figshare.com/ndownloader/files/46363525"

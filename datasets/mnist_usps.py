@@ -27,6 +27,10 @@ class Dataset(BaseDataset):
         "random_state": [27],
     }
 
+    # Dataset classification variables
+    is_multiclass = True
+    compatible_model_types = ["deep"]
+
     DATASETS = ["MNIST", "USPS"]
 
     def _download_data(self):

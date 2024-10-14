@@ -34,17 +34,15 @@ class Solver(DASolver):
         "dasvmclassifier__max_iter": [10]
     }
 
-    def skip(self, X, y, sample_domain, unmasked_y_train, dataset_name):
-        datasets_to_avoid = [
-            "Office31SURF",
-            "BCI",
-            "Office31",
-            "OfficeHomeResnet",
-            "mnist_usps",
-        ]
-
-        if dataset_name.split("[")[0] in datasets_to_avoid:
-            return True, f"solver does not support the dataset {dataset_name}."
+    def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
+        # First, call the superclass skip method
+        skip, msg = super().skip(X, y, sample_domain, unmasked_y_train, dataset)
+        if skip:
+            return skip, msg
+        
+        # Check if the dataset is multiclass
+        if hasattr(dataset, 'is_multiclass') and dataset.is_multiclass:
+            return True, f"DASVM does not support multiclass datasets like {dataset.name}."
 
         return False, None
 

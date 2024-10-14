@@ -36,6 +36,10 @@ class Dataset(BaseDataset):
         ],
     }
 
+    # Dataset classification variables
+    is_multiclass = True
+    compatible_model_types = ["deep"]
+
     path_dataset = "data/OfficeHome.zip"
     path_extract = "data/OfficeHome/"
     url_dataset = (

@@ -200,11 +200,12 @@ class DASolver(BaseSolver):
     #     return estimator
 
     def set_objective(
-        self, X, y, sample_domain, unmasked_y_train, dataset_name, **kwargs
+        self, X, y, sample_domain, unmasked_y_train, dataset, **kwargs
     ):
         self.X, self.y, self.sample_domain = X, y, sample_domain
         self.unmasked_y_train = unmasked_y_train
 
+        dataset_name = dataset.name
         n_classes = len(np.unique(self.unmasked_y_train))
         self.da_estimator = self.get_estimator(
             n_classes=n_classes,
@@ -307,7 +308,13 @@ class DASolver(BaseSolver):
             cv_results=self.cv_results_,
             dict_estimators=self.dict_estimators_,
         )
+    
+    def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
+        # Check if the dataset is compatible with the solver
+        if hasattr(dataset, 'compatible_model_types') and "shallow" not in dataset.compatible_model_types:
+            return True, f"solver does not support the dataset {dataset.name}."
 
+        return False, None
 
 class DeepDASolver(DASolver):
     n_jobs = 1
@@ -328,3 +335,11 @@ class DeepDASolver(DASolver):
 
         print(f"n_jobs: {self.n_jobs}")
         print(f"device: {self.device}")
+    
+    # Override the DASolver skip method
+    def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
+        # Check if the dataset is compatible with the solver
+        if hasattr(dataset, 'compatible_model_types') and "deep" not in dataset.compatible_model_types:
+            return True, f"solver does not support the dataset {dataset.name}."
+
+        return False, None

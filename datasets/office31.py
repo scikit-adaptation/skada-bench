@@ -30,6 +30,10 @@ class Dataset(BaseDataset):
         ],
     }
 
+    # Dataset classification variables
+    is_multiclass = True
+    compatible_model_types = ["deep"]
+
     path_dataset = "data/OFFICE31.zip"
     path_extract = "data/OFFICE31/"
     url_dataset = "https://wjdcloud.blob.core.windows.net/dataset/OFFICE31.zip"
