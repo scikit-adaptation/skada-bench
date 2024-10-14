@@ -10,7 +10,7 @@ with safe_import_context() as import_ctx:
     from skada.metrics import (
         SupervisedScorer, DeepEmbeddedValidation,
         PredictionEntropyScorer, ImportanceWeightedScorer,
-        SoftNeighborhoodDensity,
+        SoftNeighborhoodDensity, MixValScorer,
     )
     import numpy as np
 
