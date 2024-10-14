@@ -55,12 +55,7 @@ class Objective(BaseObjective):
     # Set random states
     random.seed(random_state)
 
-    try:
-        import numpy as np
-
-        np.random.seed(random_state)
-    except ImportError:
-        pass
+    np.random.seed(random_state)
 
     try:
         import torch
