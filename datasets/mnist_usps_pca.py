@@ -28,7 +28,6 @@ class Dataset(BaseDataset):
     }
 
     # Dataset classification variables
-    is_multiclass = True
     compatible_model_types = ["shallow"]
 
     path_preprocessed_data = "data/digit_preprocessed.pkl"

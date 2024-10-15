@@ -28,7 +28,6 @@ class Dataset(BaseDataset):
     }
 
     # Dataset classification variables
-    is_multiclass = True
     compatible_model_types = ["deep"]
 
     DATASETS = ["MNIST", "USPS"]

@@ -4,7 +4,9 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    import numpy as np
     from skada import DASVMClassifier, make_da_pipeline
+    from skada._utils import _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL
     from benchmark_utils.base_solver import DASolver, FinalEstimator
 
     # Temporary fix to avoid errors, to remove when issue
@@ -46,8 +48,9 @@ class Solver(DASolver):
         if skip:
             return skip, msg
 
-        # Check if the dataset is multiclass
-        if hasattr(dataset, 'is_multiclass') and dataset.is_multiclass:
+        # Check if the dataset is multiclass, excluding y == -1
+        n_classes = len(np.unique(y[y != _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL]))
+        if n_classes > 2:
             return True, (f"DASVM does not support multiclass datasets "
                           f"like {dataset.name}.")
 

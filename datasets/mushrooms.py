@@ -29,7 +29,6 @@ class Dataset(BaseDataset):
     }
 
     # Dataset classification variables
-    is_multiclass = False
     compatible_model_types = ["shallow", "deep"]
 
     def get_data(self):
