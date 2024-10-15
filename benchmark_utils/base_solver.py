@@ -308,13 +308,15 @@ class DASolver(BaseSolver):
             cv_results=self.cv_results_,
             dict_estimators=self.dict_estimators_,
         )
-    
+
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
         # Check if the dataset is compatible with the solver
-        if hasattr(dataset, 'compatible_model_types') and "shallow" not in dataset.compatible_model_types:
+        if (hasattr(dataset, 'compatible_model_types') and
+            "shallow" not in dataset.compatible_model_types):
             return True, f"solver does not support the dataset {dataset.name}."
 
         return False, None
+
 
 class DeepDASolver(DASolver):
     n_jobs = 1
@@ -335,11 +337,12 @@ class DeepDASolver(DASolver):
 
         print(f"n_jobs: {self.n_jobs}")
         print(f"device: {self.device}")
-    
+
     # Override the DASolver skip method
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
         # Check if the dataset is compatible with the solver
-        if hasattr(dataset, 'compatible_model_types') and "deep" not in dataset.compatible_model_types:
+        if (hasattr(dataset, 'compatible_model_types') and
+            "deep" not in dataset.compatible_model_types):
             return True, f"solver does not support the dataset {dataset.name}."
 
         return False, None

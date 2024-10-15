@@ -36,13 +36,20 @@ class Solver(DASolver):
 
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
         # First, call the superclass skip method
-        skip, msg = super().skip(X, y, sample_domain, unmasked_y_train, dataset)
+        skip, msg = super().skip(
+            X,
+            y,
+            sample_domain,
+            unmasked_y_train,
+            dataset
+        )
         if skip:
             return skip, msg
-        
+
         # Check if the dataset is multiclass
         if hasattr(dataset, 'is_multiclass') and dataset.is_multiclass:
-            return True, f"DASVM does not support multiclass datasets like {dataset.name}."
+            return True, (f"DASVM does not support multiclass datasets "
+                          f"like {dataset.name}.")
 
         return False, None
 
