@@ -310,9 +310,8 @@ class DASolver(BaseSolver):
         )
 
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
-        # Check if the dataset is compatible with the solver
-        if (hasattr(dataset, 'compatible_model_types') and
-            "shallow" not in dataset.compatible_model_types):
+        # Check if the dataset name starts with 'deep' or is 'Simulated'
+        if dataset.name.startswith('deep') or dataset.name == 'Simulated':
             return True, f"solver does not support the dataset {dataset.name}."
 
         return False, None
@@ -340,9 +339,8 @@ class DeepDASolver(DASolver):
 
     # Override the DASolver skip method
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
-        # Check if the dataset is compatible with the solver
-        if (hasattr(dataset, 'compatible_model_types') and
-            "deep" not in dataset.compatible_model_types):
+        # Check if the dataset name does not start with 'deep' and is not 'Simulated'
+        if not (dataset.name.startswith('deep') or dataset.name == 'Simulated'):
             return True, f"solver does not support the dataset {dataset.name}."
 
         return False, None
