@@ -19,7 +19,7 @@ with safe_import_context() as import_ctx:
 # inherit from `BaseSolver` for `benchopt` to work properly.
 class Solver(DeepDASolver):
     # Name to select the solver in the CLI and to display the results.
-    name = 'Deep_NO_DA_SOURCE_ONLY'
+    name = 'deep_no_da_source_only'
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
