@@ -28,8 +28,6 @@ class Dataset(BaseDataset):
         "n_components": [100],
     }
 
-    # Dataset classification variables
-    compatible_model_types = ["shallow"]
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments

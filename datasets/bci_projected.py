@@ -34,8 +34,6 @@ class Dataset(BaseDataset):
         'subject_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
     }
 
-    # Dataset classification variables
-    compatible_model_types = ["shallow"]
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments

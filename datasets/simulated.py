@@ -25,8 +25,6 @@ class Dataset(BaseDataset):
         'random_state': list(range(5))
     }
 
-    # Dataset classification variables
-    compatible_model_types = ["shallow", "deep"]
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments

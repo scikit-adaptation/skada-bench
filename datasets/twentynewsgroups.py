@@ -39,8 +39,6 @@ class Dataset(BaseDataset):
         ]
     }
 
-    # Dataset classification variables
-    compatible_model_types = ["shallow"]
 
     path_preprocessed_data = "data/20newsgroups_preprocessed.pkl"
     url_preprocessed_data = (

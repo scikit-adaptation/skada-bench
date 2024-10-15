@@ -28,8 +28,6 @@ class Dataset(BaseDataset):
                           ('tapering', 'enlarging')],
     }
 
-    # Dataset classification variables
-    compatible_model_types = ["shallow", "deep"]
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments

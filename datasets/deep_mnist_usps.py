@@ -16,7 +16,7 @@ with safe_import_context() as import_ctx:
 # All datasets must be named `Dataset` and inherit from `BaseDataset`
 class Dataset(BaseDataset):
     # Name to select the dataset in the CLI and to display the results.
-    name = "mnist_usps"
+    name = "deep_mnist_usps"
 
     # List of parameters to generate the datasets. The benchmark will consider
     # the cross product for each key in the dictionary.
@@ -27,8 +27,6 @@ class Dataset(BaseDataset):
         "random_state": [27],
     }
 
-    # Dataset classification variables
-    compatible_model_types = ["deep"]
 
     DATASETS = ["MNIST", "USPS"]
 

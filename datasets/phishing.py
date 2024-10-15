@@ -31,8 +31,6 @@ class Dataset(BaseDataset):
         ],
     }
 
-    # Dataset classification variables
-    compatible_model_types = ["shallow", "deep"]
 
     path_data = "data/phishing.arff"
     url_data = "https://figshare.com/ndownloader/files/47541842"

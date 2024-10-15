@@ -27,8 +27,6 @@ class Dataset(BaseDataset):
         "random_state": [27],
     }
 
-    # Dataset classification variables
-    compatible_model_types = ["shallow"]
 
     path_preprocessed_data = "data/digit_preprocessed.pkl"
     url_preprocessed_data = (

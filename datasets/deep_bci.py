@@ -20,7 +20,7 @@ with safe_import_context() as import_ctx:
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "BCI"
+    name = "deep_bci"
 
     requirements = [
         'mne==1.6.1', 'braindecode==0.8.1', 'moabb==0.5', 'pyriemann==0.3'
@@ -30,8 +30,6 @@ class Dataset(BaseDataset):
         'subject_id': [1, 2, 3, 4, 5, 6, 7, 8, 9],
     }
 
-    # Dataset classification variables
-    compatible_model_types = ["deep"]
 
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
