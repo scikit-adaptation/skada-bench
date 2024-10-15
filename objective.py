@@ -47,10 +47,22 @@ class Objective(BaseObjective):
     # Bump it up if the benchmark depends on a new feature of benchopt.
     min_benchopt_version = "1.5"
 
+    # Parameters for the benchmark
+    parameters = {
+        'random_state': [0],
+        'n_splits_data': [5], # 5 for shallow models, 1 for deep models
+        'test_size_data': [0.2],
+    }
+
     # Random state
-    random_state = 0
-    n_splits_data = 1
-    test_size_data = 0.2
+    random_state = parameters['random_state']
+    n_splits_data = parameters['n_splits_data']
+    test_size_data = parameters['test_size_data']
+
+    # Print parameters
+    print(f"Random state: {random_state}")
+    print(f"Number of splits: {n_splits_data}")
+    print(f"Test size: {test_size_data}")
 
     # Set random states
     random.seed(random_state)
