@@ -55,9 +55,9 @@ class Objective(BaseObjective):
     }
 
     # Random state
-    random_state = parameters['random_state']
-    n_splits_data = parameters['n_splits_data']
-    test_size_data = parameters['test_size_data']
+    random_state = parameters['random_state'][0]
+    n_splits_data = parameters['n_splits_data'][0]
+    test_size_data = parameters['test_size_data'][0]
 
     # Print parameters
     print(f"Random state: {random_state}")
