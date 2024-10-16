@@ -5,7 +5,8 @@
 objective:
     - 'SKADA Domain Adaptation Benchmark':
         n_splits_data: 1
-
+        test_size_data: 0.2
+        random_state: 0
 solver:
     - "deep_*"
 

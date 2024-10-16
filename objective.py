@@ -49,28 +49,23 @@ class Objective(BaseObjective):
 
     # Parameters for the benchmark
     parameters = {
+        'random_state': [0],
         'n_splits_data': [5], # 5 for shallow models, 1 for deep models
+        'test_size_data': [0.2],
     }
 
-    # Random state
-    random_state = 0
-    test_size_data = 0.2
+    def set_random_state(self):
+        print(f"Random state: {self.random_state}")
 
-    # # Print parameters
-    print(f"Random state: {random_state}")
-    print(f"Test size: {test_size_data}")
+        random.seed(self.random_state)
+        np.random.seed(self.random_state)
 
-    # Set random states
-    random.seed(random_state)
+        try:
+            import torch
 
-    np.random.seed(random_state)
-
-    try:
-        import torch
-
-        torch.manual_seed(random_state)
-    except ImportError:
-        pass
+            torch.manual_seed(self.random_state)
+        except ImportError:
+            pass
 
     def set_data(self, X, y, sample_domain):
         # The keyword arguments of this function are the keys of the dictionary
@@ -83,7 +78,12 @@ class Objective(BaseObjective):
         # check y is discrete or continuous
         self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
 
+        # Print parameters
         print(f"Number of outer splits: {self.n_splits_data}")
+        print(f"Test size: {self.test_size_data}")
+
+        # Set random state
+        self.set_random_state()
 
         if self.is_discrete:
             self.cv = StratifiedDomainShuffleSplit(
