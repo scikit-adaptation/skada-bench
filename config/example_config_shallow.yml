@@ -8,4 +8,4 @@ objective:
         test_size_data: 0.2
         random_state: 0
 solver:
-    - "!deep_*"
+    - "^(?!deep_)*"
