@@ -49,19 +49,15 @@ class Objective(BaseObjective):
 
     # Parameters for the benchmark
     parameters = {
-        'random_state': [0],
         'n_splits_data': [5], # 5 for shallow models, 1 for deep models
-        'test_size_data': [0.2],
     }
 
     # Random state
-    random_state = parameters['random_state'][0]
-    n_splits_data = parameters['n_splits_data'][0]
-    test_size_data = parameters['test_size_data'][0]
+    random_state = 0
+    test_size_data = 0.2
 
-    # Print parameters
+    # # Print parameters
     print(f"Random state: {random_state}")
-    print(f"Number of splits: {n_splits_data}")
     print(f"Test size: {test_size_data}")
 
     # Set random states
@@ -86,6 +82,8 @@ class Objective(BaseObjective):
 
         # check y is discrete or continuous
         self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
+
+        print(f"Number of outer splits: {self.n_splits_data}")
 
         if self.is_discrete:
             self.cv = StratifiedDomainShuffleSplit(

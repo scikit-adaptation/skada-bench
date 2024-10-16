@@ -1,0 +1,12 @@
+# This is an example of a configuration file
+# for the deep experiments
+
+# We define the objective parameters
+objective:
+    - 'SKADA Domain Adaptation Benchmark':
+        n_splits_data: 1
+
+solver:
+    - "deep_*"
+
+
