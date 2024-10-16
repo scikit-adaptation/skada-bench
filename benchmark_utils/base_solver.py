@@ -310,7 +310,7 @@ class DASolver(BaseSolver):
 
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
         # Check if the dataset name starts with 'deep' or is 'Simulated'
-        if dataset.name.startswith('deep') or dataset.name == 'Simulated':
+        if dataset.name.startswith('deep'):
             return True, f"solver does not support the dataset {dataset.name}."
 
         return False, None
