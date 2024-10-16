@@ -254,7 +254,7 @@ class DASolver(BaseSolver):
             f"In theory, X train inner shape should be: "
             f"{int(self.X.shape[0] * (1 - self.test_size_cv))}"
         )
-        if self.name in ("NO_DA_TARGET_ONLY", "Deep_NO_DA_TARGET_ONLY"):
+        if 'no_da' in self.name.lower():
             # We are in a case of no domain adaptation
             # We dont need to use masked targets
             self.clf.fit(
@@ -283,10 +283,9 @@ class DASolver(BaseSolver):
             refit_estimator.set_params(**best_params)
 
             try:
-                if self.name in (
-                    "NO_DA_TARGET_ONLY",
-                    "Deep_NO_DA_TARGET_ONLY",
-                ):
+                if 'no_da' in self.name.lower():
+                    # We are in a case of no domain adaptation
+                    # We dont need to use masked targets
                     refit_estimator.fit(
                         self.X,
                         self.unmasked_y_train,
