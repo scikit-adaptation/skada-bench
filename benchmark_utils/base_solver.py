@@ -296,7 +296,6 @@ class DASolver(BaseSolver):
                         self.X,
                         self.y,
                         sample_domain=self.sample_domain,
-                        target_labels=self.unmasked_y_train,
                     )
                 self.dict_estimators_[criterion] = refit_estimator
             except Exception as e:
