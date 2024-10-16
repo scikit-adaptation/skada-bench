@@ -49,7 +49,9 @@ class Solver(DASolver):
             return skip, msg
 
         # Check if the dataset is multiclass, excluding y == -1
-        n_classes = len(np.unique(y[y != _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL]))
+        n_classes = len(
+            np.unique(y[y != _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL])
+        )
         if n_classes > 2:
             return True, (f"DASVM does not support multiclass datasets "
                           f"like {dataset.name}.")

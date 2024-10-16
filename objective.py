@@ -50,7 +50,7 @@ class Objective(BaseObjective):
     # Parameters for the benchmark
     parameters = {
         'random_state': [0],
-        'n_splits_data': [5], # 5 for shallow models, 1 for deep models
+        'n_splits_data': [5],  # 5 for shallow models, 1 for deep models
         'test_size_data': [0.2],
     }
 

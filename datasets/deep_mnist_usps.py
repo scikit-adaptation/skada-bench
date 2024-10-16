@@ -27,7 +27,6 @@ class Dataset(BaseDataset):
         "random_state": [27],
     }
 
-
     DATASETS = ["MNIST", "USPS"]
 
     def _download_data(self):

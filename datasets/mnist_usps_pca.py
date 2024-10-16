@@ -27,7 +27,6 @@ class Dataset(BaseDataset):
         "random_state": [27],
     }
 
-
     path_preprocessed_data = "data/digit_preprocessed.pkl"
     url_preprocessed_data = (
         "https://figshare.com/ndownloader/files/46363525"

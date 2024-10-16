@@ -39,7 +39,6 @@ class Dataset(BaseDataset):
         "random_state": [27],
     }
 
-
     path_preprocessed_data = "data/amazon_review_preprocessed.pkl"
     url_preprocessed_data = (
         "https://figshare.com/ndownloader/files/"

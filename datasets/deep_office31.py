@@ -30,7 +30,6 @@ class Dataset(BaseDataset):
         ],
     }
 
-
     path_dataset = "data/OFFICE31.zip"
     path_extract = "data/OFFICE31/"
     url_dataset = "https://wjdcloud.blob.core.windows.net/dataset/OFFICE31.zip"

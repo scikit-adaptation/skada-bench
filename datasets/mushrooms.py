@@ -28,7 +28,6 @@ class Dataset(BaseDataset):
                           ('tapering', 'enlarging')],
     }
 
-
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
         # to `Objective.set_data`. This defines the benchmark's

@@ -36,7 +36,6 @@ class Dataset(BaseDataset):
         ],
     }
 
-
     path_dataset = "data/OfficeHome.zip"
     path_extract = "data/OfficeHome/"
     url_dataset = (

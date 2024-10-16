@@ -39,7 +39,6 @@ class Dataset(BaseDataset):
         ]
     }
 
-
     path_preprocessed_data = "data/20newsgroups_preprocessed.pkl"
     url_preprocessed_data = (
         "https://figshare.com/ndownloader/files/"

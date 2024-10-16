@@ -25,7 +25,6 @@ class Dataset(BaseDataset):
         'random_state': list(range(5))
     }
 
-
     def get_data(self):
         # The return arguments of this function are passed as keyword arguments
         # to `Objective.set_data`. This defines the benchmark's

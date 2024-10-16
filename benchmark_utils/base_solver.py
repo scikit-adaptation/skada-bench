@@ -338,8 +338,12 @@ class DeepDASolver(DASolver):
 
     # Override the DASolver skip method
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
-        # Check if the dataset name does not start with 'deep' and is not 'Simulated'
-        if not (dataset.name.startswith('deep') or dataset.name == 'Simulated'):
+        # Check if the dataset name does not start
+        # with 'deep' and is not 'Simulated'
+        if not (
+            dataset.name.startswith('deep') or
+            dataset.name == 'Simulated'
+        ):
             return True, f"solver does not support the dataset {dataset.name}."
 
         return False, None
