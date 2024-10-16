@@ -1,3 +1,4 @@
+import numpy as np
 from benchopt import BaseDataset, safe_import_context
 
 with safe_import_context() as import_ctx:
@@ -48,6 +49,10 @@ class Dataset(BaseDataset):
             center_cov_shift=(-0.4, 3),
             random_state=self.random_state,
         )
+
+        X = X.astype(np.float32)
+        y = y.astype(np.int64)
+        sample_domain = sample_domain.astype(np.float32)
 
         return dict(
             X=X,
