@@ -149,10 +149,14 @@ class Objective(BaseObjective):
             # TRAIN metrics
             # Source accuracy
             y_pred_train_source = estimator.predict(
-                X_train_source, sample_domain=sample_domain_train_source, allow_source=True,
+                X_train_source,
+                sample_domain=sample_domain_train_source,
+                allow_source=True,
             )
             y_pred_train_source_proba = estimator.predict_proba(
-                X_train_source, sample_domain=sample_domain_train_source, allow_source=True,
+                X_train_source,
+                sample_domain=sample_domain_train_source,
+                allow_source=True,
             )
 
             # Target accuracy
@@ -166,10 +170,14 @@ class Objective(BaseObjective):
             # TEST metrics
             # Source accuracy
             y_pred_test_source = estimator.predict(
-                X_test_source, sample_domain=sample_domain_test_source, allow_source=True,
+                X_test_source,
+                sample_domain=sample_domain_test_source,
+                allow_source=True,
             )
             y_pred_test_source_proba = estimator.predict_proba(
-                X_test_source, sample_domain=sample_domain_test_source, allow_source=True,
+                X_test_source,
+                sample_domain=sample_domain_test_source,
+                allow_source=True,
             )
 
             # Target accuracy
