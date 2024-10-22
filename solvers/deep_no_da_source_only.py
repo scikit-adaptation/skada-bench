@@ -4,12 +4,12 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
-    from benchmark_utils.base_solver import DeepDASolver
     from skada.deep import SourceOnly
     from skada.metrics import SupervisedScorer
 
-    from benchmark_utils.base_solver import import_ctx as base_import_ctx
+    from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
         exc, val, tb = base_import_ctx.import_error
         raise exc(val).with_traceback(tb)

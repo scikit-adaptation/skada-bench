@@ -6,7 +6,6 @@ from torchvision.models import (
     resnet18, ResNet18_Weights, resnet50, ResNet50_Weights
 )
 from torch.autograd import Function
-from braindecode.models import ShallowFBCSPNet
 
 
 class ShallowConvNet(nn.Module):
@@ -84,6 +83,8 @@ class ShallowMLP(nn.Module):
 class FBCSPNet(nn.Module):
     def __init__(self, n_chans, n_classes, input_window_samples):
         super().__init__()
+
+        from braindecode.models import ShallowFBCSPNet
 
         # Create the ShallowFBCSPNet
         self.feature_layer = ShallowFBCSPNet(

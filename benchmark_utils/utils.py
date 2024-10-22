@@ -184,18 +184,6 @@ def get_params_per_dataset(dataset_name, n_classes):
             "max_epochs": 20,
             "lr": 0.05,
         },
-        "deep_bci": {
-            "batch_size": 64,
-            "module": FBCSPNet(
-                n_chans=22,
-                n_classes=n_classes,
-                input_window_samples=1125,
-            ),
-            "callbacks": [LRScheduler("CosineAnnealingLR", T_max=200 - 1)],
-            "optimizer": AdamW,
-            "lr": 0.0625 * 0.01,
-            "max_epochs": 200,
-        },
         "simulated": {
             "batch_size": 128,
             "module": ShallowMLP(input_dim=2, n_classes=n_classes),
@@ -206,6 +194,24 @@ def get_params_per_dataset(dataset_name, n_classes):
 
         }
     }
+
+    try:
+        import braindecode  # noqa: F401
+        dataset_configs['deep_bci'] = {
+            "batch_size": 64,
+            "module": FBCSPNet(
+                n_chans=22,
+                n_classes=n_classes,
+                input_window_samples=1125,
+            ),
+            "callbacks": [LRScheduler("CosineAnnealingLR", T_max=200 - 1)],
+            "optimizer": AdamW,
+            "lr": 0.0625 * 0.01,
+            "max_epochs": 200,
+        }
+    except ImportError:
+        # Need to have braindecode installed to get this dataset
+        pass
 
     if dataset_name not in dataset_configs:
         raise ValueError(f"Unsupported dataset: {dataset_name}")

@@ -4,17 +4,16 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
-    from benchmark_utils.base_solver import DeepDASolver
     from skada.deep import DeepCoral
     from skada.metrics import (
         SupervisedScorer, DeepEmbeddedValidation,
         PredictionEntropyScorer, ImportanceWeightedScorer,
         SoftNeighborhoodDensity, MixValScorer,
     )
-    import numpy as np
 
-    from benchmark_utils.base_solver import import_ctx as base_import_ctx
+    from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
         exc, val, tb = base_import_ctx.import_error
         raise exc(val).with_traceback(tb)
@@ -30,7 +29,8 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': np.logspace(-5, 3, 9),
+        # 'criterion__reg': np.logspace(-5, 3, 9),
+        'criterion__reg': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):

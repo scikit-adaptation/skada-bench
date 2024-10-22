@@ -1,23 +1,27 @@
+import itertools
 from benchopt import safe_import_context
 
 # Protect the import with `safe_import_context()`. This allows:
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
-    from benchmark_utils.base_solver import DeepDASolver
     from skada.deep import DeepJDOT, DeepJDOTLoss
     from skada.metrics import (
         SupervisedScorer, DeepEmbeddedValidation,
         PredictionEntropyScorer, ImportanceWeightedScorer,
         SoftNeighborhoodDensity, MixValScorer,
     )
-    import itertools
 
-    from benchmark_utils.base_solver import import_ctx as base_import_ctx
+    from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
         exc, val, tb = base_import_ctx.import_error
         raise exc(val).with_traceback(tb)
+
+if import_ctx.failed_import:
+    class DeepJDOTLoss:  # noqa: F811
+        def __init__(self, reg_cl, reg_dist): pass
 
 
 # The benchmark solvers must be named `Solver` and

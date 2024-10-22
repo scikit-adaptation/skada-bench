@@ -19,9 +19,7 @@ with safe_import_context() as import_ctx:
     from xgboost import XGBClassifier
     from sklearn.linear_model import LogisticRegression
     from sklearn.svm import SVC
-    import torch
     from sklearn.dummy import DummyClassifier
-    from benchmark_utils.scorers import CRITERIONS
 
 
 # Parameters' grid for LR, SVC and XGBoost models
@@ -157,14 +155,15 @@ class DASolver(BaseSolver):
     else:
         n_jobs = 1
 
-    # Set device to cpu
-    device = torch.device("cpu")
-
-    # Set default criterions
-    criterions = CRITERIONS
-
     def __init__(self, print_infos=True, param_grid="test", **kwargs):
         super().__init__(**kwargs)
+
+        # For compat with DeepDASolver
+        self.device = None
+
+        # Set default criterion
+        from benchmark_utils.scorers import CRITERIONS
+        self.criterions = CRITERIONS
 
         self.param_grid = param_grid
 
@@ -180,8 +179,9 @@ class DASolver(BaseSolver):
         -----------
         n_classes : int, optional
             The number of classes in the target variable.
-        device : torch.device, optional
-            The device (CPU or GPU) to use for computations.
+        device : torch.device | None, optional
+            The device (CPU or GPU) to use for computations. This is necessary
+            for compat with DeepDASolver.
 
         Returns:
         --------
@@ -189,15 +189,6 @@ class DASolver(BaseSolver):
             An estimator compatible with sklearn.GridSearchCV.
         """
         pass
-
-    # def get_base_estimator(self):
-    #     # The estimator passed should have a 'predict_proba' method.
-    #     estimator = self.base_estimators_dict[self.base_estimator]
-    #     if self.base_estimator_params is not None:
-    #         estimator.set_params(**self.base_estimator_params)
-    #     estimator.set_fit_request(sample_weight=True)
-    #     estimator.set_score_request(sample_weight=True)
-    #     return estimator
 
     def set_objective(
         self, X, y, sample_domain, unmasked_y_train, dataset, **kwargs
@@ -310,39 +301,6 @@ class DASolver(BaseSolver):
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
         # Check if the dataset name starts with 'deep' or is 'Simulated'
         if dataset.name.startswith('deep'):
-            return True, f"solver does not support the dataset {dataset.name}."
-
-        return False, None
-
-
-class DeepDASolver(DASolver):
-    n_jobs = 1
-
-    requirements = ['pip:torch']
-
-    # For DeepDA solvers, empty test_param_grid
-    test_param_grid = {}
-
-    # Set device depending on the gpu/cpu available
-    if torch.cuda.is_available():
-        device = torch.device("cuda")
-    else:
-        device = torch.device("cpu")
-
-    def __init__(self, **kwargs):
-        super().__init__(print_infos=False, **kwargs)
-
-        print(f"n_jobs: {self.n_jobs}")
-        print(f"device: {self.device}")
-
-    # Override the DASolver skip method
-    def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
-        # Check if the dataset name does not start
-        # with 'deep' and is not 'Simulated'
-        if not (
-            dataset.name.startswith('deep') or
-            dataset.name == 'Simulated'
-        ):
             return True, f"solver does not support the dataset {dataset.name}."
 
         return False, None
