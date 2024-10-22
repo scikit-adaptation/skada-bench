@@ -133,7 +133,7 @@ def get_params_per_dataset(dataset_name, n_classes):
         ValueError: If an unsupported dataset name is provided.
     """
     dataset_configs = {
-        "mnist_usps": {
+        "deep_mnist_usps": {
             "batch_size": 256,
             "module": ShallowConvNet(n_classes=n_classes),
             "callbacks": [
@@ -147,10 +147,10 @@ def get_params_per_dataset(dataset_name, n_classes):
             "optimizer": SGD,
             "optimizer__momentum": 0.6,
             "optimizer__weight_decay": 1e-5,
-            "max_epochs": 20,
+            "max_epochs": 10,
             "lr": 0.1,
         },
-        "office31": {
+        "deep_office31": {
             "batch_size": 128,
             "module": ResNet(n_classes=n_classes, model_name="resnet50"),
             "callbacks": [
@@ -167,7 +167,7 @@ def get_params_per_dataset(dataset_name, n_classes):
             "max_epochs": 30,
             "lr": 0.5,
         },
-        "officehome": {
+        "deep_officehome": {
             "batch_size": 128,
             "module": ResNet(n_classes=n_classes, model_name="resnet50"),
             "callbacks": [
@@ -184,7 +184,7 @@ def get_params_per_dataset(dataset_name, n_classes):
             "max_epochs": 20,
             "lr": 0.05,
         },
-        "bci": {
+        "deep_bci": {
             "batch_size": 64,
             "module": FBCSPNet(
                 n_chans=22,
@@ -202,7 +202,7 @@ def get_params_per_dataset(dataset_name, n_classes):
             "callbacks": [LRScheduler("CosineAnnealingLR", T_max=200 - 1)],
             "optimizer": AdamW,
             "lr": 0.0625 * 0.01,
-            "max_epochs": 200,
+            "max_epochs": 10,
 
         }
     }
