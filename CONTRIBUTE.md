@@ -3,20 +3,22 @@
 Welcome to the SKADA-Bench project! We appreciate your interest in contributing to our domain adaptation benchmark. This guide will help you add new DA methods, datasets or scorers to SKADA-Bench using the `benchopt` framework.
 
 ## Table of Contents
-1. [Adding a New DA Method](#adding-a-new-da-method)
-    - [Example](#example-da-method)
-2. [Adding a New Dataset](#adding-a-new-dataset)
+1. [Adding a New Shallow DA Method](#adding-a-new-shallow-da-method)
+    - [Example](#example-shallow-da-method)
+2. [Adding a New Deep DA Method](#adding-a-new-deep-da-method)
+    - [Example](#example-deep-da-method)
+3. [Adding a New Dataset](#adding-a-new-dataset)
     - [Example](#example-dataset)
-3. [Adding a New Scorer](#adding-a-new-scorer)
+4. [Adding a New Scorer](#adding-a-new-scorer)
     - [Example](#example-scorer)
-4. [Contributing to the Repository](#contributing-to-the-repository)
+5. [Contributing to the Repository](#contributing-to-the-repository)
     - [Opening Pull Requests](#opening-pull-requests)
     - [Code Review Process](#code-review-process)
     - [Reporting Issues](#reporting-issues)
 
-## Adding a New DA Method
+## Adding a New Shallow DA Method
 
-To add a new DA method, follow these steps:
+To add a new Shallow DA method, follow these steps:
 
 1. **Create a Solver Class:**
    - Navigate to the `solvers` folder.
@@ -25,15 +27,15 @@ To add a new DA method, follow these steps:
    - Implement the `get_estimator()` function, which returns a class inheriting from `sklearn.BaseEstimator`.
    - See `_solvers_scorers_registry.py` on how to add the new solver to the benchmark registry. 
 
-### Example DA Method
+### Example Shallow DA Method
 
-Here's an example of how to add a new DA method:
+Here's an example of how to add a new shallow DA method:
 
 ```python
 from benchmark_utils.base_solver import DASolver
 from sklearn.base import BaseEstimator
 
-class MyDAEstimator(BaseEstimator):
+class MyShallowDAEstimator(BaseEstimator):
     def __init__(self, param1=10, param2='auto'):
         self.param1 = param1
         self.param2 = param2
@@ -54,7 +56,7 @@ class MyDAEstimator(BaseEstimator):
         return proba
 
 class Solver(DASolver):
-    name = "My_DA_method"
+    name = "My_Shallow_DA_method"
     
     # Param grid to validate
     default_param_grid = {
@@ -63,8 +65,61 @@ class Solver(DASolver):
     }
     
     def get_estimator(self):
-        return MyDAEstimator()
+        return MyShallowDAEstimator()
 ```
+
+## Adding a New Deep DA Method
+
+To add a new Deep DA method, follow these steps:
+
+1. **Create a Deep Solver Class:**
+   - Navigate to the `solvers` folder.
+   - Create a new Python file for your method.
+   - Define a class called `Solver` that inherits from `DeepDASolver`.
+   - Implement the `get_estimator()` function, which returns a class inheriting from `torch.nn.Module`.
+   - Use the appropriate backbone architecture for your method.
+   - See `_solvers_scorers_registry.py` on how to add the new solver to the benchmark registry.
+
+For deep learning methods, you need to define the backbone architecture and set hyperparameters. Here's how to do it:
+
+a. **Define a Backbone:**
+   - Use an existing backbone from `benchmark_utils/backbones_architecture.py`, or create a new class that inherits from `nn.Module`.
+   - Implement the `forward()` method for your backbone.
+   - Ensure that the feature extracting layer is named 'feature_layer'. This is crucial for the proper functioning of the benchmark.
+
+b. **Set Hyperparameters:**
+   - In `benchmark_utils/utils.py`, add or modify an entry in the `dataset_configs` dictionary in the `get_params_per_dataset()` function.
+   - Specify hyperparameters such as batch size, learning rate, optimizer, and callbacks.
+
+### Example Deep DA Method
+
+Here's an example of how to use a backbone in your solver:
+
+```python
+from benchmark_utils.base_solver import DeepDASolver
+from benchmark_utils.backbones_architecture import get_backbone
+from benchmark_utils.utils import get_params_per_dataset
+
+class Solver(DeepDASolver):
+    name = "YourDeepDAMethod"
+
+    def get_estimator(self, n_classes, device, dataset_name, **kwargs):
+        dataset_name = dataset_name.split("[")[0].lower()
+
+        params = get_params_per_dataset(dataset_name, n_classes)
+
+        net = YourCustomNet(
+            **params,
+            layer_name="feature_layer",
+            train_split=None,
+            device=device,
+            warm_start=True,
+        )
+
+        return net
+```
+
+In this example, `YourCustomNet` would be your custom PyTorch module that implements your deep DA method using the provided backbone and hyperparameters.
 
 ## Adding a New Dataset
 

@@ -25,13 +25,11 @@ class Solver(DASolver):
         'finalestimator__estimator_name': ["LR", "SVC", "XGB"]
     }
 
-    def get_criterions(self):
-        # We only use the supervised scorer!
-        return {
-            'supervised': SupervisedScorer()
+    def get_estimator(self, **kwargs):
+        self.criterions = {
+            'supervised': SupervisedScorer(),
         }
 
-    def get_estimator(self):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             ('finalestimator', SelectSource(FinalEstimator())),

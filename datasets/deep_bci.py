@@ -6,11 +6,6 @@ from benchopt import BaseDataset, safe_import_context
 with safe_import_context() as import_ctx:
     from skada.utils import source_target_merge
     import numpy as np
-
-    from pyriemann.estimation import Covariances
-    from pyriemann.tangentspace import TangentSpace
-    from sklearn.pipeline import make_pipeline
-
     from braindecode.datasets import MOABBDataset
     from braindecode.preprocessing import (
         exponential_moving_standardize,
@@ -25,7 +20,7 @@ with safe_import_context() as import_ctx:
 class Dataset(BaseDataset):
 
     # Name to select the dataset in the CLI and to display the results.
-    name = "BCI"
+    name = "deep_bci"
 
     requirements = [
         'mne==1.6.1', 'braindecode==0.8.1', 'moabb==0.5', 'pyriemann==0.3'
@@ -113,12 +108,8 @@ class Dataset(BaseDataset):
         y_target = np.array(y)
 
         X, y, sample_domain = source_target_merge(
-                    X_source, X_target, y_source, y_target)
+            X_source, X_target, y_source, y_target)
 
-        ts_projector = make_pipeline(
-            Covariances(estimator="oas"), TangentSpace()
-        )
-        X = ts_projector.fit_transform(X)
         return dict(
             X=X,
             y=y,
