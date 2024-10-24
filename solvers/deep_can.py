@@ -61,9 +61,7 @@ class Solver(DeepDASolver):
             layer_name="feature_layer",
             train_split=None,
             device=device,
-            domain_classifier=DomainClassifier(
-                num_features=params['module'].n_features
-            ),
+            warm_start=True,
         )
 
         return net
