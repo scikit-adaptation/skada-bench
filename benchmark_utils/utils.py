@@ -179,6 +179,15 @@ def get_params_per_dataset(dataset_name, n_classes):
             'lr': 0.0625 * 0.01,
             'max_epochs': 200,
         },
+        'bci_concat': {
+            'batch_size': 256,
+            'model': FBCSPNet(n_chans=22, n_classes=n_classes, input_window_samples=1125,),
+            'lr_scheduler': LRScheduler("CosineAnnealingLR", T_max=200 - 1),
+            'optimizer': AdamW,
+            'lr': 0.0625 * 0.01,
+            'max_epochs': 200,
+            'num_features': 40 * 69,
+        },
     }
 
     if dataset_name not in dataset_configs:
