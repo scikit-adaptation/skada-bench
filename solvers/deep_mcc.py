@@ -13,6 +13,10 @@ with safe_import_context() as import_ctx:
         exc, val, tb = base_import_ctx.import_error
         raise exc(val).with_traceback(tb)
 
+if import_ctx.failed_import:
+    class MCCLoss:  # noqa: F811
+        def __init__(self, T): pass
+
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
