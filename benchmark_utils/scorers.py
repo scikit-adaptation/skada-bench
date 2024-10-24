@@ -14,15 +14,22 @@ To add a new scorer to the script:
 This method ensures that all scorers are organized and easily accessible
 for evaluating domain adaptation methods.
 """
-from skada.metrics import (
-    SupervisedScorer,
-    PredictionEntropyScorer,
-    ImportanceWeightedScorer,
-    SoftNeighborhoodDensity,
-    DeepEmbeddedValidation,
-    CircularValidation,
-    MixValScorer,
-)
+from benchopt import safe_import_context
+
+# Protect the import with `safe_import_context()`. This allows:
+# - skipping import to speed up autocompletion in CLI.
+# - getting requirements info when all dependencies are not installed.
+with safe_import_context() as import_ctx:
+    from skada.metrics import (
+        SupervisedScorer,
+        PredictionEntropyScorer,
+        ImportanceWeightedScorer,
+        SoftNeighborhoodDensity,
+        DeepEmbeddedValidation,
+        CircularValidation,
+        MixValScorer,
+    )
+
 
 CRITERIONS = {
     'supervised': SupervisedScorer(),

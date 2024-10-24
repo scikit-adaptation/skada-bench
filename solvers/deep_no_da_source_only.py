@@ -4,12 +4,12 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    from benchmark_utils.base_solver import DASolver, FinalEstimator
-    from skada.base import SelectSource
-    from skada import make_da_pipeline
+    from benchmark_utils.deep_base_solver import DeepDASolver
+    from benchmark_utils.utils import get_params_per_dataset
+    from skada.deep import SourceOnly
+    from skada.metrics import SupervisedScorer
 
-    from benchmark_utils.scorers import SupervisedScorer
-    from benchmark_utils.base_solver import import_ctx as base_import_ctx
+    from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
         exc, val, tb = base_import_ctx.import_error
         raise exc(val).with_traceback(tb)
@@ -17,22 +17,32 @@ with safe_import_context() as import_ctx:
 
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
-class Solver(DASolver):
+class Solver(DeepDASolver):
     # Name to select the solver in the CLI and to display the results.
-    name = 'NO_DA_SOURCE_ONLY'
+    name = 'deep_no_da_source_only'
 
     # List of parameters for the solver. The benchmark will consider
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
-    default_param_grid = {
-        'finalestimator__estimator_name': ["LR", "SVC", "XGB"]
-    }
+    default_param_grid = {}
 
-    def get_estimator(self, **kwargs):
+    def get_estimator(self, n_classes, device, dataset_name, **kwargs):
         self.criterions = {
             'supervised': SupervisedScorer(),
         }
-        # The estimator passed should have a 'predict_proba' method.
-        return make_da_pipeline(
-            ('finalestimator', SelectSource(FinalEstimator())),
+
+        dataset_name = dataset_name.split("[")[0].lower()
+
+        params = get_params_per_dataset(
+            dataset_name, n_classes,
         )
+
+        net = SourceOnly(
+            **params,
+            layer_name="feature_layer",
+            train_split=None,
+            device=device,
+            warm_start=True,
+        )
+
+        return net

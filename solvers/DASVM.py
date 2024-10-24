@@ -4,7 +4,9 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    import numpy as np
     from skada import DASVMClassifier, make_da_pipeline
+    from skada._utils import _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL
     from benchmark_utils.base_solver import DASolver, FinalEstimator
 
     # Temporary fix to avoid errors, to remove when issue
@@ -34,21 +36,29 @@ class Solver(DASolver):
         "dasvmclassifier__max_iter": [10]
     }
 
-    def skip(self, X, y, sample_domain, unmasked_y_train, dataset_name):
-        datasets_to_avoid = [
-            "Office31SURF",
-            "BCI",
-            "Office31",
-            "OfficeHomeResnet",
-            "mnist_usps",
-        ]
+    def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
+        # First, call the superclass skip method
+        skip, msg = super().skip(
+            X,
+            y,
+            sample_domain,
+            unmasked_y_train,
+            dataset
+        )
+        if skip:
+            return skip, msg
 
-        if dataset_name.split("[")[0] in datasets_to_avoid:
-            return True, f"solver does not support the dataset {dataset_name}."
+        # Check if the dataset is multiclass, excluding y == -1
+        n_classes = len(
+            np.unique(y[y != _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL])
+        )
+        if n_classes > 2:
+            return True, (f"DASVM does not support multiclass datasets "
+                          f"like {dataset.name}.")
 
         return False, None
 
-    def get_estimator(self):
+    def get_estimator(self, **kwargs):
         # The estimator passed should have a 'predict_proba' method.
         return make_da_pipeline(
             DASVMClassifier(base_estimator=FinalEstimator())

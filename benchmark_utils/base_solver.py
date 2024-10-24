@@ -11,7 +11,7 @@ with safe_import_context() as import_ctx:
     from sklearn.model_selection import GridSearchCV
     from skada.model_selection import (
         StratifiedDomainShuffleSplit,
-        DomainShuffleSplit
+        DomainShuffleSplit,
     )
     from skada._utils import Y_Type, _find_y_type
 
@@ -21,16 +21,32 @@ with safe_import_context() as import_ctx:
     from sklearn.svm import SVC
     from sklearn.dummy import DummyClassifier
 
-    from benchmark_utils.scorers import CRITERIONS
-
 
 # Parameters' grid for LR, SVC and XGBoost models
-LR_C_GRID = [0.001, 0.002, 0.005, 0.01, 0.02, 0.05, 0.1,
-             0.2, 0.5, 1., 2., 5., 10., 20.,
-             50., 100., 200., 500., 1000.]
+LR_C_GRID = [
+    0.001,
+    0.002,
+    0.005,
+    0.01,
+    0.02,
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    20.0,
+    50.0,
+    100.0,
+    200.0,
+    500.0,
+    1000.0,
+]
 
-SVC_C_GRID = [0.001, 0.01, 0.1, 1., 10., 100., 1000.]
-SVC_GAMMA_GRID = [0.001, 0.01, 0.1, 1., 10., 100., 1000.]
+SVC_C_GRID = [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
+SVC_GAMMA_GRID = [0.001, 0.01, 0.1, 1.0, 10.0, 100.0, 1000.0]
 
 XGB_SUBSAMPLE_GRID = [0.5, 0.65, 0.8]
 XGB_COLSAMPLE_GRID = [0.5, 0.65, 0.8]
@@ -80,7 +96,7 @@ def get_estimator_grid():
                     subsample=subsample,
                     colsample_bytree=colsample,
                     colsample_bylevel=colsample,
-                    colsample_bynode=colsample
+                    colsample_bynode=colsample,
                 )
     return _BASE_ESTIMATOR_DICT
 
@@ -122,11 +138,11 @@ class DASolver(BaseSolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     parameters = {
-        "param_grid": ["default"]
+        "param_grid": ["default"],
     }
 
     test_param_grid = {
-        'finalestimator__estimator_name': ["test"],
+        "finalestimator__estimator_name": ["test"],
     }
 
     # Random state
@@ -134,42 +150,59 @@ class DASolver(BaseSolver):
     n_splits_cv = 5
     test_size_cv = 0.2
 
-    if 'SLURM_CPUS_PER_TASK' in os.environ:
-        n_jobs = int(os.environ['SLURM_CPUS_PER_TASK'])
+    if "SLURM_CPUS_PER_TASK" in os.environ:
+        n_jobs = int(os.environ["SLURM_CPUS_PER_TASK"])
     else:
         n_jobs = 1
 
-    def __init__(self, param_grid="test"):
+    def __init__(self, print_infos=True, param_grid="test", **kwargs):
+        super().__init__(**kwargs)
+
+        # For compat with DeepDASolver
+        self.device = None
+
+        # Set default criterion
+        from benchmark_utils.scorers import CRITERIONS
+        self.criterions = CRITERIONS
+
         self.param_grid = param_grid
 
+        if print_infos:
+            print(f"n_jobs: {self.n_jobs}")
+            print(f"device: {self.device}")
+
     @abstractmethod
-    def get_estimator(self):
-        """Return an estimator compatible with the `sklearn.GridSearchCV`."""
+    def get_estimator(self, n_classes=None, device=None):
+        """Return an estimator compatible with the `sklearn.GridSearchCV`.
+
+        Parameters:
+        -----------
+        n_classes : int, optional
+            The number of classes in the target variable.
+        device : torch.device | None, optional
+            The device (CPU or GPU) to use for computations. This is necessary
+            for compat with DeepDASolver.
+
+        Returns:
+        --------
+        estimator : object
+            An estimator compatible with sklearn.GridSearchCV.
+        """
         pass
 
-    def get_criterions(self):
-        """Returns the criterions to use for the gridsearch.
-
-        We make this overwrittable as some solvers might not want
-        to use all criterions.
-        """
-        return CRITERIONS
-
-    # def get_base_estimator(self):
-    #     # The estimator passed should have a 'predict_proba' method.
-    #     estimator = self.base_estimators_dict[self.base_estimator]
-    #     if self.base_estimator_params is not None:
-    #         estimator.set_params(**self.base_estimator_params)
-    #     estimator.set_fit_request(sample_weight=True)
-    #     estimator.set_score_request(sample_weight=True)
-    #     return estimator
-
-    def set_objective(self, X, y, sample_domain, unmasked_y_train, **kwargs):
+    def set_objective(
+        self, X, y, sample_domain, unmasked_y_train, dataset, **kwargs
+    ):
         self.X, self.y, self.sample_domain = X, y, sample_domain
         self.unmasked_y_train = unmasked_y_train
 
-        self.da_estimator = self.get_estimator()
-        self.criterions = self.get_criterions()
+        dataset_name = dataset.name
+        n_classes = len(np.unique(self.unmasked_y_train))
+        self.da_estimator = self.get_estimator(
+            n_classes=n_classes,
+            device=self.device,
+            dataset_name=dataset_name,
+        )
 
         # check y is discrete or continuous
         self.is_discrete = _find_y_type(self.y) == Y_Type.DISCRETE
@@ -194,14 +227,25 @@ class DASolver(BaseSolver):
         elif self.param_grid == "test":
             self.param_grid = self.test_param_grid
 
+        print("Param Grid", self.param_grid)
+
         self.clf = GridSearchCV(
-            self.da_estimator, self.param_grid, refit=False,
-            scoring=self.criterions, cv=self.gs_cv, error_score=-np.inf,
-            n_jobs=self.n_jobs
+            self.da_estimator,
+            self.param_grid,
+            refit=False,
+            scoring=self.criterions,
+            cv=self.gs_cv,
+            error_score=-np.inf,
+            n_jobs=self.n_jobs,
         )
 
     def run(self, n_iter):
-        if self.name == 'NO_DA_TARGET_ONLY':
+        print(f"X train outer shape: {self.X.shape}")
+        print(
+            f"In theory, X train inner shape should be: "
+            f"{int(self.X.shape[0] * (1 - self.test_size_cv))}"
+        )
+        if 'no_da' in self.name.lower():
             # We are in a case of no domain adaptation
             # We dont need to use masked targets
             self.clf.fit(
@@ -216,29 +260,33 @@ class DASolver(BaseSolver):
                 self.X,
                 self.y,
                 sample_domain=self.sample_domain,
-                target_labels=self.unmasked_y_train
+                target_labels=self.unmasked_y_train,
             )
 
         self.cv_results_ = self.clf.cv_results_
         self.dict_estimators_ = {}
         for criterion in self.criterions:
             best_index = np.argmax(
-                self.clf.cv_results_['mean_test_' + criterion]
+                self.clf.cv_results_["mean_test_" + criterion]
             )
-            best_params = self.clf.cv_results_['params'][best_index]
+            best_params = self.clf.cv_results_["params"][best_index]
             refit_estimator = clone(self.da_estimator)
             refit_estimator.set_params(**best_params)
 
             try:
-                if self.name == 'NO_DA_TARGET_ONLY':
+                if 'no_da' in self.name.lower():
+                    # We are in a case of no domain adaptation
+                    # We dont need to use masked targets
                     refit_estimator.fit(
                         self.X,
                         self.unmasked_y_train,
-                        sample_domain=self.sample_domain
+                        sample_domain=self.sample_domain,
                     )
                 else:
                     refit_estimator.fit(
-                        self.X, self.y, sample_domain=self.sample_domain
+                        self.X,
+                        self.y,
+                        sample_domain=self.sample_domain,
                     )
                 self.dict_estimators_[criterion] = refit_estimator
             except Exception as e:
@@ -247,5 +295,12 @@ class DASolver(BaseSolver):
     def get_result(self):
         return dict(
             cv_results=self.cv_results_,
-            dict_estimators=self.dict_estimators_
+            dict_estimators=self.dict_estimators_,
         )
+
+    def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
+        # Check if the dataset name starts with 'deep' or is 'Simulated'
+        if dataset.name.startswith('deep'):
+            return True, f"solver does not support the dataset {dataset.name}."
+
+        return False, None

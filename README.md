@@ -51,7 +51,7 @@ To install the necessary requirements to run a benchmark, use the following comm
 
 ## Running the Benchmark
 
-### Step 1: Finding the Best Base Estimators for Each Dataset
+### Step 1 (shallow methods only): Finding the Best Base Estimators for Each Dataset
 
 #### 1.1 Generate the Configuration File
 
@@ -121,7 +121,7 @@ benchopt run --config dataset.yml --timeout 3h --output output_directory/output_
 benchopt run --config config/datasets/Simulated.yml --timeout 3h --output simulated_datasets/output_simulated --no-plot --no-html
 ```
 
-> **Note:** In the paper results, the timeout was set to 3 hours.
+> **Note:** In the paper results, the timeout was set to 3 hours for shallow methods and 24 hours for deep methods.
 > The `benchopt` framework supports running benchmarks in parallel on a SLURM cluster. For more details, refer to the [Benchopt user guide](https://benchopt.github.io/user_guide/advanced.html).
 
 ## Step 3: Displaying Results
@@ -138,7 +138,9 @@ This generates `visualize/cleaned_outputs/output_readable_dataset.csv`. This csv
 
 In the `visualize` folder, run the following commands to generate various results and plots:
 
-- **Main Result Table:**
+#### Shallow Methods
+
+- **Main Result Table (Shallow):**|
   ```bash
   python plot_results_all_datasets.py --csv-file cleaned_outputs/results_real_datasets_experiments.csv --csv-file-simulated cleaned_outputs/results_simulated_datasets_experiments.csv
   ```
@@ -158,6 +160,16 @@ In the `visualize` folder, run the following commands to generate various result
   ```bash
   python plot_boxplot.py  --csv-file cleaned_outputs/results_real_datasets_experiments.csv
   ```
+
+#### Deep Methods
+
+- **Main Result Table (Deep):**
+  ```bash
+  python plot_results_all_datasets_deep.py --csv-file cleaned_outputs/results_deep_datasets_experiments.csv --scorer-selection unsupervised
+  ```
+
+#### Both Shallow and Deep Methods
+
 - **Mean Computing Time for Training and Testing Each Method:**
   ```bash
   python visualize/get_computational_time.py --directory outputs
