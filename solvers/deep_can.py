@@ -7,11 +7,6 @@ with safe_import_context() as import_ctx:
     from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
     from skada.deep import CAN
-    from skada.metrics import (
-        SupervisedScorer, DeepEmbeddedValidation,
-        PredictionEntropyScorer, ImportanceWeightedScorer,
-        SoftNeighborhoodDensity, MixValScorer,
-    )
 
     from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
@@ -34,17 +29,6 @@ class Solver(DeepDASolver):
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
-        self.criterions = {
-            'supervised': SupervisedScorer(),
-            'prediction_entropy': PredictionEntropyScorer(),
-            'importance_weighted': ImportanceWeightedScorer(),
-            'soft_neighborhood_density': SoftNeighborhoodDensity(),
-            'deep_embedded_validation': DeepEmbeddedValidation(),
-            'mix_val_both': MixValScorer(ice_type='both'),
-            'mix_val_inter': MixValScorer(ice_type='inter'),
-            'mix_val_intra': MixValScorer(ice_type='intra'),
-        }
-
         dataset_name = dataset_name.split("[")[0].lower()
 
         params = get_params_per_dataset(
