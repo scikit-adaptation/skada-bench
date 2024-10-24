@@ -6,7 +6,6 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
-    from benchmark_utils.backbones_architecture import DomainClassifier
     from skada.deep import CAN
     from skada.metrics import (
         SupervisedScorer, DeepEmbeddedValidation,
