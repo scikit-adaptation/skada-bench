@@ -4,6 +4,11 @@ from benchmark_utils.base_solver import DASolver
 
 with safe_import_context() as import_ctx:
     import torch
+    from skada.metrics import (
+        SupervisedScorer, DeepEmbeddedValidation,
+        PredictionEntropyScorer, ImportanceWeightedScorer,
+        SoftNeighborhoodDensity, MixValScorer,
+    )
 
 
 class DeepDASolver(DASolver):
@@ -25,6 +30,17 @@ class DeepDASolver(DASolver):
 
         print(f"n_jobs: {self.n_jobs}")
         print(f"device: {self.device}")
+
+        self.criterions = {
+            'supervised': SupervisedScorer(),
+            'prediction_entropy': PredictionEntropyScorer(),
+            'importance_weighted': ImportanceWeightedScorer(),
+            'soft_neighborhood_density': SoftNeighborhoodDensity(),
+            'deep_embedded_validation': DeepEmbeddedValidation(),
+            'mix_val_both': MixValScorer(ice_type='both'),
+            'mix_val_inter': MixValScorer(ice_type='inter'),
+            'mix_val_intra': MixValScorer(ice_type='intra'),
+        }
 
     # Override the DASolver skip method
     def skip(self, X, y, sample_domain, unmasked_y_train, dataset):
