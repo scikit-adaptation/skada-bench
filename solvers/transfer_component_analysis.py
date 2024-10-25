@@ -5,6 +5,7 @@ from benchopt import safe_import_context
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
     from skada import TransferComponentAnalysisAdapter, make_da_pipeline
+    from skada.transformers import StratifiedDomainSubsampler
     from benchmark_utils.base_solver import DASolver, FinalEstimator
 
     from benchmark_utils.base_solver import import_ctx as base_import_ctx
@@ -33,7 +34,12 @@ class Solver(DASolver):
 
     def get_estimator(self, **kwargs):
         # The estimator passed should have a 'predict_proba' method.
+        subsampler = StratifiedDomainSubsampler(
+            train_size=200
+        )
+
         return make_da_pipeline(
+            subsampler,
             TransferComponentAnalysisAdapter(),
             FinalEstimator(),
         )

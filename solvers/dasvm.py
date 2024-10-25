@@ -7,6 +7,7 @@ with safe_import_context() as import_ctx:
     import numpy as np
     from skada import DASVMClassifier, make_da_pipeline
     from skada._utils import _DEFAULT_MASKED_TARGET_CLASSIFICATION_LABEL
+    from skada.transformers import StratifiedDomainSubsampler
     from benchmark_utils.base_solver import DASolver, FinalEstimator
 
     # Temporary fix to avoid errors, to remove when issue
@@ -60,7 +61,12 @@ class Solver(DASolver):
 
     def get_estimator(self, **kwargs):
         # The estimator passed should have a 'predict_proba' method.
+        subsampler = StratifiedDomainSubsampler(
+            train_size=200
+        )
+
         return make_da_pipeline(
+            subsampler,
             DASVMClassifier(base_estimator=FinalEstimator())
             .set_score_request(sample_weight=True)
         )

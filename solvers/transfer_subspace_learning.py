@@ -6,6 +6,7 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.base_solver import DASolver, FinalEstimator
     from skada import TransferSubspaceLearningAdapter, make_da_pipeline
+    from skada.transformers import StratifiedDomainSubsampler
     import torch  # noqa: F401
 
     from benchmark_utils.base_solver import import_ctx as base_import_ctx
@@ -41,7 +42,12 @@ class Solver(DASolver):
 
     def get_estimator(self, **kwargs):
         # The estimator passed should have a 'predict_proba' method.
+        subsampler = StratifiedDomainSubsampler(
+            train_size=200
+        )
+
         return make_da_pipeline(
+            subsampler,
             TransferSubspaceLearningAdapter(),
             FinalEstimator(),
         )
