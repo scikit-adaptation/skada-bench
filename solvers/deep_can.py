@@ -1,3 +1,4 @@
+import itertools
 from benchopt import safe_import_context
 
 # Protect the import with `safe_import_context()`. This allows:
@@ -6,12 +7,16 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
-    from skada.deep import CAN
+    from skada.deep import CAN, CANLoss
 
     from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
         exc, val, tb = base_import_ctx.import_error
         raise exc(val).with_traceback(tb)
+
+if import_ctx.failed_import:
+    class CANLoss:  # noqa: F811
+        def __init__(self, distance_threshold, class_threshold): pass
 
 
 # The benchmark solvers must be named `Solver` and
@@ -24,8 +29,16 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__distance_threshold': [0.01, 0.05, 0.1, 0.2, 0.5, 0.8],
-        'criterion__class_threshold': [3, 5, 10, 20],
+        'criterion__adapt_criterion': [
+            CANLoss(
+                distance_threshold=distance_threshold,
+                class_threshold=class_threshold,
+            )
+            for distance_threshold, class_threshold in itertools.product(
+                [0.01, 0.05, 0.1, 0.2, 0.5, 0.8],
+                [3, 5, 10, 20],
+            )
+        ]
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
