@@ -41,7 +41,7 @@ class Solver(DeepDASolver):
             train_split=None,
             device=device,
             warm_start=True,
-            domain_classifier=DomainClassifier(
+            disc_classifier=DomainClassifier(
                 num_features=params['module'].n_features
             ),
         )
