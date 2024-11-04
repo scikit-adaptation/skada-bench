@@ -30,6 +30,10 @@ if __name__ == "__main__":
     )[2]
 
     for name in filenames_dataset:
+        if name.startswith('deep'):
+            # We dont want to include the deep datasets
+            continue
+
         spec = importlib.util.spec_from_file_location(
             name, os.path.join(PATH_skada_bench, "datasets", name)
         )
