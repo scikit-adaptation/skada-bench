@@ -134,7 +134,7 @@ def get_params_per_dataset(dataset_name, n_classes):
     """
     dataset_configs = {
         "deep_mnist_usps": {
-            "batch_size": 256,
+            "batch_size": 128,
             "module": ShallowConvNet(n_classes=n_classes),
             "callbacks": [
                 LRScheduler(
@@ -148,10 +148,10 @@ def get_params_per_dataset(dataset_name, n_classes):
             "optimizer__momentum": 0.6,
             "optimizer__weight_decay": 1e-5,
             "max_epochs": 10,
-            "lr": 0.1,
+            "lr": 0.05,
         },
         "deep_office31": {
-            "batch_size": 128,
+            "batch_size": 64,
             "module": ResNet(n_classes=n_classes, model_name="resnet50"),
             "callbacks": [
                 LRScheduler(
@@ -165,7 +165,7 @@ def get_params_per_dataset(dataset_name, n_classes):
             "optimizer__momentum": 0.2,
             "optimizer__weight_decay": 1e-5,
             "max_epochs": 30,
-            "lr": 0.5,
+            "lr": 0.3,
         },
         "deep_officehome": {
             "batch_size": 128,
