@@ -35,7 +35,7 @@ class Solver(DASolver):
     def get_estimator(self, **kwargs):
         # The estimator passed should have a 'predict_proba' method.
         subsampler = StratifiedDomainSubsampler(
-            train_size=200
+            train_size=1000
         )
 
         return make_da_pipeline(
