@@ -6,6 +6,7 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
+    from benchmark_utils.backbones_architecture import DomainClassifier
     from skada.deep import MDD
 
     from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
@@ -40,6 +41,9 @@ class Solver(DeepDASolver):
             train_split=None,
             device=device,
             warm_start=True,
+            domain_classifier=DomainClassifier(
+                num_features=params['module'].n_features
+            ),
         )
 
         return net
