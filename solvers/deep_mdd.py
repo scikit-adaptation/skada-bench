@@ -42,7 +42,8 @@ class Solver(DeepDASolver):
             device=device,
             warm_start=True,
             disc_classifier=DomainClassifier(
-                num_features=params['module'].n_features
+                num_features=params['module'].n_features,
+                n_classes=n_classes,
             ),
         )
 
