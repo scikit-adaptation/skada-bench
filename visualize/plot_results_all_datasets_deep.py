@@ -7,6 +7,7 @@ import scipy.stats as stats
 import argparse
 from _solvers_scorers_registry import DEEP_ESTIMATOR_DICT, DEEP_DATASET_DICT
 
+
 def shade_of_color_pvalue(
     df_value,
     min_value=0,
@@ -38,7 +39,7 @@ def shade_of_color_pvalue(
         else:
             return df_value
 
-# %%
+
 def generate_table(csv_folder, scorer_selection="unsupervised"):
     # Load the data
     csv_files = glob.glob(f"{csv_folder}/*.csv")
@@ -93,8 +94,6 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     df_target_mean = df_mean.query("estimator == 'deep_no_da_target_only' & scorer == 'supervised'")
     df_mean = df_mean.query("estimator != 'deep_no_da_source_only'")
     df_mean = df_mean.query("estimator != 'deep_no_da_target_only'")
-    # %%
-
 
     if scorer_selection == "supervised":
         df_tot = df_mean.query("scorer == 'supervised'")
@@ -129,12 +128,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         )
         df_tot = df_tot.query("scorer == scorer_best")
 
-
-
-    # %%
-
     df_tot = pd.concat([df_tot, df_source_mean, df_target_mean], axis=0).reset_index()
-    #%%
     df_tab = df_tot.pivot(
         index="dataset",
         columns=["estimator"],
@@ -147,7 +141,6 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         level=0,
     )
 
-    # %%
     df_tab = df_tab.T.merge(df_rank, on="estimator")
     # %%
     if scorer_selection == "unsupervised":
@@ -160,8 +153,6 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     df_tab = df_tab.set_index(["estimator"])
     df_tab = df_tab.round(2)
     # df_tab = df_tab[df_tab.columns[1:]]
-
-    # %%
 
     # add the colorcell
     for i, col in enumerate(df_tab.columns[:-2 if scorer_selection == "unsupervised" else -1]):
@@ -186,7 +177,6 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
             df_tab.loc[df_tab.index[1], col],
         )
 
-    # %%
     if scorer_selection == "supervised":
         columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
         columns += ["rank"]
@@ -204,7 +194,6 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
             columns=columns,
         )
 
-    # %%
     # rename columns
     df_tab = df_tab.rename(
         columns=DEEP_DATASET_DICT,
@@ -217,7 +206,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     )
 
     df_tab = df_tab.fillna("\\color{gray!90}NA")
-    # %%
+
     # convert to latex
     lat_tab = df_tab.to_latex(
         escape=False,
@@ -241,8 +230,6 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     with open(f"table_results_all_dataset_{scorer_selection}.txt", "w") as f:
         f.write(lat_tab)
 
-
-    # %%
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Generate main table for all datasets",
