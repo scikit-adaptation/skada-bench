@@ -26,6 +26,9 @@ if __name__ == "__main__":
     ]
 
     for filepath in filenames_dataset:
+        if filepath.stem.startswith('deep'):
+            # We dont want to include the deep datasets
+            continue
         name = filepath.stem  # Remove the .py suffix
         spec = importlib.util.spec_from_file_location(name, filepath)
         foo = importlib.util.module_from_spec(spec)

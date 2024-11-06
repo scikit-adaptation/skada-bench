@@ -9,11 +9,11 @@ slurm_additional_parameters:
   output: slurm_output.txt # Output file
   partition: normal,parietal
   mail-type: ALL
-  mail-user: name@email.com # TO CHANGE TO YOUR EMAIL
+  mail-user: theo.gnassounou@inria.fr # TO CHANGE TO YOUR EMAIL
   ntasks: 1                 # Number of tasks per job
   cpus-per-task: 5         # requires 5 CPUs per job
 slurm_setup:  # sbatch script commands added before the main job
   - module purge
   - echo "current directory is $(pwd)"
   - module load anaconda3
-  - source activate env # TO CHANGE TO YOUR ENVIRONMENT NAME
+  - source activate skada-bench # TO CHANGE TO YOUR ENVIRONMENT NAME
