@@ -42,7 +42,7 @@ if __name__ == "__main__":
         if spec is None:
             # Safety check in case spec creation fails
             continue
-            
+
         foo = importlib.util.module_from_spec(spec)
         sys.modules[name] = foo
         spec.loader.exec_module(foo)
