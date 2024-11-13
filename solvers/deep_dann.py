@@ -25,6 +25,7 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
+        # 'criterion__reg': np.logspace(-3, 0, 4),
         'criterion__reg': [1e-3, 1e-2, 1e-1, 1],
     }
 
