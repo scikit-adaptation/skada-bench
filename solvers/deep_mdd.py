@@ -6,7 +6,7 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
-    from skada.deep.modules import DomainClassifier
+    from skada.deep.modules import DiscrepancyClassifier
     from skada.deep import MDD
 
     from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
@@ -25,7 +25,8 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3],
+        'criterion__reg': [1e-2, 1e-1, 1],
+        'gamma': [2., 3., 4.]
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -41,7 +42,7 @@ class Solver(DeepDASolver):
             train_split=None,
             device=device,
             warm_start=True,
-            disc_classifier=DomainClassifier(
+            disc_classifier=DiscrepancyClassifier(
                 num_features=params['module'].n_features,
                 n_classes=n_classes,
             ),
