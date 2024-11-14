@@ -26,7 +26,7 @@ class Solver(DeepDASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
         'criterion__reg': [1e-2, 1e-1, 1],
-        'gamma': [2., 3., 4.]
+        'gamma': [2., 4.]
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
