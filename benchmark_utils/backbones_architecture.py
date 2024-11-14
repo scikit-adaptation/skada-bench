@@ -180,7 +180,7 @@ class DiscrepancyClassifier(nn.Module):
     """Classifier Architecture for discrepancy classifier of MDD.
 
     Mimic the end classifier with a gradient adversarial layer.
-    
+
     Parameters
     ----------
     num_features : int
