@@ -173,7 +173,7 @@ class DomainClassifier(nn.Module):
             Parameter for the reverse layer.
         """
         reverse_x = GradientReversalLayer.apply(x, self.alpha)
-        return self.classifier(reverse_x)
+        return self.classifier(reverse_x).flatten()
 
 
 class DiscrepancyClassifier(nn.Module):
@@ -206,4 +206,4 @@ class DiscrepancyClassifier(nn.Module):
             Parameter for the reverse layer.
         """
         reverse_x = GradientReversalLayer.apply(x, self.alpha)
-        return self.final_layer(reverse_x).flatten()
+        return self.final_layer(reverse_x)
