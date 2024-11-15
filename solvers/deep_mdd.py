@@ -7,7 +7,8 @@ with safe_import_context() as import_ctx:
     from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.backbones_architecture import DiscrepancyClassifier
-    from skada.deep import MDD
+    from skada.deep import MDD, MDDLoss
+    import torch
 
     from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
@@ -26,6 +27,10 @@ class Solver(DeepDASolver):
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
         'criterion__reg': [1e-2, 1e-1, 1],
+        'criterion__adapt_criterion': [
+            MDDLoss(gamma=gamma, disc_criterion=torch.nn.CrossEntropyLoss())
+            for gamma in [2., 4.]
+        ],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
