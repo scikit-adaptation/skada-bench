@@ -1,10 +1,10 @@
-import torch
 from benchopt import safe_import_context
 
 # Protect the import with `safe_import_context()`. This allows:
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
+    import torch
     from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.backbones_architecture import DiscrepancyClassifier
