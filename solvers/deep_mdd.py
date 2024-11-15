@@ -1,3 +1,4 @@
+import torch
 from benchopt import safe_import_context
 
 # Protect the import with `safe_import_context()`. This allows:
@@ -8,7 +9,6 @@ with safe_import_context() as import_ctx:
     from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.backbones_architecture import DiscrepancyClassifier
     from skada.deep import MDD, MDDLoss
-    import torch
 
     from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
