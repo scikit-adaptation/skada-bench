@@ -16,6 +16,11 @@ with safe_import_context() as import_ctx:
         raise exc(val).with_traceback(tb)
 
 
+if import_ctx.failed_import:
+    class MDDLoss:  # noqa: F811
+        def __init__(self, gamma, disc_criterion): pass
+
+
 # The benchmark solvers must be named `Solver` and
 # inherit from `BaseSolver` for `benchopt` to work properly.
 class Solver(DeepDASolver):
