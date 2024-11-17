@@ -30,7 +30,7 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': [1e-2, 1e-1, 1],
+        'criterion__reg': [1e-3, 1e-2, 1e-1, 1],
         'criterion__adapt_criterion': [
             MDDLoss(gamma=gamma)
             for gamma in [2., 4.]
@@ -43,21 +43,26 @@ class Solver(DeepDASolver):
         params = get_params_per_dataset(
             dataset_name, n_classes,
         )
-        # Reduce learning rate and increase momentum
-        params['lr'] = params['lr'] * 0.1
+        # Increase momentum
         if 'optimizer__momentum' in params:
             params['optimizer__momentum'] = 0.9
+            params['optimizer__nesterov'] = True
+
+        params['module'].final_layer = DiscrepancyClassifier(
+            num_features=params['module'].n_features,
+            n_classes=n_classes,
+        )
 
         net = MDD(
             **params,
             layer_name="feature_layer",
-            gamma=4.,
             train_split=None,
             device=device,
             warm_start=True,
             disc_classifier=DiscrepancyClassifier(
                 num_features=params['module'].n_features,
                 n_classes=n_classes,
+                apply_grl=True,
             ),
         )
 
