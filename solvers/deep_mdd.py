@@ -43,6 +43,10 @@ class Solver(DeepDASolver):
         params = get_params_per_dataset(
             dataset_name, n_classes,
         )
+        # Reduce learning rate and increase momentum
+        params['lr'] = params['lr'] * 0.1
+        if 'optimizer__momentum' in params:
+            params['optimizer__momentum'] = 0.9
 
         net = MDD(
             **params,
