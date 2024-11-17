@@ -4,7 +4,6 @@ from benchopt import safe_import_context
 # - skipping import to speed up autocompletion in CLI.
 # - getting requirements info when all dependencies are not installed.
 with safe_import_context() as import_ctx:
-    import torch
     from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
     from benchmark_utils.backbones_architecture import DiscrepancyClassifier
@@ -33,7 +32,7 @@ class Solver(DeepDASolver):
     default_param_grid = {
         'criterion__reg': [1e-2, 1e-1, 1],
         'criterion__adapt_criterion': [
-            MDDLoss(gamma=gamma, disc_criterion=torch.nn.CrossEntropyLoss())
+            MDDLoss(gamma=gamma)
             for gamma in [2., 4.]
         ],
     }
