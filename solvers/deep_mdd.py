@@ -37,7 +37,6 @@ class Solver(DeepDASolver):
         ],
     }
 
-
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
         dataset_name = dataset_name.split("[")[0].lower()
 
