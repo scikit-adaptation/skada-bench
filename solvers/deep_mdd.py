@@ -30,10 +30,10 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': [1e-3, 1e-2, 1e-1, 1],
+        'criterion__reg': [1e-3, 1e-2, 1e-1],
         'criterion__adapt_criterion': [
             MDDLoss(gamma=gamma)
-            for gamma in [2., 4.]
+            for gamma in [2., 3., 4.]
         ],
     }
 
