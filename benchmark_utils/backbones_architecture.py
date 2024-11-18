@@ -190,20 +190,12 @@ class DiscrepancyClassifier(nn.Module):
         Number of classes
     alpha : float
         Parameter for the gradient reversal layer
-    apply_grl: bool
-        Whether to apply gradient reversal layer
     """
 
-    def __init__(self, num_features, n_classes, alpha=1, apply_grl=False):
+    def __init__(self, num_features, n_classes, alpha=1):
         super().__init__()
-        self.final_layer = nn.Sequential(
-            nn.Linear(num_features, 2*num_features),
-            nn.ReLU(),
-            nn.Dropout(0.5),
-            nn.Linear(2*num_features, n_classes),
-        )
+        self.final_layer = nn.Linear(num_features, n_classes)
         self.alpha = alpha
-        self.apply_grl = apply_grl
 
     def forward(self, x, sample_weight=None):
         """Forward pass.
@@ -215,6 +207,5 @@ class DiscrepancyClassifier(nn.Module):
         alpha: float
             Parameter for the reverse layer.
         """
-        if self.apply_grl:
-            x = GradientReversalLayer.apply(x, self.alpha)
+        x = GradientReversalLayer.apply(x, self.alpha)
         return self.final_layer(x)
