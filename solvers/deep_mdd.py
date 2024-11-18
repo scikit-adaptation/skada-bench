@@ -67,7 +67,7 @@ class Solver(DeepDASolver):
             optimizer__param_groups=[
                 ('base_module_.feature_layer*', {'lr': 0.1*params['lr']}),
                 ('base_module_.final_layer*', {'lr': params['lr']}),
-                ('domain_classifier_*', {'lr': params['lr'],}),
+                ('domain_classifier_*', {'lr': params['lr']}),
             ]
         )
 
