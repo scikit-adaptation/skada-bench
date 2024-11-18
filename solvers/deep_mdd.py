@@ -33,7 +33,7 @@ class Solver(DeepDASolver):
         'criterion__reg': [1e-3, 1e-2, 1e-1],
         'criterion__adapt_criterion': [
             MDDLoss(gamma=gamma)
-            for gamma in [2., 3.]
+            for gamma in [1., 3.]
         ],
     }
 
