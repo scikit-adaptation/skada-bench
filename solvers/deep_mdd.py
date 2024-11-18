@@ -33,7 +33,7 @@ class Solver(DeepDASolver):
         'criterion__reg': [1e-3, 1e-2, 1e-1],
         'criterion__adapt_criterion': [
             MDDLoss(gamma=gamma)
-            for gamma in [2., 3., 4.]
+            for gamma in [2., 3.]
         ],
     }
 
@@ -43,15 +43,10 @@ class Solver(DeepDASolver):
         params = get_params_per_dataset(
             dataset_name, n_classes,
         )
-        # Increase momentum
+        # Reduce learning rate and increase momentum
+        params['lr'] = params['lr'] * 0.1
         if 'optimizer__momentum' in params:
             params['optimizer__momentum'] = 0.9
-            params['optimizer__nesterov'] = True
-
-        params['module'].final_layer = DiscrepancyClassifier(
-            num_features=params['module'].n_features,
-            n_classes=n_classes,
-        )
 
         net = MDD(
             **params,
@@ -62,13 +57,7 @@ class Solver(DeepDASolver):
             disc_classifier=DiscrepancyClassifier(
                 num_features=params['module'].n_features,
                 n_classes=n_classes,
-                apply_grl=True,
             ),
-            optimizer__param_groups=[
-                ('base_module_.feature_layer*', {'lr': 0.1*params['lr']}),
-                ('base_module_.final_layer*', {'lr': params['lr']}),
-                ('domain_classifier_*', {'lr': params['lr']}),
-            ]
         )
 
         return net
