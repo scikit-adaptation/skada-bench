@@ -40,21 +40,21 @@ def shade_of_color_pvalue(
             return df_value
 
 
-def generate_table(csv_folder, scorer_selection="unsupervised"):
+def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"):
     # Load the data
     csv_files = glob.glob(f"{csv_folder}/*.csv")
     df = pd.concat([pd.read_csv(f) for f in csv_files])
     # %%
-    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
+    df[f"target_{score}-test-identity"] = df[f"target_{score}-test-identity"].apply(
         lambda x: json.loads(x)
     )
-    df["nb_splits"] = df["target_accuracy-test-identity"].apply(lambda x: len(x))
+    df["nb_splits"] = df[f"target_{score}-test-identity"].apply(lambda x: len(x))
     df_target = df.query('estimator == "deep_no_da_target_only" & scorer == "supervised"')
     df_source = df.query(
         'estimator == "deep_no_da_source_only" & scorer == "supervised"'
     )
     df = df.merge(
-        df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
+        df_target[["shift", f"target_{score}-test-mean", f"target_{score}-test-std"]],
         on="shift",
         suffixes=("", "_target"),
     )
@@ -62,9 +62,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         df_source[
             [
                 "shift",
-                "target_accuracy-test-mean",
-                "target_accuracy-test-std",
-                "target_accuracy-test-identity",
+                f"target_{score}-test-mean",
+                f"target_{score}-test-std",
+                f"target_{score}-test-identity",
             ]
         ],
         on="shift",
@@ -74,7 +74,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     df = df.drop_duplicates(subset=["dataset", "scorer", "estimator", "shift"])
 
     df["rank"] = df.groupby(["dataset", "scorer", "shift"])[
-        "target_accuracy-test-mean"
+        f"target_{score}-test-mean"
     ].rank(ascending=False)
     df_rank = df.groupby(["estimator"])["rank"].mean().reset_index()
 
@@ -82,8 +82,8 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         df.groupby(["dataset", "type", "scorer", "estimator"])
         .agg(
             {
-                "target_accuracy-test-mean": lambda x: x.mean(skipna=True),
-                "target_accuracy-test-std": lambda x: x.mean(skipna=True),
+                f"target_{score}-test-mean": lambda x: x.mean(skipna=True),
+                f"target_{score}-test-std": lambda x: x.mean(skipna=True),
                 "rank": lambda x: x.mean(skipna=True),
             }
         )
@@ -103,14 +103,14 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
 
         best_scorers = (
             df_mean.groupby(["estimator", "scorer"])[
-                "target_accuracy-test-mean"
+                f"target_{score}-test-mean"
             ]
             .mean()
             .reset_index()
         )
 
         idx_best_scorer = best_scorers.groupby(["estimator"])[
-            "target_accuracy-test-mean"
+            f"target_{score}-test-mean"
         ].idxmax()
         best_scorers = best_scorers.loc[idx_best_scorer]
 
@@ -132,7 +132,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     df_tab = df_tot.pivot(
         index="dataset",
         columns=["estimator"],
-        values="target_accuracy-test-mean",
+        values=f"target_{score}-test-mean",
     )
 
     columns = DEEP_ESTIMATOR_DICT.keys()
@@ -227,7 +227,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     lat_tab = lat_tab.replace("mix_val_inter", "MixVal")
 
     # save to txt file
-    with open(f"table_results_all_dataset_{scorer_selection}.txt", "w") as f:
+    with open(f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
         f.write(lat_tab)
 
 if __name__ == "__main__":
@@ -249,6 +249,13 @@ if __name__ == "__main__":
         required=True
     )
 
+
+    parser.add_argument(
+        "--score",
+        type=str,
+        default="accuracy",
+    )
+
     args = parser.parse_args()
     df = generate_table(
-        args.csv_folder, args.scorer_selection)
+        args.csv_folder, args.scorer_selection, args.score)
