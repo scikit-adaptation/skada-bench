@@ -16,8 +16,8 @@ with safe_import_context() as import_ctx:
         raise exc(val).with_traceback(tb)
 
 if import_ctx.failed_import:
-    class CANLoss:  # noqa: F811
-        def __init__(self, distance_threshold, class_threshold): pass
+    class SPALoss:  # noqa: F811
+        def __init__(self, reg_adv, reg_nap): pass
 
 
 # The benchmark solvers must be named `Solver` and
