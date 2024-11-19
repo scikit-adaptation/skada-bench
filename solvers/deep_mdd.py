@@ -6,13 +6,18 @@ from benchopt import safe_import_context
 with safe_import_context() as import_ctx:
     from benchmark_utils.deep_base_solver import DeepDASolver
     from benchmark_utils.utils import get_params_per_dataset
-    from skada.deep.modules import DomainClassifier
-    from skada.deep import MDD
+    from benchmark_utils.backbones_architecture import DiscrepancyClassifier
+    from skada.deep import MDD, MDDLoss
 
     from benchmark_utils.deep_base_solver import import_ctx as base_import_ctx
     if base_import_ctx.failed_import:
         exc, val, tb = base_import_ctx.import_error
         raise exc(val).with_traceback(tb)
+
+
+if import_ctx.failed_import:
+    class MDDLoss:  # noqa: F811
+        def __init__(self, gamma): pass
 
 
 # The benchmark solvers must be named `Solver` and
@@ -25,7 +30,11 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': [1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1, 1e1, 1e2, 1e3],
+        'criterion__reg': [1e-3, 1e-2, 1e-1],
+        'criterion__adapt_criterion': [
+            MDDLoss(gamma=gamma)
+            for gamma in [1., 3.]
+        ],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -34,6 +43,10 @@ class Solver(DeepDASolver):
         params = get_params_per_dataset(
             dataset_name, n_classes,
         )
+        # Reduce learning rate and increase momentum
+        params['lr'] = params['lr'] * 0.1
+        if 'optimizer__momentum' in params:
+            params['optimizer__momentum'] = 0.9
 
         net = MDD(
             **params,
@@ -41,7 +54,7 @@ class Solver(DeepDASolver):
             train_split=None,
             device=device,
             warm_start=True,
-            disc_classifier=DomainClassifier(
+            disc_classifier=DiscrepancyClassifier(
                 num_features=params['module'].n_features,
                 n_classes=n_classes,
             ),
