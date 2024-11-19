@@ -49,13 +49,18 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
         lambda x: json.loads(x)
     )
-    df["nb_splits"] = df["target_accuracy-test-identity"].apply(lambda x: len(x))
-    df_target = df.query('estimator == "deep_no_da_target_only" & scorer == "supervised"')
+    df["nb_splits"] = df["target_accuracy-test-identity"].apply(
+        lambda x: len(x)
+    )
+    df_target = df.query(
+        'estimator == "deep_no_da_target_only" & scorer == "supervised"'
+    )
     df_source = df.query(
         'estimator == "deep_no_da_source_only" & scorer == "supervised"'
     )
     df = df.merge(
-        df_target[["shift", "target_accuracy-test-mean", "target_accuracy-test-std"]],
+        df_target[["shift", "target_accuracy-test-mean",
+                   "target_accuracy-test-std"]],
         on="shift",
         suffixes=("", "_target"),
     )
@@ -90,8 +95,12 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         )
         .reset_index()
     )
-    df_source_mean = df_mean.query("estimator == 'deep_no_da_source_only' & scorer == 'supervised'")
-    df_target_mean = df_mean.query("estimator == 'deep_no_da_target_only' & scorer == 'supervised'")
+    df_source_mean = df_mean.query(
+        "estimator == 'deep_no_da_source_only' & scorer == 'supervised'"
+    )
+    df_target_mean = df_mean.query(
+        "estimator == 'deep_no_da_target_only' & scorer == 'supervised'"
+    )
     df_mean = df_mean.query("estimator != 'deep_no_da_source_only'")
     df_mean = df_mean.query("estimator != 'deep_no_da_target_only'")
 
@@ -99,7 +108,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         df_tot = df_mean.query("scorer == 'supervised'")
 
     elif scorer_selection == "unsupervised":
-        df_mean = df_mean.query("scorer != 'supervised' & scorer != 'best_scorer'")
+        df_mean = df_mean.query(
+            "scorer != 'supervised' & scorer != 'best_scorer'"
+        )
 
         best_scorers = (
             df_mean.groupby(["estimator", "scorer"])[
@@ -128,7 +139,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         )
         df_tot = df_tot.query("scorer == scorer_best")
 
-    df_tot = pd.concat([df_tot, df_source_mean, df_target_mean], axis=0).reset_index()
+    df_tot = pd.concat(
+        [df_tot, df_source_mean, df_target_mean], axis=0
+    ).reset_index()
     df_tab = df_tot.pivot(
         index="dataset",
         columns=["estimator"],
@@ -148,7 +161,8 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         df_tab = df_tab.merge(
             df_best_scorer, on="estimator"
         )
-        df_tab = df_tab[df_tot["scorer"] == df_tot["scorer_best"]].reset_index()
+        df_tab = df_tab[df_tot["scorer"] ==
+                        df_tot["scorer_best"]].reset_index()
 
     df_tab = df_tab.set_index(["estimator"])
     df_tab = df_tab.round(2)
@@ -214,13 +228,13 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         escape=False,
         multicolumn_format="c",
         multirow=True,
-        #column_format="|l||rr||r||rr|",
+        # column_format="|l||rr||r||rr|",
         column_format=column_format,
     )
     lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
     lat_tab = lat_tab.replace("toprule", "hline")
     lat_tab = lat_tab.replace("midrule", "hline")
-    lat_tab = lat_tab.replace("\multirow[t]", "\multirow")
+    lat_tab = lat_tab.replace(r"\multirow[t]", r"\multirow")
     lat_tab = lat_tab.replace("bottomrule", "hline")
     lat_tab = lat_tab.replace("circular_validation", "CircV")
     lat_tab = lat_tab.replace("prediction_entropy", "PE")
@@ -234,6 +248,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     # save to txt file
     with open(f"table_results_all_dataset_{scorer_selection}.txt", "w") as f:
         f.write(lat_tab)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
