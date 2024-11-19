@@ -195,7 +195,6 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
             )
         )
 
-
     if scorer_selection == "supervised":
         columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
         columns += ["rank"]
