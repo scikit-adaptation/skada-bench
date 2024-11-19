@@ -131,6 +131,9 @@ DEEP_ESTIMATOR_DICT = {
     'deep_dann': 'DANN',
     'deep_jdot': 'DeepJDOT',
     'deep_mcc': 'MCC',
+    'deep_can': 'CAN',
+    'deep_mdd': 'MDD',
+    'deep_spa': 'SPA'
 }
 
 DATASET_DICT = {
@@ -155,4 +158,6 @@ DATASET_DICT = {
 DEEP_DATASET_DICT = {
   'deep_mnist_usps': 'MNIST/USPS',
   'deep_office31': 'Office31',
+  'deep_officehome': 'OfficeHome',
+  'deep_bci': 'BCI',
 }
