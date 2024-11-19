@@ -2,6 +2,7 @@
 import json
 import argparse
 
+import glob
 import numpy as np
 import pandas as pd
 import scipy.stats as stats
@@ -56,92 +57,88 @@ def shade_of_color_pvalue(
 
 
 def generate_table(
-    csv_file, csv_file_simulated, scorer_selection="unsupervised"
+    csv_folder, csv_folder_simulated, scorer_selection="unsupervised", score="accuracy"
 ):
-    df = pd.read_csv(csv_file)
+    csv_files = glob.glob(f"{csv_folder}/*.csv")
+    df = pd.concat([pd.read_csv(f) for f in csv_files])
 
-    df_simulated = pd.read_csv(csv_file_simulated)
+    csv_files_simulated = glob.glob(f"{csv_folder_simulated}/*.csv")
+    df_simulated = pd.concat([pd.read_csv(f) for f in csv_files_simulated])
 
     df_simulated["dataset"] = df_simulated["shift"]
 
     df = pd.concat([df, df_simulated])
 
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
-
-    df["target_accuracy-test-identity"] = (
-        df["target_accuracy-test-identity"].apply(lambda x: json.loads(x))
+    df[f"target_{score}-test-identity"] = (
+        df[f"target_{score}-test-identity"].apply(lambda x: json.loads(x))
     )
 
     df["nb_splits"] = (
-        df["target_accuracy-test-identity"].apply(lambda x: len(x))
+        df[f"target_{score}-test-identity"].apply(lambda x: len(x))
     )
 
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
     df_source = df.query(
-        'estimator == "Train Src" & scorer != "supervised" '
-        '& scorer != "best_scorer"'
+        'estimator == "Train Src" & scorer == "supervised" '
     )
-    idx_source_best_scorer = df_source.groupby(["shift"])[
-        "target_accuracy-test-mean"
-    ].idxmax()
-    df_source = df_source.loc[idx_source_best_scorer]
 
     df = df.merge(
         df_target[[
-            "shift", "target_accuracy-test-mean", "target_accuracy-test-std"
+            "shift", f"target_{score}-test-mean", f"target_{score}-test-std"
         ]], on="shift", suffixes=("", "_target"),
     )
     df = df.merge(
         df_source[
             [
                 "shift",
-                "target_accuracy-test-mean",
-                "target_accuracy-test-std",
-                "target_accuracy-test-identity",
+                f"target_{score}-test-mean",
+                f"target_{score}-test-std",
+                f"target_{score}-test-identity",
             ]
         ],
         on="shift",
         suffixes=("", "_source"),
     )
-    # remove rows where the source is better than the target
-    df = df[
-        df["target_accuracy-test-mean_source"]
-        < df["target_accuracy-test-mean_target"]
-    ].reset_index()
-    df = df.query("nb_splits == 5 | nb_splits == 25")
+    # # remove rows where the source is better than the target
+    # df = df[
+    #     df[f"target_{score}-test-mean_source"]
+    #     < df[f"target_{score}-test-mean_target"]
+    # ].reset_index()
+    # df = df.query("nb_splits == 5 | nb_splits == 25")
 
     # remove duplicates
     df = df.drop_duplicates(subset=["dataset", "scorer", "estimator", "shift"])
 
-    # count the number of shifts
-    df_shift = df.groupby(["dataset", "scorer", "estimator"])
-    df_shift = df_shift.agg({"shift": "count"}).reset_index()
-    df_shift["nb_shift"] = df_shift["shift"]
-    nb_shifts_per_dataset = {
-        "Office31": int(0.8 * 5),
-        "OfficeHomeResnet": int(0.8 * 12),
-        "mnist_usps": 2,
-        "20NewsGroups": int(0.8 * 6),
-        "AmazonReview": int(0.8 * 11),
-        "Mushrooms": int(0.8 * 2),
-        "Phishing": int(0.8 * 2),
-        "BCI": int(0.8 * 9),
-        "covariate_shift": 1,
-        "target_shift": 1,
-        "concept_drift": 1,
-        "subspace": 1,
-    }
+    # # count the number of shifts
+    # df_shift = df.groupby(["dataset", "scorer", "estimator"])
+    # df_shift = df_shift.agg({"shift": "count"}).reset_index()
+    # df_shift["nb_shift"] = df_shift["shift"]
+    # nb_shifts_per_dataset = {
+    #     "Office31": int(0.8 * 5),
+    #     "OfficeHomeResnet": int(0.8 * 12),
+    #     "mnist_usps": 2,
+    #     "20NewsGroups": int(0.8 * 6),
+    #     "AmazonReview": int(0.8 * 11),
+    #     "Mushrooms": int(0.8 * 2),
+    #     "Phishing": int(0.8 * 2),
+    #     "BCI": int(0.8 * 9),
+    #     "covariate_shift": 1,
+    #     "target_shift": 1,
+    #     "concept_drift": 1,
+    #     "subspace": 1,
+    # }
 
-    df_shift["nb_shift_max"] = df_shift["dataset"].apply(
-        lambda x: nb_shifts_per_dataset[x]
-    )
+    # df_shift["nb_shift_max"] = df_shift["dataset"].apply(
+    #     lambda x: nb_shifts_per_dataset[x]
+    # )
 
-    df = df.merge(
-        df_shift[[
-            "dataset", "scorer", "estimator", "nb_shift", "nb_shift_max"
-        ]], on=["dataset", "scorer", "estimator"],
-    )
-    df = df[df["nb_shift"] >= df["nb_shift_max"]]
+    # df = df.merge(
+    #     df_shift[[
+    #         "dataset", "scorer", "estimator", "nb_shift", "nb_shift_max"
+    #     ]], on=["dataset", "scorer", "estimator"],
+    # )
+    # df = df[df["nb_shift"] >= df["nb_shift_max"]]
 
     df_filtered = df.query("estimator != 'Train Tgt'")
     df_filtered = df_filtered.query("estimator != 'Train Src'")
@@ -152,9 +149,9 @@ def generate_table(
     dataset = []
     for idx, df_ in df_grouped:
         # test de wilcoxon
-        acc_da = np.concatenate(df_["target_accuracy-test-identity"].values)
+        acc_da = np.concatenate(df_[f"target_{score}-test-identity"].values)
         acc_source = np.concatenate(
-            df_["target_accuracy-test-identity_source"].values
+            df_[f"target_{score}-test-identity_source"].values
         )
         try:
             wilco.append(
@@ -182,15 +179,21 @@ def generate_table(
     )
 
     df["rank"] = df.groupby(["dataset", "scorer", "shift"])[
-        "target_accuracy-test-mean"
+        f"target_{score}-test-mean"
     ].rank(ascending=False)
+
+    df_no_simutaled = df.query(
+        "dataset != 'covariate_shift' & dataset != 'target_shift' & "
+        "dataset != 'concept_drift' & dataset != 'subspace'"
+    )
+    df_rank = df_no_simutaled.groupby(["estimator"])["rank"].mean().reset_index()
 
     df_mean = (
         df.groupby(["dataset", "type", "scorer", "estimator"])
         .agg(
             {
-                "target_accuracy-test-mean": lambda x: x.mean(skipna=False),
-                "target_accuracy-test-std": lambda x: x.mean(skipna=False),
+                f"target_{score}-test-mean": lambda x: x.mean(skipna=False),
+                f"target_{score}-test-std": lambda x: x.mean(skipna=False),
                 "rank": lambda x: x.mean(skipna=False),
             }
         )
@@ -198,11 +201,14 @@ def generate_table(
     )
 
     df_source_mean = df_mean.query(
-        "estimator == 'Train Src' & scorer == 'best_scorer'"
+        "estimator == 'Train Src' & scorer == 'supervised'"
     )
     df_target_mean = df_mean.query(
         "estimator == 'Train Tgt' & scorer == 'supervised'"
     )
+
+    df_mean = df_mean.query("estimator != 'Train Src'")
+    df_mean = df_mean.query("estimator != 'Train Tgt'")
 
     if scorer_selection == "supervised":
         df_tot = df_mean.query("scorer == 'supervised'")
@@ -212,25 +218,24 @@ def generate_table(
         df_mean = df_mean.query(
             "scorer != 'supervised' & scorer != 'best_scorer'"
         )
-        df_mean_dataset = df_mean.query(
+        best_scorers = df_mean.query(
             "dataset != 'covariate_shift' & dataset != 'target_shift' "
             "& dataset != 'concept_drift' & dataset != 'subspace'"
         )
-        df_mean_dataset = (
-            df_mean_dataset.groupby(["estimator", "scorer"])[
-                "target_accuracy-test-mean"
+        best_scorers = (
+            best_scorers.groupby(["estimator", "scorer"])[
+                f"target_{score}-test-mean"
             ]
             .mean()
             .reset_index()
         )
-
-        idx_best_scorer = df_mean_dataset.groupby(["estimator"])[
-            "target_accuracy-test-mean"
+        idx_best_scorer = best_scorers.groupby(["estimator"])[
+            f"target_{score}-test-mean"
         ].idxmax()
-        df_mean_dataset = df_mean_dataset.loc[idx_best_scorer]
+        best_scorers = best_scorers.loc[idx_best_scorer]
 
         df_tot = df_mean.merge(
-            df_mean_dataset[
+            best_scorers[
                 [
                     "estimator",
                     "scorer",
@@ -247,21 +252,15 @@ def generate_table(
         df_wilco = (
             df_wilco[["dataset", "estimator", "scorer", "pvalue"]]
             .merge(
-                df_mean_dataset[["estimator", "scorer"]],
+                best_scorers[["estimator", "scorer"]],
                 on=["estimator",], suffixes=("", "_best"),
             )
         )
 
         df_wilco = df_wilco.query("scorer == scorer_best").reset_index()
 
-    df_tot_ = df_tot.query(
-        "dataset != 'covariate_shift' & dataset != 'target_shift' & "
-        "dataset != 'concept_drift' & dataset != 'subspace'"
-    )
-    df_rank = df_tot_.groupby(["estimator"])["rank"].mean().reset_index()
+
     # %%
-    df_tot = df_tot.query("estimator != 'Train Tgt'")
-    df_tot = df_tot.query("estimator != 'Train Src'")
     df_tot = pd.concat([
         df_tot, df_source_mean, df_target_mean
     ], axis=0).reset_index()
@@ -269,9 +268,8 @@ def generate_table(
     df_tab = df_tot.pivot(
         index="dataset",
         columns=["type", "estimator"],
-        values="target_accuracy-test-mean",
+        values=f"target_{score}-test-mean",
     )
-
     df_tab = df_tab.reindex(
         columns=["NO DA", "Reweighting", "Mapping", "Subspace", "Other"],
         level=0
@@ -317,13 +315,18 @@ def generate_table(
 
     df_tab = df_tab.reset_index().merge(df_rank, on="estimator")
 
-    df_tab = df_tab.reset_index().merge(
-        df_mean_dataset[["estimator", "scorer"]], on="estimator"
-    )
+
+    if scorer_selection == "unsupervised":
+        df_best_scorer = df_tot[["estimator", "scorer_best"]].drop_duplicates()
+        df_tab = df_tab.merge(
+            df_best_scorer, on="estimator"
+        )
+        df_tab = df_tab[df_tot["scorer"] == df_tot["scorer_best"]].reset_index()
+
     df_tab = df_tab.set_index(["type", "estimator"])
     df_tab = df_tab.round(2)
+    # remove columns index
     df_tab = df_tab[df_tab.columns[1:]]
-
     # add the colorcell
     for i, col in enumerate(df_tab.columns[:-2]):
         max_value = df_tab.loc[df_tab[col].index[1], col]
@@ -350,22 +353,21 @@ def generate_table(
             60,
             df_tab.loc[df_tab.index[1], col],
         )
-
-    if scorer == "supervised":
+    if scorer_selection == "supervised":
         df_tab = df_tab.reindex(
             columns=[
                 "covariate_shift",
                 "target_shift",
                 "concept_drift",
                 "subspace",
-                "Office31",
+                "Office31Decaf",
                 "OfficeHomeResnet",
-                "mnist_usps",
+                "mnist_usps_pca",
                 "20NewsGroups",
                 "AmazonReview",
                 "Mushrooms",
                 "Phishing",
-                "BCI",
+                "bci_projected",
                 "rank",
             ],
         )
@@ -376,15 +378,15 @@ def generate_table(
                 "target_shift",
                 "concept_drift",
                 "subspace",
-                "Office31",
+                "Office31Decaf",
                 "OfficeHomeResnet",
-                "mnist_usps",
+                "mnist_usps_pca",
                 "20NewsGroups",
                 "AmazonReview",
                 "Mushrooms",
                 "Phishing",
-                "BCI",
-                "scorer",
+                "bci_projected",
+                "scorer_best",
                 "rank",
             ],
         )
@@ -394,15 +396,15 @@ def generate_table(
             "target_shift": "\\mcrot{1}{l}{45}{\\underline{Tar. shift}}",
             "concept_drift": "\\mcrot{1}{l}{45}{\\underline{Cond. shift}}",
             "subspace": "\\mcrot{1}{l}{45}{\\underline{Sub. shift}}",
-            "Office31": "\\mcrot{1}{l}{45}{Office31}",
+            "Office31Decaf": "\\mcrot{1}{l}{45}{Office31}",
             "OfficeHomeResnet": "\\mcrot{1}{l}{45}{OfficeHome}",
-            "mnist_usps": "\\mcrot{1}{l}{45}{MNIST/USPS}",
+            "mnist_usps_pca": "\\mcrot{1}{l}{45}{MNIST/USPS}",
             "20NewsGroups": "\\mcrot{1}{l}{45}{20NewsGroups}",
             "AmazonReview": "\\mcrot{1}{l}{45}{AmazonReview}",
             "Mushrooms": "\\mcrot{1}{l}{45}{Mushrooms}",
             "Phishing": "\\mcrot{1}{l}{45}{Phishing}",
-            "BCI": "\\mcrot{1}{l}{45}{BCI}",
-            "scorer": "\\mcrot{1}{l}{45}{Selected Scorer}",
+            "bci_projected": "\\mcrot{1}{l}{45}{BCI}",
+            "scorer_best": "\\mcrot{1}{l}{45}{Selected Scorer}",
             "rank": "\\mcrot{1}{l}{45}{Rank}",
         }
     )
@@ -434,7 +436,7 @@ def generate_table(
     lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
 
     # save to txt file
-    with open("table_results_all_dataset.txt", "w") as f:
+    with open(f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
         f.write(lat_tab)
 
 
@@ -444,17 +446,17 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "--csv-file",
+        "--csv-folder",
         type=str,
         help="Path to the csv file containing results for real data",
         default='./readable_csv/results_all_datasets_experiments.csv'
     )
 
     parser.add_argument(
-        "--csv-file-simulated",
+        "--csv-folder-simulated",
         type=str,
-        help="Path to the csv file containing results for simulated data",
-        default='./readable_csv/simulated_31_05_readable.csv'
+        help="Path to the csv file containing results for real data",
+        default='./readable_csv/results_all_datasets_experiments.csv'
     )
 
     parser.add_argument(
@@ -463,7 +465,14 @@ if __name__ == "__main__":
         default="unsupervised"
     )
 
+    parser.add_argument(
+        "--score",
+        type=str,
+        default="accuracy"
+    )
+
     args = parser.parse_args()
     df = generate_table(
-        args.csv_file, args.csv_file_simulated, args.scorer_selection
+        args.csv_folder,args.csv_folder_simulated,
+        scorer_selection=args.scorer_selection, score=args.score
     )
