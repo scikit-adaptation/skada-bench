@@ -3,7 +3,6 @@ import numpy as np
 import glob
 import pandas as pd
 import json
-import scipy.stats as stats
 import argparse
 from _solvers_scorers_registry import DEEP_ESTIMATOR_DICT, DEEP_DATASET_DICT
 
@@ -46,9 +45,10 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     df = pd.concat([pd.read_csv(f) for f in csv_files])
 
     # %%
-    df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
-        lambda x: json.loads(x)
+    df["target_accuracy-test-identity"] = (
+        df["target_accuracy-test-identity"].apply(lambda x: json.loads(x))
     )
+
     df["nb_splits"] = df["target_accuracy-test-identity"].apply(
         lambda x: len(x)
     )
@@ -169,7 +169,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     # df_tab = df_tab[df_tab.columns[1:]]
 
     # add the colorcell
-    for i, col in enumerate(df_tab.columns[:-2 if scorer_selection == "unsupervised" else -1]):
+    for i, col in enumerate(
+        df_tab.columns[:-2 if scorer_selection == "unsupervised" else -1]
+    ):
         max_value = df_tab.loc[df_tab[col].index[1], col]
         mean_value = df_tab.loc[df_tab[col].index[0], col]
         min_value = df_tab[col].min()
@@ -186,10 +188,13 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
                 max_value=max_value,
             )
             df_tab.loc[idx, col] = color
-        df_tab.loc[df_tab.index[1], col] = "\\cellcolor{green_color!%d}{%s}" % (
-            60,
-            df_tab.loc[df_tab.index[1], col],
+        df_tab.loc[df_tab.index[1], col] = (
+            "\\cellcolor{{green_color!{}}}{{{}}}".format(
+                60,
+                df_tab.loc[df_tab.index[1], col],
+            )
         )
+
 
     if scorer_selection == "supervised":
         columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
