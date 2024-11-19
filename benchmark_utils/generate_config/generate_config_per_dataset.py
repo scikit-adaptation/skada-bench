@@ -27,7 +27,15 @@ if __name__ == "__main__":
 
     for filepath in filenames_dataset:
         name = filepath.stem  # Remove the .py suffix
+        if not name.endswith('.py') or name.startswith('deep'):
+            # We dont want to include the deep datasets
+            continue
         spec = importlib.util.spec_from_file_location(name, filepath)
+
+        if spec is None:
+            # Safety check in case spec creation fails
+            continue
+
         foo = importlib.util.module_from_spec(spec)
         sys.modules[name] = foo
         spec.loader.exec_module(foo)
@@ -47,8 +55,16 @@ if __name__ == "__main__":
 
         for filepath in filenames:
             name = filepath.stem  # Remove the .py suffix
+            if not name.endswith('.py') or name.startswith('deep'):
+                # We dont want to include the deep datasets
+                continue
             print(name)
             spec = importlib.util.spec_from_file_location(name, filepath)
+
+            if spec is None:
+                # Safety check in case spec creation fails
+                continue
+
             foo = importlib.util.module_from_spec(spec)
             sys.modules[name] = foo
             spec.loader.exec_module(foo)
