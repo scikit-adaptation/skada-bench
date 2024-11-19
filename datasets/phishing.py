@@ -100,8 +100,8 @@ class Dataset(BaseDataset):
         X_target = X.loc[X["having-IP-adress"] == domain_dict[target]]
         y_target = y.loc[X_target.index].values
 
-        X_source = X_source.to_numpy()
-        X_target = X_target.to_numpy()
+        X_source = X_source.to_numpy().astype(np.float64)
+        X_target = X_target.to_numpy().astype(np.float64)
 
         X, y, sample_domain = source_target_merge(
             X_source, X_target, y_source, y_target
