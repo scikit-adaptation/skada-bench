@@ -44,6 +44,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     # Load the data
     csv_files = glob.glob(f"{csv_folder}/*.csv")
     df = pd.concat([pd.read_csv(f) for f in csv_files])
+
     # %%
     df["target_accuracy-test-identity"] = df["target_accuracy-test-identity"].apply(
         lambda x: json.loads(x)
@@ -89,7 +90,6 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
         )
         .reset_index()
     )
-
     df_source_mean = df_mean.query("estimator == 'deep_no_da_source_only' & scorer == 'supervised'")
     df_target_mean = df_mean.query("estimator == 'deep_no_da_target_only' & scorer == 'supervised'")
     df_mean = df_mean.query("estimator != 'deep_no_da_source_only'")
@@ -208,11 +208,14 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     df_tab = df_tab.fillna("\\color{gray!90}NA")
 
     # convert to latex
+    column_format = "|l||" + len(df_tab.columns)*"r" + "|"
+
     lat_tab = df_tab.to_latex(
         escape=False,
         multicolumn_format="c",
         multirow=True,
-        column_format="|l||rr||r||rr|",
+        #column_format="|l||rr||r||rr|",
+        column_format=column_format,
     )
     lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
     lat_tab = lat_tab.replace("toprule", "hline")
@@ -224,7 +227,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised"):
     lat_tab = lat_tab.replace("importance_weighted", "IW")
     lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
     lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
-    lat_tab = lat_tab.replace("mix_val_inter", "MixVal")
+    lat_tab = lat_tab.replace("mix_val_inter", "MixValInter")
+    lat_tab = lat_tab.replace("mix_val_both", "MixValBoth")
+    lat_tab = lat_tab.replace("mix_val_intra", "MixValIntra")
 
     # save to txt file
     with open(f"table_results_all_dataset_{scorer_selection}.txt", "w") as f:
