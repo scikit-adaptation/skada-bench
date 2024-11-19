@@ -47,7 +47,9 @@ class Solver(DeepDASolver):
             train_split=None,
             device=device,
             domain_classifier=DomainClassifier(
-                num_features=params['module'].n_features),
+                num_features=params['module'].n_features
+            ),
+            warm_start=True,
             # optimizer__param_groups=[
             #     ('base_module_.feature_layer*', {'lr': params['lr']}),
             #     ('base_module_.final_layer*', {'lr': params['lr']}),

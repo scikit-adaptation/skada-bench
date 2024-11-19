@@ -30,9 +30,19 @@ if __name__ == "__main__":
     )[2]
 
     for name in filenames_dataset:
+        if not name.endswith('.py') or name.startswith('deep'):
+            # To skip non-Python files like .DS_Store
+            # + to skip deep datasets
+            continue
+
         spec = importlib.util.spec_from_file_location(
             name, os.path.join(PATH_skada_bench, "datasets", name)
         )
+
+        if spec is None:
+            # Safety check in case spec creation fails
+            continue
+
         foo = importlib.util.module_from_spec(spec)
         sys.modules[name] = foo
         spec.loader.exec_module(foo)

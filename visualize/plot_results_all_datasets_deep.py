@@ -3,7 +3,6 @@ import numpy as np
 import glob
 import pandas as pd
 import json
-import scipy.stats as stats
 import argparse
 from _solvers_scorers_registry import DEEP_ESTIMATOR_DICT, DEEP_DATASET_DICT
 
@@ -44,17 +43,24 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
     # Load the data
     csv_files = glob.glob(f"{csv_folder}/*.csv")
     df = pd.concat([pd.read_csv(f) for f in csv_files])
+
     # %%
-    df[f"target_{score}-test-identity"] = df[f"target_{score}-test-identity"].apply(
-        lambda x: json.loads(x)
+    df[f"target_{score}-test-identity"] = (
+        df[f"target_{score}-test-identity"].apply(lambda x: json.loads(x))
     )
-    df["nb_splits"] = df[f"target_{score}-test-identity"].apply(lambda x: len(x))
-    df_target = df.query('estimator == "deep_no_da_target_only" & scorer == "supervised"')
+
+    df["nb_splits"] = df[f"target_{score}-test-identity"].apply(
+        lambda x: len(x)
+    )
+    df_target = df.query(
+        'estimator == "deep_no_da_target_only" & scorer == "supervised"'
+    )
     df_source = df.query(
         'estimator == "deep_no_da_source_only" & scorer == "supervised"'
     )
     df = df.merge(
-        df_target[["shift", f"target_{score}-test-mean", f"target_{score}-test-std"]],
+        df_target[["shift", f"target_{score}-test-mean",
+                   f"target_{score}-test-std"]],
         on="shift",
         suffixes=("", "_target"),
     )
@@ -89,9 +95,12 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         )
         .reset_index()
     )
-
-    df_source_mean = df_mean.query("estimator == 'deep_no_da_source_only' & scorer == 'supervised'")
-    df_target_mean = df_mean.query("estimator == 'deep_no_da_target_only' & scorer == 'supervised'")
+    df_source_mean = df_mean.query(
+        "estimator == 'deep_no_da_source_only' & scorer == 'supervised'"
+    )
+    df_target_mean = df_mean.query(
+        "estimator == 'deep_no_da_target_only' & scorer == 'supervised'"
+    )
     df_mean = df_mean.query("estimator != 'deep_no_da_source_only'")
     df_mean = df_mean.query("estimator != 'deep_no_da_target_only'")
 
@@ -99,7 +108,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         df_tot = df_mean.query("scorer == 'supervised'")
 
     elif scorer_selection == "unsupervised":
-        df_mean = df_mean.query("scorer != 'supervised' & scorer != 'best_scorer'")
+        df_mean = df_mean.query(
+            "scorer != 'supervised' & scorer != 'best_scorer'"
+        )
 
         best_scorers = (
             df_mean.groupby(["estimator", "scorer"])[
@@ -128,7 +139,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         )
         df_tot = df_tot.query("scorer == scorer_best")
 
-    df_tot = pd.concat([df_tot, df_source_mean, df_target_mean], axis=0).reset_index()
+    df_tot = pd.concat(
+        [df_tot, df_source_mean, df_target_mean], axis=0
+    ).reset_index()
     df_tab = df_tot.pivot(
         index="dataset",
         columns=["estimator"],
@@ -148,14 +161,17 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         df_tab = df_tab.merge(
             df_best_scorer, on="estimator"
         )
-        df_tab = df_tab[df_tot["scorer"] == df_tot["scorer_best"]].reset_index()
+        df_tab = df_tab[df_tot["scorer"] ==
+                        df_tot["scorer_best"]].reset_index()
 
     df_tab = df_tab.set_index(["estimator"])
     df_tab = df_tab.round(2)
     # df_tab = df_tab[df_tab.columns[1:]]
 
     # add the colorcell
-    for i, col in enumerate(df_tab.columns[:-2 if scorer_selection == "unsupervised" else -1]):
+    for i, col in enumerate(
+        df_tab.columns[:-2 if scorer_selection == "unsupervised" else -1]
+    ):
         max_value = df_tab.loc[df_tab[col].index[1], col]
         mean_value = df_tab.loc[df_tab[col].index[0], col]
         min_value = df_tab[col].min()
@@ -172,9 +188,11 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
                 max_value=max_value,
             )
             df_tab.loc[idx, col] = color
-        df_tab.loc[df_tab.index[1], col] = "\\cellcolor{green_color!%d}{%s}" % (
-            60,
-            df_tab.loc[df_tab.index[1], col],
+        df_tab.loc[df_tab.index[1], col] = (
+            "\\cellcolor{{green_color!{}}}{{{}}}".format(
+                60,
+                df_tab.loc[df_tab.index[1], col],
+            )
         )
 
     if scorer_selection == "supervised":
@@ -208,27 +226,33 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
     df_tab = df_tab.fillna("\\color{gray!90}NA")
 
     # convert to latex
+    column_format = "|l||" + len(df_tab.columns)*"r" + "|"
+
     lat_tab = df_tab.to_latex(
         escape=False,
         multicolumn_format="c",
         multirow=True,
-        column_format="|l||rr||r||rr|",
+        # column_format="|l||rr||r||rr|",
+        column_format=column_format,
     )
     lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
     lat_tab = lat_tab.replace("toprule", "hline")
     lat_tab = lat_tab.replace("midrule", "hline")
-    lat_tab = lat_tab.replace("\multirow[t]", "\multirow")
+    lat_tab = lat_tab.replace(r"\multirow[t]", r"\multirow")
     lat_tab = lat_tab.replace("bottomrule", "hline")
     lat_tab = lat_tab.replace("circular_validation", "CircV")
     lat_tab = lat_tab.replace("prediction_entropy", "PE")
     lat_tab = lat_tab.replace("importance_weighted", "IW")
     lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
     lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
-    lat_tab = lat_tab.replace("mix_val_inter", "MixVal")
+    lat_tab = lat_tab.replace("mix_val_inter", "MixValInter")
+    lat_tab = lat_tab.replace("mix_val_both", "MixValBoth")
+    lat_tab = lat_tab.replace("mix_val_intra", "MixValIntra")
 
     # save to txt file
     with open(f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
         f.write(lat_tab)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
