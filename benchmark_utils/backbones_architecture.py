@@ -174,3 +174,38 @@ class DomainClassifier(nn.Module):
         """
         reverse_x = GradientReversalLayer.apply(x, self.alpha)
         return self.classifier(reverse_x).flatten()
+
+
+class DiscrepancyClassifier(nn.Module):
+    """Classifier Architecture for discrepancy classifier of MDD.
+
+    Mimic the end classifier with a gradient adversarial layer.
+
+    Parameters
+    ----------
+    num_features : int
+        Size of the input, e.g size of the last layer of
+        the feature extractor
+    n_classes : int
+        Number of classes
+    alpha : float
+        Parameter for the gradient reversal layer
+    """
+
+    def __init__(self, num_features, n_classes, alpha=1):
+        super().__init__()
+        self.final_layer = nn.Linear(num_features, n_classes)
+        self.alpha = alpha
+
+    def forward(self, x, sample_weight=None):
+        """Forward pass.
+
+        Parameters
+        ----------
+        x: torch.Tensor
+            Data of shape (batch_size, ...)
+        alpha: float
+            Parameter for the reverse layer.
+        """
+        x = GradientReversalLayer.apply(x, self.alpha)
+        return self.final_layer(x)
