@@ -29,14 +29,15 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
+        'criterion__reg': [3e-1],
         'criterion__adapt_criterion': [
             CANLoss(
                 distance_threshold=distance_threshold,
                 class_threshold=class_threshold,
             )
             for distance_threshold, class_threshold in itertools.product(
-                [0.01, 0.05, 0.1, 0.2, 0.5, 0.8],
-                [3, 5, 10, 20],
+                [5e-3, 5e-2, 5e-1],
+                [1, 3, 5],
             )
         ]
     }
