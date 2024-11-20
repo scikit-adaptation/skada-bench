@@ -1,4 +1,3 @@
-import itertools
 from benchopt import safe_import_context
 
 # Protect the import with `safe_import_context()`. This allows:
