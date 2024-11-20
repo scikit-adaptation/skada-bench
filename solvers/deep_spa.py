@@ -30,17 +30,7 @@ class Solver(DeepDASolver):
     # the cross product for each key in the dictionary.
     # All parameters 'p' defined here are available as 'self.p'.
     default_param_grid = {
-        'criterion__reg': [1],
-        'criterion__adapt_criterion': [
-            SPALoss(
-                reg_adv=reg_adv,
-                reg_nap=reg_nap,
-            )
-            for reg_adv, reg_nap in itertools.product(
-                [1],
-                [1],
-            )
-        ]
+        'criterion__reg': [1e-1],
     }
 
     def get_estimator(self, n_classes, device, dataset_name, **kwargs):
@@ -56,6 +46,9 @@ class Solver(DeepDASolver):
 
         net = SPA(
             **params,
+            reg_adv=1,
+            reg_gsa=1,
+            reg_nap=1,
             layer_name="feature_layer",
             train_split=None,
             device=device,
