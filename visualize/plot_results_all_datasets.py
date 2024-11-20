@@ -326,9 +326,10 @@ def generate_table(
     df_tab = df_tab.set_index(["type", "estimator"])
     df_tab = df_tab.round(2)
     # remove columns index
-    df_tab = df_tab[df_tab.columns[1:]]
+    if scorer_selection == "unsupervised":
+        df_tab = df_tab[df_tab.columns[1:]]
     # add the colorcell
-    for i, col in enumerate(df_tab.columns[:-2]):
+    for i, col in enumerate(df_tab.columns[:-2 if scorer_selection == "unsupervised" else -1]):
         max_value = df_tab.loc[df_tab[col].index[1], col]
         mean_value = df_tab.loc[df_tab[col].index[0], col]
         min_value = df_tab[col].min()
