@@ -434,6 +434,9 @@ def generate_table(
     lat_tab = lat_tab.replace("importance_weighted", "IW")
     lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
     lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
+    lat_tab = lat_tab.replace("mix_val_intra", "MixVal")
+    lat_tab = lat_tab.replace("mix_val_both", "MixVal")
+    lat_tab = lat_tab.replace("mix_val_inter", "MixVal")
 
     # save to txt file
     with open(f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
