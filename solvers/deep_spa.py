@@ -47,7 +47,7 @@ class Solver(DeepDASolver):
             **params,
             reg_adv=1,
             reg_gsa=1,
-            reg_nap=1,
+            reg_nap=0,
             layer_name="feature_layer",
             train_split=None,
             device=device,
