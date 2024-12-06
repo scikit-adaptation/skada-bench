@@ -36,8 +36,8 @@ class Solver(DeepDASolver):
                 class_threshold=class_threshold,
             )
             for distance_threshold, class_threshold in itertools.product(
-                [5e-3, 5e-2, 5e-1],
-                [1, 3, 5],
+                [0.1, 0.5, 1],
+                [10, 20, 50],
             )
         ]
     }
