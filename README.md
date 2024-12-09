@@ -165,7 +165,7 @@ In the `visualize` folder, run the following commands to generate various result
 
 - **Main Result Table (Deep):**
   ```bash
-  python plot_results_all_datasets_deep.py --csv-file cleaned_outputs/results_deep_datasets_experiments.csv --scorer-selection unsupervised
+  python plot_results_all_datasets_deep.py --csv-folder cleaned_outputs/ --scorer-selection unsupervised
   ```
 
 #### Both Shallow and Deep Methods
