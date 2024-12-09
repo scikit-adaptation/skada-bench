@@ -161,3 +161,10 @@ DEEP_DATASET_DICT = {
   'deep_officehome': 'OfficeHome',
   'deep_bci': 'BCI',
 }
+
+DEEP_SIMULATED_DATASET_DICT = {
+  'covariate_shift': 'Cov. shift',
+  'target_shift': 'Tar. shift',
+  'concept_drift': 'Cond. shift',
+  'subspace': 'Sub. shift',
+}

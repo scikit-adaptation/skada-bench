@@ -4,7 +4,7 @@ import glob
 import pandas as pd
 import json
 import argparse
-from _solvers_scorers_registry import DEEP_ESTIMATOR_DICT, DEEP_DATASET_DICT
+from _solvers_scorers_registry import DEEP_ESTIMATOR_DICT, DEEP_DATASET_DICT, DEEP_SIMULATED_DATASET_DICT
 
 
 def shade_of_color_pvalue(
@@ -39,10 +39,18 @@ def shade_of_color_pvalue(
             return df_value
 
 
-def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"):
+def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy", simulated=False):
     # Load the data
     csv_files = glob.glob(f"{csv_folder}/*.csv")
     df = pd.concat([pd.read_csv(f) for f in csv_files])
+
+    if simulated:
+        # Keep only 'Simulated' rows and update 'dataset' column
+        df = df[df['dataset'] == 'Simulated']
+        df['dataset'] = df['shift']
+    else:
+        # Discard 'Simulated' rows
+        df = df[df['dataset'] != 'Simulated']
 
     # %%
     df[f"target_{score}-test-identity"] = (
@@ -148,11 +156,13 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         values=f"target_{score}-test-mean",
     )
 
-    columns = DEEP_ESTIMATOR_DICT.keys()
-    df_tab = df_tab.reindex(
-        columns=columns,
-        level=0,
-    )
+    if not simulated:
+        columns = DEEP_ESTIMATOR_DICT.keys()
+
+        df_tab = df_tab.reindex(
+            columns=columns,
+            level=0,
+        )
 
     df_tab = df_tab.T.merge(df_rank, on="estimator")
     # %%
@@ -196,27 +206,43 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         )
 
     if scorer_selection == "supervised":
-        columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
+        if not simulated:
+            columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
+        else:
+            columns = [dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()]
         columns += ["rank"]
         df_tab = df_tab.reindex(
             columns=columns,
         )
     else:
-        columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
+        if not simulated:
+            columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
+        else:
+            columns = [dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()]
         columns += ["scorer"]
         columns += ["rank"]
         df_tab = df_tab.rename(
             columns={"scorer_best": "scorer"},
         )
+
         df_tab = df_tab.reindex(
             columns=columns,
         )
 
     # rename columns
-    df_tab = df_tab.rename(
-        columns=DEEP_DATASET_DICT,
-        index=DEEP_ESTIMATOR_DICT,
-    )
+    if not simulated:
+        df_tab = df_tab.rename(
+            columns=DEEP_DATASET_DICT,
+            index=DEEP_ESTIMATOR_DICT,
+        )
+    else:
+        df_tab = df_tab.rename(
+            columns=DEEP_SIMULATED_DATASET_DICT,
+            index=DEEP_ESTIMATOR_DICT,
+        )
+
+    import pdb; pdb.set_trace()
+
     # apply mcrot on columns names
     df_tab.columns = pd.MultiIndex.from_tuples(
         [(f"\\mcrot{{1}}{{l}}{{45}}{{{col}}}", "") for col in df_tab.columns],
@@ -280,6 +306,16 @@ if __name__ == "__main__":
         default="accuracy",
     )
 
+    parser.add_argument(
+        "--simulated",
+        action="store_true",
+        help="Flag to indicate if the data is simulated",
+    )
+
     args = parser.parse_args()
     df = generate_table(
-        args.csv_folder, args.scorer_selection, args.score)
+        args.csv_folder,
+        args.scorer_selection,
+        args.score,
+        args.simulated
+    )
