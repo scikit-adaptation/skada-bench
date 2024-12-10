@@ -209,7 +209,7 @@ def keep_only_best_scorer_per_estimator(df, specific_col=None):
     df_copy['estimator'] = [index_tuple[1] for index_tuple in df.index]
     df_copy['dataset'] = [index_tuple[0] for index_tuple in df.index]
     df_copy = df_copy.reset_index(drop=True)
-    
+
     mean_index = None
     if not specific_col:
         for i in range(0, len(df.columns)):
