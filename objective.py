@@ -40,7 +40,7 @@ class Objective(BaseObjective):
 
     # List of packages needed to run the benchmark.
     requirements = [
-        "pip:scikit-learn==1.4.0",
+        "pip:scikit-learn==1.5.0",
         "pip:skada==0.4.0",
     ]
     # Minimal version of benchopt required to run this benchmark.
