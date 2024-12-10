@@ -71,7 +71,7 @@ jobs:
         fi
     - name: Install skada and its dependencies
       run: |
-        pip install -U git+https://github.com/scikit-adaptation/skada.git
+        pip install -U skada==0.4.0
     - name: Check if benchopt is compatible with this benchmark
       id: check_min_version
       run: |

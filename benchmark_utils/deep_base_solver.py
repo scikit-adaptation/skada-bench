@@ -14,8 +14,6 @@ with safe_import_context() as import_ctx:
 class DeepDASolver(DASolver):
     n_jobs = 1
 
-    requirements = ['pip:skada[deep]']
-
     # For DeepDA solvers, empty test_param_grid
     test_param_grid = {}
 
