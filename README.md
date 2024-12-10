@@ -43,8 +43,8 @@ To install the necessary requirements to run a benchmark, use the following comm
 
 4. [NOT MANDATORY] Install the preprocessing - visualising - all requirements:
   ```bash
-  pip install -r requirements_preprocess.txt # Install preprocessing dependencies
-  pip install -r requirements_plot.txt # Install plotting dependencies
+  pip install -r preprocessing/requirements_preprocess.txt # Install preprocessing dependencies
+  pip install -r visualize/requirements_plot.txt # Install plotting dependencies
   pip install -r requirements_all.txt # Install all dependencies
   ```
 
