@@ -326,15 +326,16 @@ def retrieve_cv(file_path):
 
 def process_files_in_directory(directory, processing_type='extract_benchopt'):
     """
-    Process all CSV and Parquet files in a directory using the specified processing function.
+    Process all CSV and Parquet files in a directory using the
+    specified processing function.
 
     Parameters
     ----------
     directory : str
         Path to the directory containing the files to process
     processing_type : str, optional
-        Type of processing to apply. Can be either 'retrieve_cv' or 'extract_benchopt'
-        (default is 'extract_benchopt')
+        Type of processing to apply. Can be either 'retrieve_cv' 
+        or 'extract_benchopt' (default is 'extract_benchopt')
 
     Returns
     -------
@@ -348,7 +349,8 @@ def process_files_in_directory(directory, processing_type='extract_benchopt'):
     """
     if processing_type not in ['retrieve_cv', 'extract_benchopt']:
         raise ValueError(
-            "processing_type must be either 'retrieve_cv' or 'extract_benchopt'"
+            "processing_type must be either "
+            "'retrieve_cv' or 'extract_benchopt'"
         )
 
     df_list = []
