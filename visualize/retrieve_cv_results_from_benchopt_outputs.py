@@ -113,13 +113,13 @@ def clean_benchopt_df(df):
 def create_npz_file(df):
     """
     Create a npz file from the DataFrame containing CV results.
-    
+
     Parameters
     ----------
     df : pandas.DataFrame
         DataFrame containing CV results with columns:
         dataset, shift, estimator, scorer, type, idx_rep, split, grid_split, results
-    
+
     Returns
     -------
     dict
@@ -133,42 +133,46 @@ def create_npz_file(df):
     """
     # Pivot the DataFrame to create scorer columns
     df_pivot = df.pivot(
-        index=['dataset', 'shift', 'estimator', 'type', 'idx_rep', 'split', 'grid_split'],
+        index=['dataset', 'shift', 'estimator',
+               'type', 'idx_rep', 'split', 'grid_split'],
         columns='scorer',
         values='results'
     ).reset_index()
-    
+
     # Rename columns to remove the MultiIndex
     df_pivot.columns.name = None
-    
+
     # Dictionary to store unique arrays and their mappings
     unique_mappings = {}
     columns = ['dataset', 'shift', 'estimator', 'type']
-    
+
     for col in columns:
         # Get unique values for the column
         unique_values = df_pivot[col].unique()
-        
+
         # Create a mapping dictionary with indices
         mapping_dict = dict(zip(unique_values, range(len(unique_values))))
-        
+
         # Store the unique values array for reference
         unique_mappings[col] = unique_values
-        
+
         # Override the values of the column
         df_pivot[col] = df_pivot[col].map(mapping_dict)
-    
+
     # Get scorers from the columns (excluding the index columns)
-    scorers = [col for col in df_pivot.columns if col not in ['dataset', 'shift', 'estimator', 'type', 'idx_rep', 'split', 'grid_split']]
-    import pdb; pdb.set_trace()
+    scorers = [col for col in df_pivot.columns if col not in [
+        'dataset', 'shift', 'estimator', 'type', 'idx_rep', 'split', 'grid_split']
+    ]
+
     # Convert to numpy array, handling potential multi-dimensional results
     try:
         # Attempt to convert directly to numpy array
-        X = df_pivot.drop(columns=['idx_rep', 'split', 'grid_split']).to_numpy()
+        X = df_pivot.drop(
+            columns=['idx_rep', 'split', 'grid_split']).to_numpy()
     except TypeError:
         # If direct conversion fails (e.g., mixed types), use object array
         X = df_pivot.drop(columns=['idx_rep', 'split', 'grid_split']).values
-    
+
     return {
         'X': X,
         'scorers': np.array(scorers),
