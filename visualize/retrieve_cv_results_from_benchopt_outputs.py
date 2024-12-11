@@ -112,7 +112,7 @@ def clean_benchopt_df(df):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Process Benchopt output files to extract and organize "
-                   "cross-validation results"
+                    "cross-validation results"
     )
 
     parser.add_argument(

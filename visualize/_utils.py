@@ -334,7 +334,7 @@ def process_files_in_directory(directory, processing_type='extract_benchopt'):
     directory : str
         Path to the directory containing the files to process
     processing_type : str, optional
-        Type of processing to apply. Can be either 'retrieve_cv' 
+        Type of processing to apply. Can be either 'retrieve_cv'
         or 'extract_benchopt' (default is 'extract_benchopt')
 
     Returns
