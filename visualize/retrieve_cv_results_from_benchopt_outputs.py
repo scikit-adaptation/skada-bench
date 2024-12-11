@@ -118,7 +118,8 @@ def create_npz_file(df):
     ----------
     df : pandas.DataFrame
         DataFrame containing CV results with columns:
-        dataset, shift, estimator, scorer, type, idx_rep, split, grid_split, results
+        dataset, shift, estimator, scorer, type,
+        idx_rep, split, grid_split, results
 
     Returns
     -------
@@ -161,7 +162,9 @@ def create_npz_file(df):
 
     # Get scorers from the columns (excluding the index columns)
     scorers = [col for col in df_pivot.columns if col not in [
-        'dataset', 'shift', 'estimator', 'type', 'idx_rep', 'split', 'grid_split']
+        'dataset', 'shift', 'estimator',
+        'type', 'idx_rep', 'split', 'grid_split'
+        ]
     ]
 
     # Convert to numpy array, handling potential multi-dimensional results
