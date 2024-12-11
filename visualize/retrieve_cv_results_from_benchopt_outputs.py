@@ -31,6 +31,7 @@ Example:
 
 import os
 import argparse
+import numpy as np
 
 from _solvers_scorers_registry import (
     DA_TECHNIQUES,
@@ -109,6 +110,72 @@ def clean_benchopt_df(df):
     return df
 
 
+def create_npz_file(df):
+    """
+    Create a npz file from the DataFrame containing CV results.
+    
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        DataFrame containing CV results with columns:
+        dataset, shift, estimator, scorer, type, idx_rep, split, grid_split, results
+    
+    Returns
+    -------
+    dict
+        Dictionary containing the arrays to be saved in npz format:
+        - X: float matrix of shape (n_samples, n_features)
+        - datasets: unique dataset names
+        - shifts: unique shift values
+        - estimators: unique estimator names
+        - types: unique type values
+        - scorers: unique scorer names
+    """
+    # Pivot the DataFrame to create scorer columns
+    df_pivot = df.pivot(
+        index=['dataset', 'shift', 'estimator', 'type', 'idx_rep', 'split', 'grid_split'],
+        columns='scorer',
+        values='results'
+    ).reset_index()
+    
+    # Rename columns to remove the MultiIndex
+    df_pivot.columns.name = None
+    
+    # Dictionary to store unique arrays and their mappings
+    unique_mappings = {}
+    columns = ['dataset', 'shift', 'estimator', 'type']
+    
+    for col in columns:
+        # Get unique values for the column
+        unique_values = df_pivot[col].unique()
+        
+        # Create a mapping dictionary with indices
+        mapping_dict = dict(zip(unique_values, range(len(unique_values))))
+        
+        # Store the unique values array for reference
+        unique_mappings[col] = unique_values
+        
+        # Override the values of the column
+        df_pivot[col] = df_pivot[col].map(mapping_dict)
+    
+    # Get scorers from the columns (excluding the index columns)
+    scorers = [col for col in df_pivot.columns if col not in ['dataset', 'shift', 'estimator', 'type', 'idx_rep', 'split', 'grid_split']]
+    import pdb; pdb.set_trace()
+    # Convert to numpy array, handling potential multi-dimensional results
+    try:
+        # Attempt to convert directly to numpy array
+        X = df_pivot.drop(columns=['idx_rep', 'split', 'grid_split']).to_numpy()
+    except TypeError:
+        # If direct conversion fails (e.g., mixed types), use object array
+        X = df_pivot.drop(columns=['idx_rep', 'split', 'grid_split']).values
+    
+    return {
+        'X': X,
+        'scorers': np.array(scorers),
+        **unique_mappings,
+    }
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Process Benchopt output files to extract and organize "
@@ -138,6 +205,8 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    output_directory = args.output
+
     # Step 1: Load the Data
     # Load the data from the specified directory
     df = process_files_in_directory(
@@ -147,8 +216,11 @@ if __name__ == "__main__":
     # Step 2: Clean the dataframe
     df = clean_benchopt_df(df)
 
-    # Step 3: Export to CSV
-    output_directory = args.output
+    # Step 3: Create npz file
+    npz_data = create_npz_file(df)
+
+    output_npz_path = f'{output_directory}/{args.file_name}.npz'
+    np.savez(output_npz_path, **npz_data)
 
     os.makedirs(output_directory, exist_ok=True)
 
