@@ -14,7 +14,21 @@ SOURCE_TARGET_ACRONYMS = {
 }
 
 
-def generate_df(file_path):
+def extract_benchopt_file_informations(file_path):
+    """
+    Extract and process experimentation results from
+    the benchopt output file.
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the benchopt results file.
+
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame containing the processed experiment results.
+    """
     # Read the CSV or Parquet file into a pandas DataFrame
     if file_path.endswith(".csv"):
         df = pd.read_csv(file_path)
@@ -183,14 +197,174 @@ def generate_df(file_path):
     return merged_df
 
 
-def process_files_in_directory(directory):
+def retrieve_cv(file_path):
+    """
+    Read and extract the cv results from the benchopt output file.
+
+    Parameters
+    ----------
+    file_path : str
+        Path to the CSV or Parquet file containing cross-validation results.
+
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame containing the processed cross-validation results.
+    """
+    # Read the CSV or Parquet file into a pandas DataFrame
+    if file_path.endswith(".csv"):
+        df = pd.read_csv(file_path)
+    elif file_path.endswith(".parquet"):
+        df = pd.read_parquet(file_path)
+    else:
+        print(f"Unsupported file format: {file_path}")
+        return
+
+    # Keep only useful columns
+    df = df[['solver_name', 'data_name', 'idx_rep', 'objective_cv_results']]
+
+    def extract_test_cv(text):
+        # This pattern matches both 'mean_test_*' and 'split*_test_*' keys
+        pattern = r"('split\d+_test_\w+': array\(\[.*?\]\))"
+        result = {}
+        try:
+            matches = re.findall(pattern, text, re.DOTALL)
+
+            for match in matches:
+                key_pattern = r"'(split\d+_test_\w+)'"
+                key_match = re.search(key_pattern, match)
+                if key_match:
+                    key = key_match.group(1)
+                    array_pattern = r"array\((\[.*?\])\)"
+                    array_match = re.search(array_pattern, match, re.DOTALL)
+                    if array_match:
+                        array_str = array_match.group(1).replace('\n', '')
+                        array = np.fromstring(array_str.strip('[]'), sep=', ')
+
+                        # Store all values in the list
+                        result[key] = array.tolist()
+        except Exception:
+            pass
+
+        return result
+
+    df['cv_score'] = df['objective_cv_results'].apply(
+        lambda x: extract_test_cv(x)
+    )
+    df_exploded = pd.json_normalize(df['cv_score'])
+
+    if df_exploded.size != 0:
+        df = pd.concat([df.drop(columns=['cv_score']), df_exploded], axis=1)
+
+    # Rename columns --> Remove 'objective_'
+    new_column_names = []
+
+    # Extract the part before 'train' or 'test'
+    for index_label in df.columns:
+        new_column_name = index_label.replace('objective_', '')
+        new_column_names.append(new_column_name)
+
+    # Assign modified column names to DataFrame
+    df.columns = new_column_names
+
+    # Function to extract split and scorer from column names
+
+    def extract_split_and_scorer(col_name):
+        match = re.match(r'split(\d+)_test_(.*)', col_name)
+        if match:
+            split = match.group(1)
+            scorer = match.group(2)
+            return split, scorer
+        return None, None
+
+    # Prepare a list to store the new rows
+    new_rows = []
+
+    # Determine columns that do not match the pattern and are not to be removed
+    non_split_columns = [
+        col for col in df.columns
+        if not re.match(r'split\d+_test_.*', col)
+    ]
+
+    # Iterate over each row in the DataFrame
+    for _, row in df.iterrows():
+        # Iterate over each column in the row
+        for col in df.columns:
+            split, scorer = extract_split_and_scorer(col)
+            if split is not None and scorer is not None:
+                # Convert string representation of list to actual list
+                results = row[col]
+
+                # Check if results is a list-like object
+                if isinstance(results, (list, np.ndarray)):
+                    # Create a new row for each value in the results list
+                    for grid_split, result in enumerate(results):
+                        new_row = {key: row[key] for key in non_split_columns}
+                        new_row.update({
+                            'results': result,
+                            'split': split,
+                            'scorer': scorer,
+                            'grid_split': grid_split
+                        })
+                        new_rows.append(new_row)
+                else:
+                    # Handle single value case
+                    new_row = {key: row[key] for key in non_split_columns}
+                    new_row.update({
+                        'results': results,
+                        'split': split,
+                        'scorer': scorer,
+                        'grid_split': 0
+                    })
+                    new_rows.append(new_row)
+
+    # Create a new DataFrame from the new rows
+    new_df = pd.DataFrame(new_rows)
+
+    return new_df
+
+
+def process_files_in_directory(directory, processing_type='extract_benchopt'):
+    """
+    Process all CSV and Parquet files in a directory using the
+    specified processing function.
+
+    Parameters
+    ----------
+    directory : str
+        Path to the directory containing the files to process
+    processing_type : str, optional
+        Type of processing to apply. Can be either 'retrieve_cv'
+        or 'extract_benchopt' (default is 'extract_benchopt')
+
+    Returns
+    -------
+    pandas.DataFrame
+        Concatenated DataFrame containing all processed results
+
+    Raises
+    ------
+    ValueError
+        If processing_type is not one of 'retrieve_cv' or 'extract_benchopt'
+    """
+    if processing_type not in ['retrieve_cv', 'extract_benchopt']:
+        raise ValueError(
+            "processing_type must be either "
+            "'retrieve_cv' or 'extract_benchopt'"
+        )
+
     df_list = []
     for root, dirs, files in os.walk(directory):
         for filename in files:
             if filename.endswith(".csv") or filename.endswith(".parquet"):
                 file_path = os.path.join(root, filename)
                 print(f"Processing file: {file_path}")
-                df = generate_df(file_path)
+
+                if processing_type == 'retrieve_cv':
+                    df = retrieve_cv(file_path)
+                else:  # extract_benchopt
+                    df = extract_benchopt_file_informations(file_path)
+
                 df_list.append(df)
             else:
                 print(

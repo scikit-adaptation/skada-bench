@@ -211,7 +211,9 @@ if __name__ == "__main__":
 
     # Step 1: Load the Data
     # Load the data from the specified directory
-    df = process_files_in_directory(args.directory)
+    df = process_files_in_directory(
+        args.directory, processing_type='extract_benchopt'
+    )
 
     print(f"Using {args.domain} domain to generate csv file")
     # Step 2: Clean the dataframe
