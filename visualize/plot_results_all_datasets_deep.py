@@ -55,7 +55,7 @@ def shade_of_color_pvalue(
 
 
 # %%
-def generate_table(csv_file, scorer_selection="unsupervised"):
+def generate_table(csv_file, scorer_selection="unsupervised", output_format="latex"):
     scorer_selection = "unsupervised"
     df = pd.read_csv(csv_file)
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
@@ -236,14 +236,16 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
 
         df_tot = df_tot[df_tot["scorer"] ==
                         df_tot["scorer_best"]].reset_index()
+        
+        # Convert estimator to string type in both DataFrames before merging
+        df_wilco['estimator'] = df_wilco['estimator'].astype(str)
+        df_mean_dataset['estimator'] = df_mean_dataset['estimator'].astype(str)
 
         df_wilco = df_wilco[
             ["dataset", "estimator", "scorer", "pvalue"]
         ].merge(
             df_mean_dataset[["estimator", "scorer"]],
-            on=[
-                "estimator",
-            ],
+            on="estimator",
             suffixes=("", "_best"),
         )
 
@@ -355,35 +357,52 @@ def generate_table(csv_file, scorer_selection="unsupervised"):
         }
     )
 
-    df_tab = df_tab.fillna("\\color{gray!90}NA")
-    # %%
-    # convert to latex
-    lat_tab = df_tab.to_latex(
-        escape=False,
-        multicolumn_format="c",
-        multirow=True,
-        column_format="|l||rr||r||rr|",
-    )
-    lat_tab = lat_tab.replace(r"\type & estimator &  &  &  &  \\", "")
-    lat_tab = lat_tab.replace("toprule", "hline")
-    lat_tab = lat_tab.replace("midrule", "hline")
-    if scorer == "supervised":
-        lat_tab = lat_tab.replace("cline{1-15}", r"hline\hline")
-    else:
-        lat_tab = lat_tab.replace("cline{1-16}", r"hline\hline")
-    lat_tab = lat_tab.replace(r"\multirow[t]", r"\multirow")
-    lat_tab = lat_tab.replace("bottomrule", "hline")
-    lat_tab = lat_tab.replace("mnist_usps", "MNIST/USPS")
-    lat_tab = lat_tab.replace("OfficeHomeResnet", "OfficeHome")
-    lat_tab = lat_tab.replace("circular_validation", "CircV")
-    lat_tab = lat_tab.replace("prediction_entropy", "PE")
-    lat_tab = lat_tab.replace("importance_weighted", "IW")
-    lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
-    lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
+    if output_format == "latex":
+        df_tab = df_tab.fillna("\\color{gray!90}NA")
+        lat_tab = df_tab.to_latex(
+            escape=False,
+            multicolumn_format="c",
+            multirow=True,
+            column_format="|l||rr||r||rr|",
+        )
+        lat_tab = lat_tab.replace(r"\type & estimator &  &  &  &  \\", "")
+        lat_tab = lat_tab.replace("toprule", "hline")
+        lat_tab = lat_tab.replace("midrule", "hline")
+        if scorer == "supervised":
+            lat_tab = lat_tab.replace("cline{1-15}", r"hline\hline")
+        else:
+            lat_tab = lat_tab.replace("cline{1-16}", r"hline\hline")
+        lat_tab = lat_tab.replace(r"\multirow[t]", r"\multirow")
+        lat_tab = lat_tab.replace("bottomrule", "hline")
+        lat_tab = lat_tab.replace("mnist_usps", "MNIST/USPS")
+        lat_tab = lat_tab.replace("OfficeHomeResnet", "OfficeHome")
+        lat_tab = lat_tab.replace("circular_validation", "CircV")
+        lat_tab = lat_tab.replace("prediction_entropy", "PE")
+        lat_tab = lat_tab.replace("importance_weighted", "IW")
+        lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
+        lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
 
-    # save to txt file
-    with open("table_results_all_dataset.txt", "w") as f:
-        f.write(lat_tab)
+        # save to txt file
+        with open("table_results_all_dataset.txt", "w") as f:
+            f.write(lat_tab)
+    
+    elif output_format == "markdown":
+        import pdb; pdb.set_trace()
+        # Remove LaTeX-specific formatting from cell values
+        for col in df_tab.columns:
+            df_tab[col] = df_tab[col].apply(
+                lambda x: str(x).replace("\\cellcolor{good_color!\\d+}{", "").replace("}", "")
+                if isinstance(x, str) else x
+            )
+        
+        df_tab = df_tab.fillna("NA")
+        
+        # Convert to markdown
+        md_tab = df_tab.to_markdown(index=True)
+        
+        # save to md file
+        with open("table_results_all_dataset.md", "w") as f:
+            f.write(md_tab)
 
 
 # %%
@@ -405,6 +424,14 @@ if __name__ == "__main__":
         default="unsupervised"
     )
 
+    parser.add_argument(
+        "--output-format",
+        type=str,
+        choices=["latex", "markdown"],
+        default="latex",
+        help="Output format for the table (latex or markdown)"
+    )
+
     args = parser.parse_args()
     df = generate_table(
-        args.csv_file, args.csv_file_simulated, args.scorer_selection)
+        args.csv_file, args.scorer_selection, args.output_format)
