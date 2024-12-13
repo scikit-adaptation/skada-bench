@@ -277,7 +277,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         lat_tab = lat_tab.replace("mix_val_intra", "MixValIntra")
 
         # save to txt file
-        with open(f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
+        with open(f"table_results_deep_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
             f.write(lat_tab)
     
     elif output_format == "markdown":
@@ -294,7 +294,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         md_tab = df_tab.to_markdown(index=True)
 
         # save to md file
-        with open("table_results_all_dataset.md", "w") as f:
+        with open(f"table_results_deep_all_dataset_{scorer_selection}_{score}.md", "w") as f:
             f.write(md_tab)
 
 
