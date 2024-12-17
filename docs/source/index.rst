@@ -19,6 +19,7 @@ Contents
    self
    contribute
    results
+   versions
 
 .. include:: ../../README.md
    :parser: myst_parser.sphinx_

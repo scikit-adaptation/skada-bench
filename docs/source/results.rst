@@ -29,7 +29,6 @@ Unsupervised Methods
 
 .. include:: experiment_results/table_results_all_dataset_unsupervised.md
    :parser: myst_parser.sphinx_
-
 Cross-validation Score Analysis
 -----------------------------
 
@@ -49,3 +48,4 @@ Deep Methods
 ~~~~~~~~~~
 ..
     TODO: Change the include path
+
