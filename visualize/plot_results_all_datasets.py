@@ -56,7 +56,10 @@ def shade_of_color_pvalue(
 
 
 def generate_table(
-    csv_file, csv_file_simulated, scorer_selection="unsupervised"
+    csv_file,
+    csv_file_simulated,
+    scorer_selection="unsupervised",
+    output_format="latex",
 ):
     df = pd.read_csv(csv_file)
 
@@ -324,32 +327,33 @@ def generate_table(
     df_tab = df_tab.round(2)
     df_tab = df_tab[df_tab.columns[1:]]
 
-    # add the colorcell
-    for i, col in enumerate(df_tab.columns[:-2]):
-        max_value = df_tab.loc[df_tab[col].index[1], col]
-        mean_value = df_tab.loc[df_tab[col].index[0], col]
-        min_value = df_tab[col].min()
-        for idx in df_tab.index[2:]:
-            # get the value
-            if df_tab.loc[idx, col] == "nan" or np.isnan(df_tab.loc[idx, col]):
-                continue
-            value = df_tab.loc[idx, col]
-            # get the color
-            pvalue = df_wilco.query(
-                f"estimator == '{idx[1]}' & dataset == '{col}'"
-            )["pvalue"].values[0]
-            color = shade_of_color_pvalue(
-                value,
-                pvalue,
-                min_value=min_value,
-                mean_value=mean_value,
-                max_value=max_value,
+    if output_format == "latex":
+        # add the colorcell
+        for i, col in enumerate(df_tab.columns[:-2]):
+            max_value = df_tab.loc[df_tab[col].index[1], col]
+            mean_value = df_tab.loc[df_tab[col].index[0], col]
+            min_value = df_tab[col].min()
+            for idx in df_tab.index[2:]:
+                # get the value
+                if df_tab.loc[idx, col] == "nan" or np.isnan(df_tab.loc[idx, col]):
+                    continue
+                value = df_tab.loc[idx, col]
+                # get the color
+                pvalue = df_wilco.query(
+                    f"estimator == '{idx[1]}' & dataset == '{col}'"
+                )["pvalue"].values[0]
+                color = shade_of_color_pvalue(
+                    value,
+                    pvalue,
+                    min_value=min_value,
+                    mean_value=mean_value,
+                    max_value=max_value,
+                )
+                df_tab.loc[idx, col] = color
+            df_tab.loc[df_tab.index[1], col] = "\\cellcolor{good_color!%d}{%s}" % (
+                60,
+                df_tab.loc[df_tab.index[1], col],
             )
-            df_tab.loc[idx, col] = color
-        df_tab.loc[df_tab.index[1], col] = "\\cellcolor{good_color!%d}{%s}" % (
-            60,
-            df_tab.loc[df_tab.index[1], col],
-        )
 
     if scorer == "supervised":
         df_tab = df_tab.reindex(
@@ -388,54 +392,66 @@ def generate_table(
                 "rank",
             ],
         )
-    df_tab = df_tab.rename(
-        columns={
-            "covariate_shift": "\\mcrot{1}{l}{45}{\\underline{Cov. shift}}",
-            "target_shift": "\\mcrot{1}{l}{45}{\\underline{Tar. shift}}",
-            "concept_drift": "\\mcrot{1}{l}{45}{\\underline{Cond. shift}}",
-            "subspace": "\\mcrot{1}{l}{45}{\\underline{Sub. shift}}",
-            "Office31": "\\mcrot{1}{l}{45}{Office31}",
-            "OfficeHomeResnet": "\\mcrot{1}{l}{45}{OfficeHome}",
-            "mnist_usps": "\\mcrot{1}{l}{45}{MNIST/USPS}",
-            "20NewsGroups": "\\mcrot{1}{l}{45}{20NewsGroups}",
-            "AmazonReview": "\\mcrot{1}{l}{45}{AmazonReview}",
-            "Mushrooms": "\\mcrot{1}{l}{45}{Mushrooms}",
-            "Phishing": "\\mcrot{1}{l}{45}{Phishing}",
-            "BCI": "\\mcrot{1}{l}{45}{BCI}",
-            "scorer": "\\mcrot{1}{l}{45}{Selected Scorer}",
-            "rank": "\\mcrot{1}{l}{45}{Rank}",
-        }
-    )
+    
+    if output_format == "latex":
+        df_tab = df_tab.rename(
+            columns={
+                "covariate_shift": "\\mcrot{1}{l}{45}{\\underline{Cov. shift}}",
+                "target_shift": "\\mcrot{1}{l}{45}{\\underline{Tar. shift}}",
+                "concept_drift": "\\mcrot{1}{l}{45}{\\underline{Cond. shift}}",
+                "subspace": "\\mcrot{1}{l}{45}{\\underline{Sub. shift}}",
+                "Office31": "\\mcrot{1}{l}{45}{Office31}",
+                "OfficeHomeResnet": "\\mcrot{1}{l}{45}{OfficeHome}",
+                "mnist_usps": "\\mcrot{1}{l}{45}{MNIST/USPS}",
+                "20NewsGroups": "\\mcrot{1}{l}{45}{20NewsGroups}",
+                "AmazonReview": "\\mcrot{1}{l}{45}{AmazonReview}",
+                "Mushrooms": "\\mcrot{1}{l}{45}{Mushrooms}",
+                "Phishing": "\\mcrot{1}{l}{45}{Phishing}",
+                "BCI": "\\mcrot{1}{l}{45}{BCI}",
+                "scorer": "\\mcrot{1}{l}{45}{Selected Scorer}",
+                "rank": "\\mcrot{1}{l}{45}{Rank}",
+            }
+        )
 
-    df_tab = df_tab.fillna("\\color{gray!90}NA")
+        df_tab = df_tab.fillna("\\color{gray!90}NA")
 
-    # convert to latex
-    lat_tab = df_tab.to_latex(
-        escape=False,
-        multicolumn_format="c",
-        multirow=True,
-        column_format="|l|l||rrrr||rrr|rr|rr|r||rr|",
-    )
-    lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
-    lat_tab = lat_tab.replace("toprule", "hline")
-    lat_tab = lat_tab.replace("midrule", "hline")
-    if scorer == "supervised":
-        lat_tab = lat_tab.replace("cline{1-15}", "hline\\hline")
-    else:
-        lat_tab = lat_tab.replace("cline{1-16}", "hline\\hline")
-    lat_tab = lat_tab.replace("\\multirow[t]", "\\multirow")
-    lat_tab = lat_tab.replace("bottomrule", "hline")
-    lat_tab = lat_tab.replace("mnist_usps", "MNIST/USPS")
-    lat_tab = lat_tab.replace("OfficeHomeResnet", "OfficeHome")
-    lat_tab = lat_tab.replace("circular_validation", "CircV")
-    lat_tab = lat_tab.replace("prediction_entropy", "PE")
-    lat_tab = lat_tab.replace("importance_weighted", "IW")
-    lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
-    lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
+        # convert to latex
+        lat_tab = df_tab.to_latex(
+            escape=False,
+            multicolumn_format="c",
+            multirow=True,
+            column_format="|l|l||rrrr||rrr|rr|rr|r||rr|",
+        )
+        lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
+        lat_tab = lat_tab.replace("toprule", "hline")
+        lat_tab = lat_tab.replace("midrule", "hline")
+        if scorer == "supervised":
+            lat_tab = lat_tab.replace("cline{1-15}", "hline\\hline")
+        else:
+            lat_tab = lat_tab.replace("cline{1-16}", "hline\\hline")
+        lat_tab = lat_tab.replace("\\multirow[t]", "\\multirow")
+        lat_tab = lat_tab.replace("bottomrule", "hline")
+        lat_tab = lat_tab.replace("mnist_usps", "MNIST/USPS")
+        lat_tab = lat_tab.replace("OfficeHomeResnet", "OfficeHome")
+        lat_tab = lat_tab.replace("circular_validation", "CircV")
+        lat_tab = lat_tab.replace("prediction_entropy", "PE")
+        lat_tab = lat_tab.replace("importance_weighted", "IW")
+        lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
+        lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
 
-    # save to txt file
-    with open("table_results_all_dataset.txt", "w") as f:
-        f.write(lat_tab)
+        # save to txt file
+        with open(f"table_results_all_dataset_{scorer_selection}.txt", "w") as f:
+            f.write(lat_tab)
+
+    elif output_format == "markdown":
+        df_tab = df_tab.fillna("NA")
+
+        # Convert to markdown
+        md_tab = df_tab.to_markdown(index=True)
+
+        # save to md file
+        with open(f"table_results_all_dataset_{scorer_selection}.md", "w") as f:
+            f.write(md_tab)
 
 
 if __name__ == "__main__":
@@ -463,7 +479,18 @@ if __name__ == "__main__":
         default="unsupervised"
     )
 
+    parser.add_argument(
+        "--output-format",
+        type=str,
+        choices=["latex", "markdown"],
+        default="latex",
+        help="Output format for the table (latex or markdown)"
+    )
+
     args = parser.parse_args()
     df = generate_table(
-        args.csv_file, args.csv_file_simulated, args.scorer_selection
+        args.csv_file,
+        args.csv_file_simulated,
+        args.scorer_selection,
+        args.output_format,
     )

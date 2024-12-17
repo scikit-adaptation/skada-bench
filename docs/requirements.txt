@@ -1,0 +1,12 @@
+sphinx>=4.0.0
+sphinx_gallery
+sphinx-rtd-theme>=1.0.0
+numpydoc
+memory_profiler
+myst-parser>=0.15.0
+ipython
+torch
+torchvision
+skorch
+matplotlib
+sphinx-multiversion>=0.2.4

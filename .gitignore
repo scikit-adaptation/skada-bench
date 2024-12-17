@@ -17,6 +17,9 @@ slurm_output.txt
 # Config files
 benchopt.ini
 
+# Sphinx documentation
+docs/_build/
+
 .DS_Store
 coverage.xml
 
