@@ -1,7 +1,0 @@
-dataset:
-- OfficeHomeResnet
-solver:
-- NO_DA_SOURCE_ONLY:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C10.0_Gamma0.001

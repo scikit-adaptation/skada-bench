@@ -1,9 +1,0 @@
-dataset:
-- 20NewsGroups
-solver:
-- DASVM:
-    param_grid:
-    - dasvmclassifier__base_estimator__estimator_name:
-      - SVC_C10.0_Gamma10.0
-      dasvmclassifier__max_iter:
-      - 30

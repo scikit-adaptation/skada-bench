@@ -1,9 +1,0 @@
-dataset:
-- AmazonReview
-solver:
-- gaussian_reweight:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC_C1000.0_Gamma0.001
-      gaussianreweightadapter__reg:
-      - 0.9

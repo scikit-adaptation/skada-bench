@@ -1,9 +1,0 @@
-dataset:
-- Mushrooms
-solver:
-- DASVM:
-    param_grid:
-    - dasvmclassifier__base_estimator__estimator_name:
-      - SVC
-      dasvmclassifier__max_iter:
-      - 200

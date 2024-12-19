@@ -1,9 +1,0 @@
-dataset:
-- Phishing
-solver:
-- DASVM:
-    param_grid:
-    - dasvmclassifier__base_estimator__estimator_name:
-      - SVC_C100.0_Gamma0.1
-      dasvmclassifier__max_iter:
-      - 200

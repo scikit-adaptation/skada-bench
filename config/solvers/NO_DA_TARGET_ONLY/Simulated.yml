@@ -1,7 +1,0 @@
-dataset:
-- Simulated
-solver:
-- NO_DA_TARGET_ONLY:
-    param_grid:
-    - finalestimator__estimator_name:
-      - SVC

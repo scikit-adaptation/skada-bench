@@ -1,9 +1,0 @@
-dataset:
-- mnist_usps
-solver:
-- DASVM:
-    param_grid:
-    - dasvmclassifier__base_estimator__estimator_name:
-      - SVC_C10.0_Gamma0.01
-      dasvmclassifier__max_iter:
-      - 200
