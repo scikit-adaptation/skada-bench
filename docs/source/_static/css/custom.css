@@ -1,0 +1,16 @@
+.versions {
+    padding: 10px;
+    background: #2980B9;
+    color: white;
+}
+
+.versions select {
+    margin-left: 10px;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.current-version {
+    font-weight: bold;
+}
+  

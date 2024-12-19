@@ -1,9 +1,4 @@
-.. POT documentation master file, created by
-   sphinx-quickstart on Mon Oct 24 11:10:10 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-SKADA-Bench: Benchmarking Unsupervised Domain Adaptation Methods with Realistic Validation
+SKADA Benchmark
 ===============================
 
 .. image:: _static/images/skada_logo_full.svg
@@ -19,7 +14,6 @@ Contents
    self
    contribute
    results
-   versions
 
 .. include:: ../../README.md
    :parser: myst_parser.sphinx_

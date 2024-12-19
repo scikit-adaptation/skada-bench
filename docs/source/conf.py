@@ -1,6 +1,6 @@
 #
 
-# Author: Remi Flamary <remi.flamary@polytechnique.edu>
+# Author: Yanis Lalou <yanis.lalou@polytechnique.edu>
 #
 # License: BSD 3-Clause
 
@@ -13,10 +13,14 @@ import sphinx_gallery  # noqa
 import sphinx_rtd_theme  # noqa
 from numpydoc import docscrape, numpydoc  # noqa
 
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath("../.."))
+
+# Add the _ext directory to the Python path
+sys.path.insert(0, os.path.abspath('_ext'))
 
 
 # -- General configuration ------------------------------------------------
@@ -35,29 +39,11 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.doctest",
     "sphinx.ext.intersphinx",
-    "sphinx.ext.todo",
-    "sphinx.ext.coverage",
     "sphinx.ext.mathjax",
-    #"sphinx_gallery.gen_gallery",
-    "sphinx.ext.graphviz",
     "myst_parser",
     "sphinx.ext.autosectionlabel",
     "sphinx_multiversion",
 ]
-
-# # Enable Jinja templating in Markdown files
-# myst_enable_extensions = [
-#     "dollarmath",
-#     "deflist",
-#     "html_admonition",
-#     "html_image",
-#     "linkify",
-#     "tasklist",
-#     "attrs_block",
-#     "smartquotes",
-#     "replacements",
-#     "include",
-# ]
 
 # autodoc / autosummary
 autosummary_generate = True
@@ -155,36 +141,9 @@ html_theme = "sphinx_rtd_theme"
 # further.  For a list of options available for each theme, see the
 # documentation.
 
-# Function to get available versions from versions directory
-def get_versions():
-    versions_dir = Path(__file__).parent / "versions"
-    versions = []
-    
-    if versions_dir.exists():
-        # Get all directories in versions/
-        version_dirs = [d for d in versions_dir.iterdir() if d.is_dir()]
-        
-        # Add each version to the list
-        for ver_dir in version_dirs:
-            version_name = ver_dir.name
-            versions.append({
-                'name': version_name,
-                'url': '#'  # URL is handled by JavaScript
-            })
-    
-    # Sort versions in reverse order
-    versions.sort(key=lambda x: x['name'], reverse=True)
-    return versions
-
+# Define html_context before it's used
 html_context = {
-    'current_version': 'v1.0.0',  # Default to 1.0.0
-    'versions': get_versions()
-}
-
-
-# Update html_theme_options
-html_theme_options = {
-    'display_version': True,
+    'current_version': version,
 }
 
 # Add any paths that contain custom themes here, relative to this directory.
@@ -227,16 +186,8 @@ html_static_path = ["_static"]
 # typographically correct entities.
 # html_use_smartypants = True
 
-# Custom sidebar templates, maps document names to template names.
-# html_sidebars = {}
-html_sidebars = {
-    '**': [
-        "_templates/versioning.html",
-    ]
-}
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-# html_additional_pages = {}
 
 # If false, no module index is generated.
 # html_domain_indices = True
@@ -380,5 +331,3 @@ intersphinx_mapping = {
 #     "matplotlib_animations": True,
 #     "reference_url": {"skada": None},
 # }
-smv_branch_whitelist = None  # for branch names
-smv_tag_whitelist = r'^v\d+\.\d+\.\d+$'  # regex for version tags
