@@ -123,6 +123,19 @@ ESTIMATOR_DICT = {
     'OTLabelProp': 'OTLabelProp'
 }
 
+DEEP_ESTIMATOR_DICT = {
+    'deep_no_da_source_only': 'Train Src',
+    'deep_no_da_target_only': 'Train Tgt',
+    'deep_coral': 'DeepCORAL',
+    'deep_dan': 'DAN',
+    'deep_dann': 'DANN',
+    'deep_jdot': 'DeepJDOT',
+    'deep_mcc': 'MCC',
+    'deep_can': 'CAN',
+    'deep_mdd': 'MDD',
+    'deep_spa': 'SPA'
+}
+
 DATASET_DICT = {
   'Computer_vision': [
     'Office31',
@@ -140,4 +153,18 @@ DATASET_DICT = {
   'Biosignals': [
     'BCI',
   ],
+}
+
+DEEP_DATASET_DICT = {
+  'deep_mnist_usps': 'MNIST/USPS',
+  'deep_office31': 'Office31',
+  'deep_officehome': 'OfficeHome',
+  'deep_bci': 'BCI',
+}
+
+DEEP_SIMULATED_DATASET_DICT = {
+  'covariate_shift': 'Cov. shift',
+  'target_shift': 'Tar. shift',
+  'concept_drift': 'Cond. shift',
+  'subspace': 'Sub. shift',
 }
