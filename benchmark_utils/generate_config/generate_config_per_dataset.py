@@ -24,9 +24,9 @@ if __name__ == "__main__":
         f for f in datasets_path.iterdir()
         if f.is_file() and not f.name.startswith('.') and f.suffix == '.py'
     ]
-
     for filepath in filenames_dataset:
-        name = filepath.stem  # Remove the .py suffix
+        # get the name of the file with the extension
+        name = filepath.name
         if not name.endswith('.py') or name.startswith('deep'):
             # We dont want to include the deep datasets
             continue
@@ -54,11 +54,10 @@ if __name__ == "__main__":
         DD["solver"] = []
 
         for filepath in filenames:
-            name = filepath.stem  # Remove the .py suffix
+            name = filepath.name
             if not name.endswith('.py') or name.startswith('deep'):
                 # We dont want to include the deep datasets
                 continue
-            print(name)
             spec = importlib.util.spec_from_file_location(name, filepath)
 
             if spec is None:
