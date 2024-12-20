@@ -44,8 +44,12 @@ def shade_of_color_pvalue(
 
 
 def generate_table(
-    csv_folder, scorer_selection="unsupervised",
-    score="accuracy", simulated=False
+    csv_folder,
+    output_folder,
+    scorer_selection="unsupervised",
+    score="accuracy",
+    simulated=False,
+    output_format="latex"
 ):
     # Load the data
     csv_files = glob.glob(f"{csv_folder}/*.csv")
@@ -185,32 +189,33 @@ def generate_table(
     df_tab = df_tab.round(2)
     # df_tab = df_tab[df_tab.columns[1:]]
 
-    # add the colorcell
-    for i, col in enumerate(
-        df_tab.columns[:-2 if scorer_selection == "unsupervised" else -1]
-    ):
-        max_value = df_tab.loc[df_tab[col].index[1], col]
-        mean_value = df_tab.loc[df_tab[col].index[0], col]
-        min_value = df_tab[col].min()
-        for idx in df_tab.index[2:]:
-            # get the value
-            if df_tab.loc[idx, col] == "nan" or np.isnan(df_tab.loc[idx, col]):
-                continue
-            value = df_tab.loc[idx, col]
-            # get the color
-            color = shade_of_color_pvalue(
-                value,
-                min_value=min_value,
-                mean_value=mean_value,
-                max_value=max_value,
+    if output_format == "latex":
+        # add the colorcell
+        for i, col in enumerate(
+            df_tab.columns[:-2 if scorer_selection == "unsupervised" else -1]
+        ):
+            max_value = df_tab.loc[df_tab[col].index[1], col]
+            mean_value = df_tab.loc[df_tab[col].index[0], col]
+            min_value = df_tab[col].min()
+            for idx in df_tab.index[2:]:
+                # get the value
+                if df_tab.loc[idx, col] == "nan" or np.isnan(df_tab.loc[idx, col]):
+                    continue
+                value = df_tab.loc[idx, col]
+                # get the color
+                color = shade_of_color_pvalue(
+                    value,
+                    min_value=min_value,
+                    mean_value=mean_value,
+                    max_value=max_value,
+                )
+                df_tab.loc[idx, col] = color
+            df_tab.loc[df_tab.index[1], col] = (
+                "\\cellcolor{{green_color!{}}}{{{}}}".format(
+                    60,
+                    df_tab.loc[df_tab.index[1], col],
+                )
             )
-            df_tab.loc[idx, col] = color
-        df_tab.loc[df_tab.index[1], col] = (
-            "\\cellcolor{{green_color!{}}}{{{}}}".format(
-                60,
-                df_tab.loc[df_tab.index[1], col],
-            )
-        )
 
     if scorer_selection == "supervised":
         if not simulated:
@@ -252,43 +257,60 @@ def generate_table(
             index=DEEP_ESTIMATOR_DICT,
         )
 
-    # apply mcrot on columns names
-    df_tab.columns = pd.MultiIndex.from_tuples(
-        [(f"\\mcrot{{1}}{{l}}{{45}}{{{col}}}", "") for col in df_tab.columns],
-        names=["", ""],
-    )
+    if output_format == "latex":
+        # apply mcrot on columns names
+        df_tab.columns = pd.MultiIndex.from_tuples(
+            [(f"\\mcrot{{1}}{{l}}{{45}}{{{col}}}", "") for col in df_tab.columns],
+            names=["", ""],
+        )
 
-    df_tab = df_tab.fillna("\\color{gray!90}NA")
+    if output_format == "latex":
+        df_tab = df_tab.fillna("\\color{gray!90}NA")
 
-    # convert to latex
-    column_format = "|l||" + len(df_tab.columns)*"r" + "|"
+        # convert to latex
+        column_format = "|l||" + len(df_tab.columns)*"r" + "|"
 
-    lat_tab = df_tab.to_latex(
-        escape=False,
-        multicolumn_format="c",
-        multirow=True,
-        # column_format="|l||rr||r||rr|",
-        column_format=column_format,
-    )
-    lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
-    lat_tab = lat_tab.replace("toprule", "hline")
-    lat_tab = lat_tab.replace("midrule", "hline")
-    lat_tab = lat_tab.replace(r"\multirow[t]", r"\multirow")
-    lat_tab = lat_tab.replace("bottomrule", "hline")
-    lat_tab = lat_tab.replace("circular_validation", "CircV")
-    lat_tab = lat_tab.replace("prediction_entropy", "PE")
-    lat_tab = lat_tab.replace("importance_weighted", "IW")
-    lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
-    lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
-    lat_tab = lat_tab.replace("mix_val_inter", "MixValInter")
-    lat_tab = lat_tab.replace("mix_val_both", "MixValBoth")
-    lat_tab = lat_tab.replace("mix_val_intra", "MixValIntra")
+        lat_tab = df_tab.to_latex(
+            escape=False,
+            multicolumn_format="c",
+            multirow=True,
+            # column_format="|l||rr||r||rr|",
+            column_format=column_format,
+        )
+        lat_tab = lat_tab.replace("\type & estimator &  &  &  &  \\", "")
+        lat_tab = lat_tab.replace("toprule", "hline")
+        lat_tab = lat_tab.replace("midrule", "hline")
+        lat_tab = lat_tab.replace(r"\multirow[t]", r"\multirow")
+        lat_tab = lat_tab.replace("bottomrule", "hline")
+        lat_tab = lat_tab.replace("circular_validation", "CircV")
+        lat_tab = lat_tab.replace("prediction_entropy", "PE")
+        lat_tab = lat_tab.replace("importance_weighted", "IW")
+        lat_tab = lat_tab.replace("soft_neighborhood_density", "SND")
+        lat_tab = lat_tab.replace("deep_embedded_validation", "DEV")
+        lat_tab = lat_tab.replace("mix_val_inter", "MixValInter")
+        lat_tab = lat_tab.replace("mix_val_both", "MixValBoth")
+        lat_tab = lat_tab.replace("mix_val_intra", "MixValIntra")
 
-    # save to txt file
-    with open(
-        f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w"
-    ) as f:
-        f.write(lat_tab)
+        # save to txt file
+        with open(f"{output_folder}/table_results_deep_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
+            f.write(lat_tab)
+    
+    elif output_format == "markdown":
+        # Remove LaTeX-specific formatting from cell values
+        # for col in df_tab.columns:
+        #     df_tab[col] = df_tab[col].apply(
+        #         lambda x: str(x).replace("\\cellcolor{good_color!\\d+}{", "").replace("}", "")
+        #         if isinstance(x, str) else x
+        #     )
+
+        df_tab = df_tab.fillna("NA")
+
+        # Convert to markdown
+        md_tab = df_tab.to_markdown(index=True)
+
+        # save to md file
+        with open(f"{output_folder}/table_results_deep_all_dataset_{scorer_selection}_{score}.md", "w") as f:
+            f.write(md_tab)
 
 
 if __name__ == "__main__":
@@ -301,6 +323,13 @@ if __name__ == "__main__":
         type=str,
         help="Path to the csv folder containing results for real data",
         required=True,
+    )
+
+    parser.add_argument(
+        "--output-folder",
+        type=str,
+        help="Path to the output folder",
+        default="./",
     )
 
     parser.add_argument(
@@ -322,10 +351,20 @@ if __name__ == "__main__":
         help="Flag to indicate if the data is simulated",
     )
 
+    parser.add_argument(
+        "--output-format",
+        type=str,
+        choices=["latex", "markdown"],
+        default="latex",
+        help="Output format for the table (latex or markdown)"
+    )
+
     args = parser.parse_args()
     df = generate_table(
         args.csv_folder,
+        args.output_folder,
         args.scorer_selection,
         args.score,
-        args.simulated
+        args.simulated,
+        args.output_format,
     )
