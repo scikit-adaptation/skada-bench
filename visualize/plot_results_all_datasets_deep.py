@@ -39,7 +39,14 @@ def shade_of_color_pvalue(
             return df_value
 
 
-def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy", simulated=False, output_format="latex"):
+def generate_table(
+    csv_folder,
+    output_folder,
+    scorer_selection="unsupervised",
+    score="accuracy",
+    simulated=False,
+    output_format="latex"
+):
     # Load the data
     csv_files = glob.glob(f"{csv_folder}/*.csv")
     df = pd.concat([pd.read_csv(f) for f in csv_files])
@@ -277,7 +284,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         lat_tab = lat_tab.replace("mix_val_intra", "MixValIntra")
 
         # save to txt file
-        with open(f"table_results_deep_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
+        with open(f"{output_folder}/table_results_deep_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
             f.write(lat_tab)
     
     elif output_format == "markdown":
@@ -294,7 +301,7 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         md_tab = df_tab.to_markdown(index=True)
 
         # save to md file
-        with open(f"table_results_deep_all_dataset_{scorer_selection}_{score}.md", "w") as f:
+        with open(f"{output_folder}/table_results_deep_all_dataset_{scorer_selection}_{score}.md", "w") as f:
             f.write(md_tab)
 
 
@@ -308,6 +315,13 @@ if __name__ == "__main__":
         type=str,
         help="Path to the csv folder containing results for real data",
         required=True,
+    )
+
+    parser.add_argument(
+        "--output-folder",
+        type=str,
+        help="Path to the output folder",
+        default="./",
     )
 
     parser.add_argument(
@@ -341,6 +355,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
     df = generate_table(
         args.csv_folder,
+        args.output_folder,
         args.scorer_selection,
         args.score,
         args.simulated,
