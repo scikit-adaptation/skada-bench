@@ -52,12 +52,19 @@ def plot_param_grid(data, output_dir):
     """
     dataset = data['data_name'].iloc[0].split('[')[0]
 
-    num_plots = len(data['solver_name'].unique())
+    # Filter out "deep_can" from unique solver names
+    solvers = [s for s in data['solver_name'].unique() if s not in [
+        "deep_no_da_source_only[param_grid=default]",
+        "deep_no_da_target_only[param_grid=default]"
+        ]
+    ]
+    num_plots = len(solvers)
 
     fig = plt.figure(figsize=(40, 80))
     subfigs = fig.subfigures(num_plots, 1)
 
-    for solver, subfig in zip(data['solver_name'].unique(), subfigs.flat):
+    for solver, subfig in zip(solvers, subfigs.flat):
+        print(solver)
         solver_data = data[data['solver_name'] == solver]
         objective_cv_results = solver_data['objective_cv_results']
 
@@ -171,6 +178,9 @@ def plot_single_solver(axes, mean_results, std_results, cols_to_groupby):
             # Check if the values in grouped_mean_results[param]
             # are numeric and not categorical/boolean
             if grouped_mean_results[param].dtype.kind in 'iufc':
+                # Set x-axis to log scale for numeric parameters
+                axes[idx].set_xscale('log')
+
                 if len(grouped_mean_results) == 1:
                     axes[idx].scatter(
                         grouped_mean_results[param],
@@ -218,7 +228,10 @@ def plot_single_solver(axes, mean_results, std_results, cols_to_groupby):
         except Exception as e:
             print(f"Error: {e}")
         axes[idx].set_ylim(0, 1)
-        axes[idx].grid()
+        axes[idx].grid(True, which="both", ls="-", alpha=0.2)
+        # Add minor gridlines for log scale
+        if grouped_mean_results[param].dtype.kind in 'iufc':
+            axes[idx].grid(True, which="minor", ls=":", alpha=0.2)
 
 
 def extract_from_str_mean_test_supervised(string):

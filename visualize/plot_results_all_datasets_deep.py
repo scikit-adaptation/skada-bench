@@ -4,7 +4,11 @@ import glob
 import pandas as pd
 import json
 import argparse
-from _solvers_scorers_registry import DEEP_ESTIMATOR_DICT, DEEP_DATASET_DICT, DEEP_SIMULATED_DATASET_DICT
+from _solvers_scorers_registry import (
+    DEEP_ESTIMATOR_DICT,
+    DEEP_DATASET_DICT,
+    DEEP_SIMULATED_DATASET_DICT
+)
 
 
 def shade_of_color_pvalue(
@@ -217,7 +221,9 @@ def generate_table(
         if not simulated:
             columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
         else:
-            columns = [dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()]
+            columns = [
+                dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()
+            ]
         columns += ["rank"]
         df_tab = df_tab.reindex(
             columns=columns,
@@ -226,7 +232,9 @@ def generate_table(
         if not simulated:
             columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
         else:
-            columns = [dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()]
+            columns = [
+                dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()
+            ]
         columns += ["scorer"]
         columns += ["rank"]
         df_tab = df_tab.rename(
@@ -330,7 +338,6 @@ if __name__ == "__main__":
         choices=["unsupervised", "supervised"],
         required=True
     )
-
 
     parser.add_argument(
         "--score",
