@@ -8,27 +8,28 @@ Shallow Methods Results
 
 Supervised Methods
 ~~~~~~~~~~~~~~~~
-..
-    TODO: Change the include path
+.. include:: experiment_results/table_results_shallow_all_dataset_supervised_accuracy.md
+   :parser: myst_parser.sphinx_
 
 Unsupervised Methods
 ~~~~~~~~~~~~~~~~~~~
-..
-    TODO: Change the include path
+.. include:: experiment_results/table_results_shallow_all_dataset_unsupervised_accuracy.md
+   :parser: myst_parser.sphinx_
 
 Deep Results
 -----------
 
 Supervised Methods
 ~~~~~~~~~~~~~~~~
-.. include:: experiment_results/table_results_all_dataset_supervised.md
+.. include:: experiment_results/table_results_deep_all_dataset_supervised_accuracy.md
    :parser: myst_parser.sphinx_
 
 Unsupervised Methods
 ~~~~~~~~~~~~~~~~~~~
 
-.. include:: experiment_results/table_results_all_dataset_unsupervised.md
+.. include:: experiment_results/table_results_deep_all_dataset_unsupervised_accuracy.md
    :parser: myst_parser.sphinx_
+
 Cross-validation Score Analysis
 -----------------------------
 
