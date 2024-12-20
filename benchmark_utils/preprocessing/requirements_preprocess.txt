@@ -4,4 +4,4 @@ sentence_transformers==3.0.0
 skrub==0.1.1
 torch==2.2.1
 torchvision==0.17.1
-scikit-learn==1.4.0
+scikit-learn==1.5.0

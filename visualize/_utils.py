@@ -225,6 +225,7 @@ def keep_only_best_scorer_per_estimator(df, specific_col=None):
     max_indices = df_copy.groupby(
         [df_copy['dataset'], 'estimator']
     )[[df_copy.columns[mean_index]]].idxmax()
+    max_indices = max_indices.dropna()
     max_rows = df_copy.iloc[max_indices.values.flatten()]
 
     max_rows = max_rows.set_index(['dataset', 'estimator'])
