@@ -54,7 +54,8 @@ def plot_param_grid(data, output_dir):
 
     # Filter out "deep_can" from unique solver names
     solvers = [s for s in data['solver_name'].unique() if s not in [
-        "deep_no_da_source_only[param_grid=default]", "deep_no_da_target_only[param_grid=default]"
+        "deep_no_da_source_only[param_grid=default]",
+        "deep_no_da_target_only[param_grid=default]"
         ]
     ]
     num_plots = len(solvers)
@@ -179,7 +180,7 @@ def plot_single_solver(axes, mean_results, std_results, cols_to_groupby):
             if grouped_mean_results[param].dtype.kind in 'iufc':
                 # Set x-axis to log scale for numeric parameters
                 axes[idx].set_xscale('log')
-                
+
                 if len(grouped_mean_results) == 1:
                     axes[idx].scatter(
                         grouped_mean_results[param],

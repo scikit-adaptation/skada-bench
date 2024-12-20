@@ -4,7 +4,11 @@ import glob
 import pandas as pd
 import json
 import argparse
-from _solvers_scorers_registry import DEEP_ESTIMATOR_DICT, DEEP_DATASET_DICT, DEEP_SIMULATED_DATASET_DICT
+from _solvers_scorers_registry import (
+    DEEP_ESTIMATOR_DICT,
+    DEEP_DATASET_DICT,
+    DEEP_SIMULATED_DATASET_DICT
+)
 
 
 def shade_of_color_pvalue(
@@ -39,7 +43,10 @@ def shade_of_color_pvalue(
             return df_value
 
 
-def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy", simulated=False):
+def generate_table(
+    csv_folder, scorer_selection="unsupervised",
+    score="accuracy", simulated=False
+):
     # Load the data
     csv_files = glob.glob(f"{csv_folder}/*.csv")
     df = pd.concat([pd.read_csv(f) for f in csv_files])
@@ -209,7 +216,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         if not simulated:
             columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
         else:
-            columns = [dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()]
+            columns = [
+                dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()
+            ]
         columns += ["rank"]
         df_tab = df_tab.reindex(
             columns=columns,
@@ -218,7 +227,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
         if not simulated:
             columns = [dataset for dataset in DEEP_DATASET_DICT.keys()]
         else:
-            columns = [dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()]
+            columns = [
+                dataset for dataset in DEEP_SIMULATED_DATASET_DICT.keys()
+            ]
         columns += ["scorer"]
         columns += ["rank"]
         df_tab = df_tab.rename(
@@ -240,8 +251,6 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
             columns=DEEP_SIMULATED_DATASET_DICT,
             index=DEEP_ESTIMATOR_DICT,
         )
-
-    import pdb; pdb.set_trace()
 
     # apply mcrot on columns names
     df_tab.columns = pd.MultiIndex.from_tuples(
@@ -276,7 +285,9 @@ def generate_table(csv_folder, scorer_selection="unsupervised", score="accuracy"
     lat_tab = lat_tab.replace("mix_val_intra", "MixValIntra")
 
     # save to txt file
-    with open(f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
+    with open(
+        f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w"
+    ) as f:
         f.write(lat_tab)
 
 
@@ -298,7 +309,6 @@ if __name__ == "__main__":
         choices=["unsupervised", "supervised"],
         required=True
     )
-
 
     parser.add_argument(
         "--score",

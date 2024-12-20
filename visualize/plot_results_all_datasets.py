@@ -57,7 +57,8 @@ def shade_of_color_pvalue(
 
 
 def generate_table(
-    csv_folder, csv_folder_simulated, scorer_selection="unsupervised", score="accuracy"
+    csv_folder, csv_folder_simulated,
+    scorer_selection="unsupervised", score="accuracy"
 ):
     csv_files = glob.glob(f"{csv_folder}/*.csv")
     df = pd.concat([pd.read_csv(f) for f in csv_files])
@@ -70,23 +71,25 @@ def generate_table(
     df = pd.concat([df, df_simulated])
 
     df = df.query("estimator != 'NO_DA_SOURCE_ONLY_BASE_ESTIM'")
-    df[f"target_{score}-test-identity"] = (
-        df[f"target_{score}-test-identity"].apply(lambda x: json.loads(x))
+    df[f"target_{score}-test-identity"] = df[
+        f"target_{score}-test-identity"
+    ].apply(
+        lambda x: json.loads(x)
     )
 
-    df["nb_splits"] = (
-        df[f"target_{score}-test-identity"].apply(lambda x: len(x))
-    )
+    df["nb_splits"] = df[
+        f"target_{score}-test-identity"
+    ].apply(lambda x: len(x))
 
     df_target = df.query('estimator == "Train Tgt" & scorer == "supervised"')
-    df_source = df.query(
-        'estimator == "Train Src" & scorer == "supervised" '
-    )
+    df_source = df.query('estimator == "Train Src" & scorer == "supervised" ')
 
     df = df.merge(
-        df_target[[
-            "shift", f"target_{score}-test-mean", f"target_{score}-test-std"
-        ]], on="shift", suffixes=("", "_target"),
+        df_target[
+            ["shift", f"target_{score}-test-mean", f"target_{score}-test-std"]
+        ],
+        on="shift",
+        suffixes=("", "_target"),
     )
     df = df.merge(
         df_source[
@@ -186,7 +189,9 @@ def generate_table(
         "dataset != 'covariate_shift' & dataset != 'target_shift' & "
         "dataset != 'concept_drift' & dataset != 'subspace'"
     )
-    df_rank = df_no_simutaled.groupby(["estimator"])["rank"].mean().reset_index()
+    df_rank = df_no_simutaled.groupby(
+        ["estimator"]
+    )["rank"].mean().reset_index()
 
     df_mean = (
         df.groupby(["dataset", "type", "scorer", "estimator"])
@@ -223,9 +228,9 @@ def generate_table(
             "& dataset != 'concept_drift' & dataset != 'subspace'"
         )
         best_scorers = (
-            best_scorers.groupby(["estimator", "scorer"])[
-                f"target_{score}-test-mean"
-            ]
+            best_scorers.groupby(
+                ["estimator", "scorer"]
+            )[f"target_{score}-test-mean"]
             .mean()
             .reset_index()
         )
@@ -249,21 +254,22 @@ def generate_table(
 
         df_tot = df_tot.query("scorer == scorer_best").reset_index()
 
-        df_wilco = (
-            df_wilco[["dataset", "estimator", "scorer", "pvalue"]]
-            .merge(
-                best_scorers[["estimator", "scorer"]],
-                on=["estimator",], suffixes=("", "_best"),
-            )
+        df_wilco = df_wilco[
+            ["dataset", "estimator", "scorer", "pvalue"]
+        ].merge(
+            best_scorers[["estimator", "scorer"]],
+            on=[
+                "estimator",
+            ],
+            suffixes=("", "_best"),
         )
 
         df_wilco = df_wilco.query("scorer == scorer_best").reset_index()
 
-
     # %%
-    df_tot = pd.concat([
-        df_tot, df_source_mean, df_target_mean
-    ], axis=0).reset_index()
+    df_tot = pd.concat(
+        [df_tot, df_source_mean, df_target_mean], axis=0
+    ).reset_index()
 
     df_tab = df_tot.pivot(
         index="dataset",
@@ -315,13 +321,12 @@ def generate_table(
 
     df_tab = df_tab.reset_index().merge(df_rank, on="estimator")
 
-
     if scorer_selection == "unsupervised":
         df_best_scorer = df_tot[["estimator", "scorer_best"]].drop_duplicates()
-        df_tab = df_tab.merge(
-            df_best_scorer, on="estimator"
-        )
-        df_tab = df_tab[df_tot["scorer"] == df_tot["scorer_best"]].reset_index()
+        df_tab = df_tab.merge(df_best_scorer, on="estimator")
+        df_tab = df_tab[
+            df_tot["scorer"] == df_tot["scorer_best"]
+        ].reset_index()
 
     df_tab = df_tab.set_index(["type", "estimator"])
     df_tab = df_tab.round(2)
@@ -329,7 +334,9 @@ def generate_table(
     if scorer_selection == "unsupervised":
         df_tab = df_tab[df_tab.columns[1:]]
     # add the colorcell
-    for i, col in enumerate(df_tab.columns[:-2 if scorer_selection == "unsupervised" else -1]):
+    for i, col in enumerate(
+        df_tab.columns[: -2 if scorer_selection == "unsupervised" else -1]
+    ):
         max_value = df_tab.loc[df_tab[col].index[1], col]
         mean_value = df_tab.loc[df_tab[col].index[0], col]
         min_value = df_tab[col].min()
@@ -341,7 +348,9 @@ def generate_table(
             # get the color
             pvalue = df_wilco.query(
                 f"estimator == '{idx[1]}' & dataset == '{col}'"
-            )["pvalue"].values[0]
+            )[
+                "pvalue"
+            ].values[0]
             color = shade_of_color_pvalue(
                 value,
                 pvalue,
@@ -440,7 +449,9 @@ def generate_table(
     lat_tab = lat_tab.replace("mix_val_inter", "MixVal")
 
     # save to txt file
-    with open(f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w") as f:
+    with open(
+        f"table_results_all_dataset_{scorer_selection}_{score}.txt", "w"
+    ) as f:
         f.write(lat_tab)
 
 
@@ -453,30 +464,24 @@ if __name__ == "__main__":
         "--csv-folder",
         type=str,
         help="Path to the csv file containing results for real data",
-        default='./readable_csv/results_all_datasets_experiments.csv'
+        default="./readable_csv/results_all_datasets_experiments.csv",
     )
 
     parser.add_argument(
         "--csv-folder-simulated",
         type=str,
         help="Path to the csv file containing results for real data",
-        default='./readable_csv/results_all_datasets_experiments.csv'
+        default="./readable_csv/results_all_datasets_experiments.csv",
     )
 
-    parser.add_argument(
-        "--scorer-selection",
-        type=str,
-        default="unsupervised"
-    )
+    parser.add_argument("--scorer-selection", type=str, default="unsupervised")
 
-    parser.add_argument(
-        "--score",
-        type=str,
-        default="accuracy"
-    )
+    parser.add_argument("--score", type=str, default="accuracy")
 
     args = parser.parse_args()
     df = generate_table(
-        args.csv_folder,args.csv_folder_simulated,
-        scorer_selection=args.scorer_selection, score=args.score
+        args.csv_folder,
+        args.csv_folder_simulated,
+        scorer_selection=args.scorer_selection,
+        score=args.score,
     )
