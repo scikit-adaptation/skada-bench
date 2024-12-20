@@ -58,6 +58,7 @@ def shade_of_color_pvalue(
 
 def generate_table(
     csv_folder,
+    output_folder,
     csv_folder_simulated,
     scorer_selection="unsupervised",
     score="accuracy",
@@ -312,15 +313,18 @@ def generate_table(
         level=1,
     )
 
-    df_tab = df_tab.T.rename(
-        index={
-            "NO DA": r"\rotatebox[origin=c]{90}{}",
-            "Reweighting": r"\rotatebox[origin=c]{90}{Reweighting}",
-            "Mapping": r"\rotatebox[origin=c]{90}{Mapping}",
-            "Subspace": r"\rotatebox[origin=c]{90}{Subspace}",
-            "Other": r"\rotatebox[origin=c]{90}{Other}",
-        }
-    )
+    if output_format == "latex":
+        df_tab = df_tab.T.rename(
+            index={
+                "NO DA": r"\rotatebox[origin=c]{90}{}",
+                "Reweighting": r"\rotatebox[origin=c]{90}{Reweighting}",
+                "Mapping": r"\rotatebox[origin=c]{90}{Mapping}",
+                "Subspace": r"\rotatebox[origin=c]{90}{Subspace}",
+                "Other": r"\rotatebox[origin=c]{90}{Other}",
+            }
+        )
+    else:
+        df_tab = df_tab.T
 
     df_tab = df_tab.reset_index().merge(df_rank, on="estimator")
 
@@ -458,19 +462,23 @@ def generate_table(
 
         # save to txt file
         with open(
-            f"table_results_all_dataset_{scorer_selection}.txt", "w"
+            f"{output_folder}/table_results_all_dataset_{scorer_selection}_{score}.txt", "w"
         ) as f:
             f.write(lat_tab)
             
     elif output_format == "markdown":
         df_tab = df_tab.fillna("NA")
+        
+        # Remove type in the index of df
+        new_index = df_tab.index.get_level_values('estimator')
+        df_tab.index = new_index
 
         # Convert to markdown
         md_tab = df_tab.to_markdown(index=True)
 
         # save to md file
         with open(
-            f"table_results_all_dataset_{scorer_selection}.md", "w"
+            f"{output_folder}/table_results_all_dataset_{scorer_selection}_{score}.md", "w"
         ) as f:
             f.write(md_tab)
 
@@ -494,6 +502,13 @@ if __name__ == "__main__":
         default="./readable_csv/results_all_datasets_experiments.csv",
     )
 
+    parser.add_argument(
+        "--output-folder",
+        type=str,
+        help="Path to the output folder",
+        default="./",
+    )
+
     parser.add_argument("--scorer-selection", type=str, default="unsupervised")
 
     parser.add_argument("--score", type=str, default="accuracy")
@@ -510,6 +525,7 @@ if __name__ == "__main__":
     df = generate_table(
         csv_folder=args.csv_folder,
         csv_folder_simulated=args.csv_folder_simulated,
+        output_folder=args.output_folder,
         scorer_selection=args.scorer_selection,
         score=args.score,
         output_format=args.output_format,
