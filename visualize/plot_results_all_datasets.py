@@ -478,7 +478,7 @@ def generate_table(
 
         # save to md file
         with open(
-            f"{output_folder}/table_results_all_dataset_{scorer_selection}_{score}.md", "w"
+            f"{output_folder}/table_results_shallow_all_dataset_{scorer_selection}_{score}.md", "w"
         ) as f:
             f.write(md_tab)
 
